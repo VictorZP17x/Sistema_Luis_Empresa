@@ -1,0 +1,528 @@
+{% load static %}
+<html>
+<body>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description"
+        content="Datta able is trending dashboard template made using Bootstrap 5 design framework and Flask, a leading backend framework written in Python.">
+    <meta name="keywords" content="datta able, flask datta able, flask theme UI, flask admin theme">
+    <meta name="author" content="App-Generator">
+
+    <!-- [Favicon] icon -->
+    <link rel="icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon">
+    <!-- [Font] Family -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- [Tabler Icons] https://tablericons.com -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/tabler-icons.min.css' %}">
+    <!-- [Feather Icons] https://feathericons.com -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
+    <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome.css' %}">
+    <!-- [Material Icons] https://fonts.google.com/icons -->
+    <link rel="stylesheet" href="{% static 'assets/fonts/material.css' %}">
+    <!-- [Template CSS Files] -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
+    <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/dashboard_css/dashboard.css' %}">
+
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+
+    <!-- [Loader] -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
+        </div>
+    </div>
+
+    <!-- navigation -->
+    <header class="pc-header">
+        <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
+            <div class="me-auto pc-mob-drp">
+                <ul class="list-unstyled">
+                    <!-- ======= Menu collapse Icon ===== -->
+                    <li class="pc-h-item pc-sidebar-collapse">
+                        <a href="#" class="pc-head-link ms-0" id="sidebar-hide">
+                            <i data-feather="menu"></i>
+                        </a>
+                    </li>
+                    <li class="pc-h-item pc-sidebar-popup">
+                        <a href="#" class="pc-head-link ms-0" id="mobile-collapse">
+                            <i data-feather="menu"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown pc-h-item">
+                        <a class="pc-head-link dropdown-toggle arrow-none m-0 trig-drp-search" data-bs-toggle="dropdown"
+                            href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                            <i data-feather="search"></i>
+                        </a>
+                        <div class="dropdown-menu pc-h-dropdown drp-search">
+                            <form class="px-3 py-2">
+                                <input type="search" class="form-control border-0 shadow-none"
+                                    placeholder="Search here. . ." />
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- [Mobile Media Block end] -->
+            <div class="ms-auto">
+                <ul class="list-unstyled">
+                    <li class="dropdown pc-h-item">
+                        <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                            role="button" aria-haspopup="false" aria-expanded="false">
+                            <i data-feather="bell"></i>
+                            <span class="badge bg-success pc-h-badge">3</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
+                            <div class="dropdown-header d-flex align-items-center justify-content-between">
+                                <h5 class="m-0">Notifications</h5>
+                                <a href="#!" class="btn btn-link btn-sm">Mark all read</a>
+                            </div>
+                            <div class="dropdown-body text-wrap header-notification-scroll position-relative"
+                                style="max-height: calc(100vh - 215px)">
+                                <p class="text-span">Today</p>
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <img class="img-radius avtar rounded-0"
+                                                    src="{% static 'assets/images/user/avatar-1.jpg' %}"
+                                                    alt="Generic placeholder image">
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <span class="float-end text-sm text-muted">2 min ago</span>
+                                                <h5 class="text-body mb-2">UI/UX Design</h5>
+                                                <p class="mb-0">Lorem Ipsum has been the industry's standard dummy text
+                                                    ever
+                                                    since the 1500s, when an unknown printer took a galley of
+                                                    type and scrambled it to make a type</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <img class="img-radius avtar rounded-0"
+                                                    src="{% static 'assets/images/user/avatar-2.jpg' %}"
+                                                    alt="Generic placeholder image">
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <span class="float-end text-sm text-muted">1 hour ago</span>
+                                                <h5 class="text-body mb-2">Message</h5>
+                                                <p class="mb-0">Lorem Ipsum has been the industry's standard dummy text
+                                                    ever
+                                                    since the 1500.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-span">Yesterday</p>
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <img class="img-radius avtar rounded-0"
+                                                    src="{% static 'assets/images/user/avatar-3.jpg' %}"
+                                                    alt="Generic placeholder image">
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <span class="float-end text-sm text-muted">2 hour ago</span>
+                                                <h5 class="text-body mb-2">Forms</h5>
+                                                <p class="mb-0">Lorem Ipsum has been the industry's standard dummy text
+                                                    ever
+                                                    since the 1500s, when an unknown printer took a galley of
+                                                    type and scrambled it to make a type</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <img class="img-radius avtar rounded-0"
+                                                    src="{% static 'assets/images/user/avatar-4.jpg' %}"
+                                                    alt="Generic placeholder image">
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <span class="float-end text-sm text-muted">12 hour ago</span>
+                                                <h5 class="text-body mb-2">Challenge invitation</h5>
+                                                <p class="mb-2"><span class="text-dark">Jonny aber</span> invites to
+                                                    join
+                                                    the challenge</p>
+                                                <button class="btn btn-sm btn-outline-secondary me-2">Decline</button>
+                                                <button class="btn btn-sm btn-primary">Accept</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0">
+                                                <img class="img-radius avtar rounded-0"
+                                                    src="{% static 'assets/images/user/avatar-5.jpg' %}"
+                                                    alt="Generic placeholder image">
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <span class="float-end text-sm text-muted">5 hour ago</span>
+                                                <h5 class="text-body mb-2">Security</h5>
+                                                <p class="mb-0">Lorem Ipsum has been the industry's standard dummy text
+                                                    ever
+                                                    since the 1500s, when an unknown printer took a galley of
+                                                    type and scrambled it to make a type</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center py-2">
+                                <a href="#!" class="link-danger">Clear all Notifications</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="dropdown pc-h-item header-user-profile">
+                        <a class="pc-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+                            role="button" aria-haspopup="false" data-bs-auto-close="outside" aria-expanded="false">
+                            <i data-feather="user"></i>
+                        </a>
+                        <div
+                            class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown p-0 overflow-hidden">
+                            <div class="dropdown-header d-flex align-items-center justify-content-between bg-primary">
+                                <div class="d-flex my-2">
+                                    <div class="flex-shrink-0">
+                                        <img src="{% static 'assets/images/user/avatar-2.jpg' %}" alt="user-image"
+                                            class="user-avtar wid-35" />
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="text-white mb-1">Carson Darrin 🖖</h6>
+                                        <span class="text-white text-opacity-75">carson.darrin@company.io</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-body">
+                                <div class="profile-notification-scroll position-relative"
+                                    style="max-height: calc(100vh - 225px)">
+                                    <a href="#" class="dropdown-item">
+                                        <span>
+                                            <svg class="pc-icon text-muted me-2">
+                                                <use xlink:href="#custom-setting-outline"></use>
+                                            </svg>
+                                            <span>Settings</span>
+                                        </span>
+                                    </a>
+                                    <a href="#" class="dropdown-item">
+                                        <span>
+                                            <svg class="pc-icon text-muted me-2">
+                                                <use xlink:href="#custom-share-bold"></use>
+                                            </svg>
+                                            <span>Share</span>
+                                        </span>
+                                    </a>
+                                    <a href="#" class="dropdown-item">
+                                        <span>
+                                            <svg class="pc-icon text-muted me-2">
+                                                <use xlink:href="#custom-lock-outline"></use>
+                                            </svg>
+                                            <span>Change Password</span>
+                                        </span>
+                                    </a>
+                                    <div class="d-grid my-2">
+
+                                        <a href="" class="btn btn-primary">
+                                            <svg class="pc-icon me-2">
+                                                <use xlink:href="#custom-logout-1-outline"></use>
+                                            </svg>Logout
+                                        </a>
+
+                                        <a href="" class="btn btn-primary">
+                                            <svg class="pc-icon me-2">
+                                                <use xlink:href="#custom-logout-1-outline"></use>
+                                            </svg>Login
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- sidebar -->
+
+    <nav class="pc-sidebar">
+        <div class="navbar-wrapper">
+            <div class="m-header">
+                <a href="" class="b-brand text-primary">
+                    <!-- ========   Change your logo from here   ============ -->
+                    <img src="{% static 'assets/images/logo-white.svg' %}" class="img-fluid" alt="logo">
+                </a>
+            </div>
+            <div class="navbar-content">
+                <ul class="pc-navbar">
+                    <li class="pc-item pc-caption">
+                        <label>Navigation</label>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="#!" class="pc-link">
+                            <span class="pc-micon">
+                                <i data-feather="home"></i>
+                            </span>
+                            <span class="pc-mtext">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item">
+                        <a href="" class="pc-link">
+                            <span class="pc-micon">
+                                <i data-feather="user"></i>
+                            </span>
+                            <span class="pc-mtext">Profile</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- itemstalbe -->
+
+    <div class="dt-responsive table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pc-container">
+        <div class="pc-content">
+            <!-- [ breadcrumb ] start -->
+            <!-- [ breadcrumb ] end -->
+            <!-- [ Main Content ] start -->
+            <div class="row">
+                <!-- [ daily sales section ] start -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-4">Empresas</h6>
+                            <div class="row d-flex align-items-center">
+                                <div class="col-9">
+                                    <h3 class="f-w-300 d-flex align-items-center m-b-0"><i
+                                            class="feather icon-briefcase text-primary f-30 m-r-10"></i>5</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ daily sales section ] end -->
+
+                <!-- [ Monthly  sales section ] start -->
+                <div class="col-md-6 col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-4">Usuarios</h6>
+                            <div class="row d-flex align-items-center">
+                                <div class="col-9">
+                                    <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
+                                            class="feather icon-users text-info f-30 m-r-10"></i>10</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ Monthly  sales section ] end -->
+
+                <!-- [ year  sales section ] start -->
+                <div class="col-md-12 col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-4">Solicitudes</h6>
+                            <div class="row d-flex align-items-center">
+                                <div class="col-9">
+                                    <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
+                                            class="feather icon-file-text text-warning f-30 m-r-10"></i>24</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ Recent Users ] end -->
+            </div>
+            <!-- [ Main Content ] end -->
+            <!-- [ small company cards ] start -->
+            <div class="row mt-4">
+                <div class="col-md-6 col-xl-4">
+                    <div class="card shadow-sm company-card">
+                        <div class="card-header text-center">
+                            <h6 class="mb-0">La Polar</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <!-- ...existing code... -->
+                            <div class="company-card-img">
+                                <img src="{% static 'assets/img/La polar.jpg' %}" alt="La Polar">
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Empreas</small><br>
+                                    <span>Empresas la Polar</span>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Localización</small><br>
+                                    <span>Al norte, se encuentran en el Círculo Polar Ártico y al sur, en la
+                                        Convergencia
+                                        Antártica.</span>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Número</small><br>
+                                    <span>0412-6776277</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
+                                data-bs-target="#empresaModal" data-title="La Polar" data-dato1="" data-dato2=""
+                                data-dato3="">
+                                Ver más
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card shadow-sm company-card">
+                        <div class="card-header text-center">
+                            <h6 class="mb-0">Lucianos</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="company-card-img">
+                                <img src="{% static 'assets/img/Lucianos.jpg' %}" alt="Lucianoo´s">
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Empresa</small><br>
+                                    <span>Lucianoo´s</span>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Localización</small><br>
+                                    <span> Fábrica en Luján y locales en varias ubicaciones, incluyendo Galerías
+                                        Pacífico en
+                                        CABA y Quilmes.</span>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Número</small><br>
+                                    <span>0412-6675689</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
+                                data-bs-target="#empresaModal" data-title="Lucianoo´s" data-dato1="" data-dato2=""
+                                data-dato3="">
+                                Ver más
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-xl-4">
+                    <div class="card shadow-sm company-card">
+                        <div class="card-header text-center">
+                            <h6 class="mb-0">P.A.N</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="company-card-img">
+                                <img src="{% static 'assets/img/PAN.jpg' %}" alt="P.A.N">
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Empresa</small><br>
+                                    <span>Empresas PAN</span>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Localización</small><br>
+                                    <span>En Venezuela, la producción principal se encuentra en las plantas de
+                                        Chivacoa y
+                                        Turmero.</span>
+                                </div>
+                                <div class="col-4 text-center">
+                                    <small class="text-muted">Número</small><br>
+                                    <span>0414-6778987</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
+                                data-bs-target="#empresaModal" data-title="P.A.N" data-dato1="" data-dato2=""
+                                data-dato3="">
+                                Ver más
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="empresaModal" tabindex="-1" aria-labelledby="empresaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="empresaModalLabel">Título Empresa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div><strong>Dato 1:</strong> <span id="modalDato1"></span></div>
+                    <div><strong>Dato 2:</strong> <span id="modalDato2"></span></div>
+                    <div><strong>Dato 3:</strong> <span id="modalDato3"></span></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="pc-footer">
+        <div class="footer-wrapper container-fluid">
+            <div class="row">
+                <div class="col my-1">
+                    <p class="m-0">
+                        &copy; SisLuis - SisLuis by <a href="https://app-generator.dev/">VicaNiela</a>.
+                    </p>
+                </div>
+                <div class="col-auto my-1">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- scripts -->
+    <!-- Required Js -->
+    <script src="{% static 'assets/js/plugins/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/simplebar.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/fonts/custom-font.js' %}"></script>
+    <script src="{% static 'assets/js/pcoded.js' %}"></script>
+    <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
+    <script src="{% static 'assets/js/dashboard_js/dashboard.js' %}"></script>
+    <script>layout_change('light');</script>
+    <script>change_box_container('false');</script>
+    <script>layout_caption_change('true');</script>
+    <script>layout_rtl_change('false');</script>
+    <script>preset_change("preset-1");</script>
+    <script>layout_theme_sidebar_change('false');</script>
+</body>
+
+</html>
