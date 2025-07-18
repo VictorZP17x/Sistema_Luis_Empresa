@@ -1,7 +1,113 @@
 {% extends 'home.html' %}
 {% block content %}
 {% load static %}
-<h1>Empresa</h1>
+{% load widget_tweaks %}
+
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card custom-card-height mb-3 mt-3 me-3 ms-3">
+                    <div class="card-header">
+                        <h5 class="card-title">Empresas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="data-container">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <button class="btn btn-md btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#register-modal">
+                                            <span class="pc-micon">
+                                                <i data-feather="plus-circle"></i>
+                                            </span><strong>Añadir Empresa</strong>
+                                        </button>
+                                        <div class="d-flex align-items-center">
+                                            <button id="open-generate-pdf-modal" class="btn btn-danger"
+                                                data-bs-toggle="modal" data-bs-target="#generate-pdf-modal">
+                                                <span class="pc-micon">
+                                                    <i data-feather="file"></i>
+                                                </span><strong>Generar Reporte PDF</strong>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <table id="datatable-company" class="table responsive">
+                                        <thead>
+                                            <tr>
+                                                <th class="centered" scope="col">#</th>
+                                                <th class="centered" scope="col">Nombre</th>
+                                                <th class="centered" scope="col">Dirección</th>
+                                                <th class="centered" scope="col">Teléfono</th>
+                                                <th class="centered" scope="col">RIF</th>
+                                                <th class="centered" scope="col">Descripción</th>
+                                                <th class="centered" scope="col">Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for company in company %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ company.name }}</td>
+                                                <td>{{ company.address }}</td>
+                                                <td>{{ company.phone_number }}</td>
+                                                <td>{{ company.rif }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-warning description-company-button"
+                                                        data-bs-toggle="modal" data-bs-target="#companyModal">
+                                                        <span class="pc-micon">
+                                                            <i data-feather="align-left"></i>
+                                                        </span>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary edit-company-button"
+                                                        data-id="{{ company.id }}">
+                                                        <span class="pc-micon">
+                                                            <i data-feather="edit"></i>
+                                                        </span>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm delete-company-button"
+                                                        data-id="{{ company.id }}">
+                                                        <span class="pc-micon">
+                                                            <i data-feather="trash-2"></i>
+                                                        </span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="companyModal" tabindex="-1" aria-labelledby="companyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="companyModalLabel">Descripción</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="company-description text-break" style="text-align: justify;">
+                    {% for company in company %}
+                    <span>{{ company.description }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_css %}
@@ -9,5 +115,5 @@
 {% endblock %}
 
 {% block extra_js %}
-
+<script src="{% static 'assets/js/company_js/datatable-company.js' %}"></script>
 {% endblock %}

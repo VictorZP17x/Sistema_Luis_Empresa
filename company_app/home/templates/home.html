@@ -6,6 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- jQuery -->
+    <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'assets/bootstrap-5.3.6/css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/bootstrap-5.3.6/css/bootstrap.min.css' %}" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="{% static 'assets/datatables/css/jquery.dataTables.min.css' %}" />
+    <!-- Select2 CSS -->
+    <link href="{% static 'assets/select2/css/select2.min.css' %}" rel="stylesheet" />
     <!-- Íconos - Feather Icons CSS -->
     <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
     <!-- Template CSS -->
@@ -119,14 +128,6 @@
                             <span class="pc-mtext">Inicio</span>
                         </a>
                     </li>
-                    <li class="pc-item">
-                        <a href="{% url 'home:client' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="user"></i>
-                            </span>
-                            <span class="pc-mtext">Clientes</span>
-                        </a>
-                    </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="{% url 'home:company' %}" class="pc-link">
                             <span class="pc-micon">
@@ -136,19 +137,11 @@
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="{% url 'home:log_history' %}" class="pc-link">
+                        <a href="{% url 'home:work_type' %}" class="pc-link">
                             <span class="pc-micon">
-                                <i data-feather="list"></i>
+                                <i data-feather="clipboard"></i>
                             </span>
-                            <span class="pc-mtext">Historial</span>
-                        </a>
-                    </li>
-                    <li class="pc-item pc-hasmenu">
-                        <a href="{% url 'home:user' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="users"></i>
-                            </span>
-                            <span class="pc-mtext">Usuarios</span>
+                            <span class="pc-mtext">Servicios</span>
                         </a>
                     </li>
                     <li class="pc-item">
@@ -160,11 +153,27 @@
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="{% url 'home:work_type' %}" class="pc-link">
+                        <a href="{% url 'home:log_history' %}" class="pc-link">
                             <span class="pc-micon">
-                                <i data-feather="clipboard"></i>
+                                <i data-feather="list"></i>
                             </span>
-                            <span class="pc-mtext">Servicios</span>
+                            <span class="pc-mtext">Historial</span>
+                        </a>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{% url 'home:client' %}" class="pc-link">
+                            <span class="pc-micon">
+                                <i data-feather="user"></i>
+                            </span>
+                            <span class="pc-mtext">Clientes</span>
+                        </a>
+                    </li>
+                    <li class="pc-item pc-hasmenu">
+                        <a href="{% url 'home:user' %}" class="pc-link">
+                            <span class="pc-micon">
+                                <i data-feather="users"></i>
+                            </span>
+                            <span class="pc-mtext">Usuarios</span>
                         </a>
                     </li>
                 </ul>
@@ -188,15 +197,21 @@
             </div>
         </div>
     </footer>
-
+    
+    <!-- Bootstrap JS -->
+    <script src="{% static 'assets/bootstrap-5.3.6/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- DataTables JS -->
+    <script src="{% static 'assets/datatables/js/jquery.dataTables.min.js' %}"></script>
+    <!-- SweetAlert -->
+    <script src="{% static 'assets/js/sweetalert2@11.js' %}"></script>
+    <!-- Select2 JS -->
+    <script src="{% static 'assets/select2/js/select2.min.js' %}"></script>
     <!-- Bootstrap JS -->
     <script src="{% static 'assets/js/plugins/bootstrap.min.js' %}"></script>
-
     <!-- Íconos - Feather Icons JS -->
     <script src="{% static 'assets/js/pcoded.js' %}"></script>
     <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
-
-
+    <!-- Plugin para Customizar Scrollbars -->
     <script src="{% static 'assets/js/plugins/simplebar.min.js' %}"></script>
 
     {% block extra_css %}
