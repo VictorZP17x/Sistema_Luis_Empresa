@@ -1,1 +1,192 @@
-<h1>Dashboard</h1>
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<div class="pc-container">
+    <div class="pc-content">
+        <!-- [ breadcrumb ] start -->
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <!-- [ daily sales section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="mb-4">Empresas</h6>
+                        <div class="row d-flex align-items-center">
+                            <div class="col-9">
+                                <h3 class="f-w-300 d-flex align-items-center m-b-0"><i
+                                        class="feather icon-briefcase text-primary f-30 m-r-10"></i>5</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ daily sales section ] end -->
+
+            <!-- [ Monthly  sales section ] start -->
+            <div class="col-md-6 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="mb-4">Usuarios</h6>
+                        <div class="row d-flex align-items-center">
+                            <div class="col-9">
+                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
+                                        class="feather icon-users text-info f-30 m-r-10"></i>10</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ Monthly  sales section ] end -->
+
+            <!-- [ year  sales section ] start -->
+            <div class="col-md-12 col-xl-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="mb-4">Solicitudes</h6>
+                        <div class="row d-flex align-items-center">
+                            <div class="col-9">
+                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
+                                        class="feather icon-file-text text-warning f-30 m-r-10"></i>24</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- [ Recent Users ] end -->
+        </div>
+        <!-- [ Main Content ] end -->
+        <!-- [ small company cards ] start -->
+        <div class="row mt-4">
+            <div class="col-md-6 col-xl-4">
+                <div class="card shadow-sm company-card">
+                    <div class="card-header text-center">
+                        <h6 class="mb-0">La Polar</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <!-- ...existing code... -->
+                        <div class="company-card-img">
+                            <img src="{% static 'assets/img/La polar.jpg' %}" alt="La Polar">
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Empreas</small><br>
+                                <span>Empresas la Polar</span>
+                            </div>
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Localización</small><br>
+                                <span>Al norte, se encuentran en el Círculo Polar Ártico y al sur, en la
+                                    Convergencia
+                                    Antártica.</span>
+                            </div>
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Número</small><br>
+                                <span>0412-6776277</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
+                            data-bs-target="#empresaModal" data-title="La Polar" data-dato1="" data-dato2=""
+                            data-dato3="">
+                            Ver más
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="card shadow-sm company-card">
+                    <div class="card-header text-center">
+                        <h6 class="mb-0">Lucianos</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="company-card-img">
+                            <img src="{% static 'assets/img/Lucianos.jpg' %}" alt="Lucianoo´s">
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Empresa</small><br>
+                                <span>Lucianoo´s</span>
+                            </div>
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Localización</small><br>
+                                <span> Fábrica en Luján y locales en varias ubicaciones, incluyendo Galerías
+                                    Pacífico en
+                                    CABA y Quilmes.</span>
+                            </div>
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Número</small><br>
+                                <span>0412-6675689</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
+                            data-bs-target="#empresaModal" data-title="Lucianoo´s" data-dato1="" data-dato2=""
+                            data-dato3="">
+                            Ver más
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-xl-4">
+                <div class="card shadow-sm company-card">
+                    <div class="card-header text-center">
+                        <h6 class="mb-0">P.A.N</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="company-card-img">
+                            <img src="{% static 'assets/img/PAN.jpg' %}" alt="P.A.N">
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Empresa</small><br>
+                                <span>Empresas PAN</span>
+                            </div>
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Localización</small><br>
+                                <span>En Venezuela, la producción principal se encuentra en las plantas de
+                                    Chivacoa y
+                                    Turmero.</span>
+                            </div>
+                            <div class="col-4 text-center">
+                                <small class="text-muted">Número</small><br>
+                                <span>0414-6778987</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
+                            data-bs-target="#empresaModal" data-title="P.A.N" data-dato1="" data-dato2="" data-dato3="">
+                            Ver más
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="empresaModal" tabindex="-1" aria-labelledby="empresaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="empresaModalLabel">Título Empresa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div><strong>Dato 1:</strong> <span id="modalDato1"></span></div>
+                <div><strong>Dato 2:</strong> <span id="modalDato2"></span></div>
+                <div><strong>Dato 3:</strong> <span id="modalDato3"></span></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/dashboard_css/dashboard.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/dashboard_js/dashboard.js' %}"></script>
+
+{% endblock %}
