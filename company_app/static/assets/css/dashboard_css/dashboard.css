@@ -32,3 +32,14 @@
     width: 33.33333333%;
   }
 }
+
+body.sidebar-collapsed .pc-container {
+  margin-left: 0 !important;
+  width: 100% !important;
+  transition: margin-left 0.3s, width 0.3s;
+}
+
+body.sidebar-collapsed .pc-content {
+  width: 100% !important;
+  transition: width 0.3s;
+}

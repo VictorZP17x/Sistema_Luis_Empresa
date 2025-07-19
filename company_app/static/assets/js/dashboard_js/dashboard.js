@@ -1,4 +1,6 @@
+
 document.addEventListener("DOMContentLoaded", function () {
+  // Modal code...
   var empresaModal = document.getElementById("empresaModal");
   empresaModal.addEventListener("show.bs.modal", function (event) {
     var button = event.relatedTarget;
@@ -11,4 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("modalDato2").textContent = dato2;
     document.getElementById("modalDato3").textContent = dato3;
   });
+
+  // Sidebar toggle
+  var sidebarHideBtn = document.getElementById("sidebar-hide");
+  if (sidebarHideBtn) {
+    sidebarHideBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.body.classList.toggle("sidebar-collapsed");
+    });
+  }
 });
