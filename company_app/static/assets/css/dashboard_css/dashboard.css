@@ -1,6 +1,5 @@
 /* ...existing code... */
 
-
 .company-card-img {
   width: 100%;
   height: 130px;
@@ -9,8 +8,8 @@
   align-items: center;
   justify-content: center;
   border: 2px solid #bdbdbd; /* Borde gris más notorio */
-  border-radius: 8px;         /* Bordes ligeramente redondeados */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04); /* Sombra sutil */
+  border-radius: 8px; /* Bordes ligeramente redondeados */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Sombra sutil */
 }
 
 .company-card-img-placeholder {
@@ -23,7 +22,6 @@
   object-fit: cover; /* Cambia 'contain' por 'cover' */
   border-radius: 6px;
 }
-
 
 /* Asegura que las cards ocupen el mismo espacio que las cards superiores */
 @media (min-width: 1200px) {
@@ -42,4 +40,19 @@ body.sidebar-collapsed .pc-container {
 body.sidebar-collapsed .pc-content {
   width: 100% !important;
   transition: width 0.3s;
+}
+
+
+body.sidebar-collapsed .header-wrapper .pc-mob-drp .pc-h-item {
+  margin-right: 0 !important;
+}
+
+body.sidebar-collapsed .header-wrapper .pc-mob-drp {
+  transform: translateX(-240px); /* Aumenta el desplazamiento */
+  transition: transform 0.3s;
+}
+
+.header-wrapper .pc-mob-drp {
+  transform: translateX(0);
+  transition: transform 0.3s;
 }
