@@ -1,0 +1,8 @@
+.swal2-container {
+  z-index: 20000 !important;
+}
+/* Oculta el icono de la lupa en el buscador de DataTables */
+.dataTables_filter label::before,
+.dataTables_filter label::after {
+    display: none !important;
+}

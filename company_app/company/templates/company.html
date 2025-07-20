@@ -53,7 +53,8 @@
                                                 <td>{{ company.rif }}</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-warning description-company-button"
-                                                        data-bs-toggle="modal" data-bs-target="#companyModal">
+                                                        data-bs-toggle="modal" data-bs-target="#companyModal"
+                                                        data-description="{{ company.description|escapejs }}">
                                                         <span class="pc-micon">
                                                             <i data-feather="align-left"></i>
                                                         </span>
@@ -95,10 +96,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <div class="company-description text-break" style="text-align: justify;">
-                    {% for company in company %}
-                    <span>{{ company.description }}</span>
-                    {% endfor %}
+                <div id="company-description-modal" class="company-description text-break" style="text-align: justify;">
+                    <!-- Aquí se insertará la descripción de la empresa seleccionada -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -136,20 +135,60 @@
         </div>
     </div>
 </div>
-<style>
-    .swal2-container {
-        z-index: 20000 !important;
-    }
-</style>
 <!-- Fin modal registrar empresa -->
+
+<!-- Modal para editar empresa -->
+<div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="edit-company-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="company_id" id="edit-company-id">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Empresa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-name">Nombre</label>
+                        <input type="text" class="form-control" id="edit-name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-address">Dirección</label>
+                        <input type="text" class="form-control" id="edit-address" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-phone">Teléfono</label>
+                        <input type="text" class="form-control" id="edit-phone" name="phone_number" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-rif">RIF</label>
+                        <input type="text" class="form-control" id="edit-rif" name="rif" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-description">Descripción</label>
+                        <textarea class="form-control" id="edit-description" name="description" rows="3"
+                            required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
-
+<link rel="stylesheet" href="{% static 'assets/css/company_css/company.css' %}">
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'assets/js/company_js/borrar.js' %}"></script>
 <script src="{% static 'assets/js/company_js/añadir.js' %}"></script>
+<script src="{% static 'assets/js/company_js/editar.js' %}"></script>
+<script src="{% static 'assets/js/company_js/datatable-company.js' %}"></script>
 {% endblock %}

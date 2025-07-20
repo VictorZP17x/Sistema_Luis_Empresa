@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
 </head>
 
-<body>
+<body{% if show_header_search %} class="dashboard-page" {% endif %}>
     <!-- Navegation-Bar -->
     <header class="pc-header">
         <div class="header-wrapper">
@@ -39,7 +39,7 @@
                             <i data-feather="menu"></i>
                         </a>
                     </li>
-                    <li class="dropdown pc-h-item">
+                    <li class="dropdown pc-h-item" {% if not show_header_search %} style="display:none;" {% endif %}>
                         <a class="pc-head-link dropdown-toggle arrow-none m-0 trig-drp-search" data-bs-toggle="dropdown"
                             href="#" role="button" aria-haspopup="false" aria-expanded="false">
                             <i data-feather="search"></i>
@@ -194,7 +194,12 @@
             </div>
         </div>
     </footer>
-
+    <style>
+        body:not(.dashboard-page) .pc-h-item .pc-head-link[data-bs-toggle="dropdown"] i[data-feather="search"],
+        body:not(.dashboard-page) .pc-h-item .dropdown-menu.drp-search {
+            display: none !important;
+        }
+    </style>
     <!-- Bootstrap JS -->
     <script src="{% static 'assets/bootstrap-5.3.6/js/bootstrap.bundle.min.js' %}"></script>
     <!-- DataTables JS -->
@@ -221,6 +226,6 @@
     {% block extra_js %}
 
     {% endblock %}
-</body>
+    </body>
 
 </html>
