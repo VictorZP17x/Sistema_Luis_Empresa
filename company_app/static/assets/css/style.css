@@ -22300,6 +22300,21 @@ body.sidebar-collapsed .header-wrapper .pc-mob-drp {
   transform: translateX(0);
   transition: transform 0.3s;
 }
+
+/* Ajuste del contenido cuando el sidebar está colapsado */
+#main-content.sidebar-collapsed .pc-container {
+    margin-left: 10px !important; /* o el ancho reducido de tu sidebar */
+    transition: margin-left 0.3s;
+}
+#main-content .pc-container {
+    transition: margin-left 0.3s;
+}
+@media (max-width: 1024px) {
+    #main-content.sidebar-collapsed .pc-container {
+        margin-left: 0 !important;
+    }
+}
+
 /**  =====================
   23. Icon layouts css end
 ==========================  **/

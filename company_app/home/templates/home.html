@@ -177,7 +177,7 @@
             </div>
         </div>
     </nav>
-    <main>
+    <main id="main-content">
         {% block content %}
 
         {% endblock %}
@@ -194,7 +194,7 @@
             </div>
         </div>
     </footer>
-    
+
     <!-- Bootstrap JS -->
     <script src="{% static 'assets/bootstrap-5.3.6/js/bootstrap.bundle.min.js' %}"></script>
     <!-- DataTables JS -->
@@ -209,6 +209,10 @@
     <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
     <!-- Plugin para Customizar Scrollbars -->
     <script src="{% static 'assets/js/plugins/simplebar.min.js' %}"></script>
+    <script>
+
+    </script>
+
 
     {% block extra_css %}
 
