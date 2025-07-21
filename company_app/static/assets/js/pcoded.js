@@ -980,5 +980,64 @@ document.addEventListener("DOMContentLoaded", function () {
   // Ajusta al cargar la página
   adjustContent();
 });
+
+// ...existing code...
+document.addEventListener("DOMContentLoaded", function () {
+  const buscador = document.getElementById("buscador-empresas");
+  const cardsEmpresas = document.getElementById("cards-empresas");
+  const alertaNoResultados = document.createElement("div");
+  alertaNoResultados.className = "col-12";
+  alertaNoResultados.innerHTML = `
+        <div class="alert alert-warning text-center my-5">
+            No se encontraron empresas que coincidan con la búsqueda.
+        </div>
+    `;
+
+  buscador.addEventListener("input", function () {
+    const filtro = buscador.value.trim().toLowerCase();
+    let hayCoincidencias = false;
+
+    document
+      .querySelectorAll("#cards-empresas .company-card")
+      .forEach(function (card) {
+        const textos = [
+          card.querySelector("h6")?.textContent || "", // Nombre
+          card.querySelector(".empresa-direccion")?.textContent || "", // Dirección
+          card.querySelector(".empresa-telefono")?.textContent || "", // Teléfono
+          card.querySelector(".empresa-rif")?.textContent || "", // RIF
+          card.querySelector(".company-description")?.textContent || "", // Descripción
+        ]
+          .join(" ")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+
+        const filtroNormalizado = filtro
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+
+        // OCULTA EL DIV DE COLUMNA DE LA CARD
+        const colDiv = card.closest('[class*="col-"]');
+        if (textos.includes(filtroNormalizado)) {
+          colDiv.style.display = "";
+          hayCoincidencias = true;
+        } else {
+          colDiv.style.display = "none";
+        }
+      });
+
+    // Mostrar mensaje si no hay coincidencias
+    if (!hayCoincidencias) {
+      if (!cardsEmpresas.contains(alertaNoResultados)) {
+        cardsEmpresas.appendChild(alertaNoResultados);
+      }
+    } else {
+      if (cardsEmpresas.contains(alertaNoResultados)) {
+        cardsEmpresas.removeChild(alertaNoResultados);
+      }
+    }
+  });
+});
+// ...existing code...
 // =======================================================
 // =======================================================

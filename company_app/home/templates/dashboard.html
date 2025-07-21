@@ -82,15 +82,15 @@
                             </div>
                             <div class="mb-2">
                                 <small class="text-muted">Dirección</small><br>
-                                <span>{{ company.address }}</span>
+                                <span class="empresa-direccion">{{ company.address }}</span>
                             </div>
                             <div class="mb-2">
                                 <small class="text-muted">Teléfono</small><br>
-                                <span>{{ company.phone_number }}</span>
+                                <span class="empresa-telefono">{{ company.phone_number }}</span>
                             </div>
                             <div class="mb-2">
                                 <small class="text-muted">RIF</small><br>
-                                <span>{{ company.rif }}</span>
+                                <span class="empresa-rif">{{ company.rif }}</span>
                             </div>
                             <div class="company-description d-none">{{ company.description }}</div>
                             <button class="btn btn-primary btn-sm mt-2 btn-ver-mas" data-bs-toggle="modal"
@@ -161,57 +161,6 @@
             {% endfor %}
         </div>
 </body>
-<script>
-    // filepath: c:\xampp\htdocs\Sistema_Luis_Empresa\company_app\home\templates\dashboard.html
-    document.addEventListener("DOMContentLoaded", function () {
-        const buscador = document.getElementById("buscador-empresas");
-        const cardsEmpresas = document.getElementById("cards-empresas");
-        const alertaNoResultados = document.createElement("div");
-        alertaNoResultados.className = "col-12";
-        alertaNoResultados.innerHTML = `
-        <div class="alert alert-warning text-center my-5">
-            No se encontraron empresas que coincidan con la búsqueda.
-        </div>
-    `;
-
-        buscador.addEventListener("input", function () {
-            const filtro = buscador.value.trim().toLowerCase();
-            let hayCoincidencias = false;
-
-            document.querySelectorAll("#cards-empresas .company-card").forEach(function (card) {
-                const nombre = card.querySelector("h6").textContent.toLowerCase();
-                const direccion = card.querySelectorAll("span")[0].textContent.toLowerCase();
-                const telefono = card.querySelectorAll("span")[1].textContent.toLowerCase();
-                const rif = card.querySelectorAll("span")[2].textContent.toLowerCase();
-                const descripcion = card.querySelector(".company-description").textContent.toLowerCase();
-
-                if (
-                    nombre.includes(filtro) ||
-                    direccion.includes(filtro) ||
-                    telefono.includes(filtro) ||
-                    rif.includes(filtro) ||
-                    descripcion.includes(filtro)
-                ) {
-                    card.parentElement.style.display = "";
-                    hayCoincidencias = true;
-                } else {
-                    card.parentElement.style.display = "none";
-                }
-            });
-
-            // Mostrar mensaje si no hay coincidencias
-            if (!hayCoincidencias) {
-                if (!cardsEmpresas.contains(alertaNoResultados)) {
-                    cardsEmpresas.appendChild(alertaNoResultados);
-                }
-            } else {
-                if (cardsEmpresas.contains(alertaNoResultados)) {
-                    cardsEmpresas.removeChild(alertaNoResultados);
-                }
-            }
-        });
-    });
-</script>
 
 {% endblock %}
 
