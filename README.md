@@ -1,2 +1,3 @@
 # Sistema_Luis_Empresa
 pillow
+reportlab

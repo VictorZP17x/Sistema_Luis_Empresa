@@ -91,4 +91,57 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // Vista previa de imagen al registrar
+  const photoInput = document.querySelector('#register-modal input[type="file"][name="photo"]');
+  const previewImg = document.getElementById('register-photo-preview');
+  if (photoInput && previewImg) {
+      photoInput.addEventListener('change', function (e) {
+          const file = e.target.files[0];
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function (ev) {
+                  previewImg.src = ev.target.result;
+              };
+              reader.readAsDataURL(file);
+          } else {
+              previewImg.src = "{% static 'assets/img/default-company.png' %}";
+          }
+      });
+  }
+
+  // SweetAlert de confirmación antes de enviar el formulario
+  if (form) {
+      form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          Swal.fire({
+              title: '¿Estás seguro?',
+              text: "¿Deseas registrar esta empresa con los datos ingresados?",
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonText: 'Sí, registrar',
+              cancelButtonText: 'Cancelar'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  form.submit();
+              }
+          });
+      });
+  }
+
+  // Mostrar SweetAlert de éxito si la URL tiene ?success=1
+  if (window.location.search.includes('success=1')) {
+      Swal.fire({
+          icon: 'success',
+          title: '¡Empresa registrada!',
+          text: 'La empresa se registró correctamente.',
+          confirmButtonText: 'Aceptar'
+      });
+      // Limpia el parámetro de la URL para evitar mostrarlo de nuevo al recargar
+      if (window.history.replaceState) {
+          const url = new URL(window.location);
+          url.searchParams.delete('success');
+          window.history.replaceState({}, document.title, url.pathname);
+      }
+  }
 });

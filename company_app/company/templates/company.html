@@ -24,7 +24,7 @@
                                         </button>
                                         <div class="d-flex align-items-center">
                                             <button id="open-generate-pdf-modal" class="btn btn-danger"
-                                                data-bs-toggle="modal" data-bs-target="#generate-pdf-modal">
+                                                onclick="window.location.href='{% url 'company:generate_pdf' %}'">
                                                 <span class="pc-micon">
                                                     <i data-feather="file"></i>
                                                 </span><strong>Generar Reporte PDF</strong>
@@ -132,6 +132,11 @@
                     <div class="mb-3">
                         <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field|add_class:"form-control" }}
+                        {% if field.name == "photo" %}
+                        <div class="mt-2">
+                            <img id="register-photo-preview" src="{% static 'assets/img/default-company.png' %}" alt="Vista previa" class="img-fluid rounded" style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
+                        </div>
+                        {% endif %}
                         {% if field.errors %}
                         <div class="text-danger">{{ field.errors }}</div>
                         {% endif %}
