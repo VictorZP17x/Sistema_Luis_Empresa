@@ -22314,7 +22314,10 @@ body.sidebar-collapsed .header-wrapper .pc-mob-drp {
         margin-left: 0 !important;
     }
 }
-
+        body:not(.dashboard-page) .pc-h-item .pc-head-link[data-bs-toggle="dropdown"] i[data-feather="search"],
+        body:not(.dashboard-page) .pc-h-item .dropdown-menu.drp-search {
+            display: none !important;
+        }
 /**  =====================
   23. Icon layouts css end
 ==========================  **/
