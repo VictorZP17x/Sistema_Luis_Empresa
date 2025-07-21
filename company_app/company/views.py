@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 def company(request):
     if request.method == 'POST':
-        form = CompanyForm(request.POST)
+        form = CompanyForm(request.POST, request.FILES)  # Cambia aquí
         if form.is_valid():
             form.save()
             return redirect('company:company')
@@ -39,9 +39,11 @@ def edit_company(request, pk):
             company.phone_number = request.POST.get("phone_number")
             company.rif = request.POST.get("rif")
             company.description = request.POST.get("description")
+            # Guardar nueva foto si se sube
+            if 'photo' in request.FILES and request.FILES['photo']:
+                company.photo = request.FILES['photo']
             company.save()
             return JsonResponse({'success': True})
         except Company.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Empresa no encontrada'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
-

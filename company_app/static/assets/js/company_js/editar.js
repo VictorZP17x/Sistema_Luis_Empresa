@@ -27,6 +27,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       // Abre la modal
       new bootstrap.Modal(document.getElementById("edit-modal")).show();
+
+      const photoPreview = document.getElementById("edit-photo-preview");
+      const rowPhotoBtn = row.querySelector(".show-photo-modal");
+      if (rowPhotoBtn && rowPhotoBtn.getAttribute("data-photo-url")) {
+        photoPreview.src = rowPhotoBtn.getAttribute("data-photo-url");
+      } else {
+        photoPreview.src = "https://via.placeholder.com/120?text=Sin+foto";
+      }
+
+      // Guarda los valores originales en atributos data-*
+      document.getElementById("edit-name").setAttribute("data-original", document.getElementById("edit-name").value);
+      document.getElementById("edit-address").setAttribute("data-original", document.getElementById("edit-address").value);
+      document.getElementById("edit-phone").setAttribute("data-original", document.getElementById("edit-phone").value);
+      document.getElementById("edit-rif").setAttribute("data-original", document.getElementById("edit-rif").value);
+      document.getElementById("edit-description").setAttribute("data-original", document.getElementById("edit-description").value);
+      document.getElementById("edit-photo-preview").setAttribute("data-original", document.getElementById("edit-photo-preview").src);
     });
   });
 
@@ -83,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const phoneRegex = /^\+58(412|414|416|424|426|212)\d{7}$/;
       const rifRegex = /^[VJGEPR]-\d{8}-\d{1}$/i;
 
+      // Validaciones...
       if (!phoneRegex.test(phoneValue)) {
         e.preventDefault();
         Swal.fire({
@@ -104,28 +121,69 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
       }
 
-      // Envío AJAX (opcional, aquí ejemplo básico)
-      e.preventDefault();
-      const formData = new FormData(this);
-      fetch(`/company/edit/${formData.get("company_id")}/`, {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]")
-            .value,
-        },
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            Swal.fire(
-              "¡Actualizado!",
-              "La empresa ha sido actualizada.",
-              "success"
-            ).then(() => window.location.reload());
-          } else {
-            Swal.fire("Error", data.error || "No se pudo actualizar.", "error");
-          }
+      // Detectar cambios
+      const nameChanged = document.getElementById("edit-name").value !== document.getElementById("edit-name").getAttribute("data-original");
+      const addressChanged = document.getElementById("edit-address").value !== document.getElementById("edit-address").getAttribute("data-original");
+      const phoneChanged = document.getElementById("edit-phone").value !== document.getElementById("edit-phone").getAttribute("data-original");
+      const rifChanged = document.getElementById("edit-rif").value !== document.getElementById("edit-rif").getAttribute("data-original");
+      const descChanged = document.getElementById("edit-description").value !== document.getElementById("edit-description").getAttribute("data-original");
+      const photoInput = document.getElementById("edit-photo");
+      const photoChanged = photoInput.files.length > 0;
+
+      if (!(nameChanged || addressChanged || phoneChanged || rifChanged || descChanged || photoChanged)) {
+        e.preventDefault();
+        Swal.fire({
+          icon: "info",
+          title: "Sin cambios",
+          text: "No se detectaron cambios para guardar.",
         });
+        return false;
+      }
+
+      // Confirmación antes de guardar
+      e.preventDefault();
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Deseas guardar los cambios de la empresa?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, guardar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formData = new FormData(this);
+          fetch(`/company/edit/${formData.get("company_id")}/`, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+            },
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                Swal.fire(
+                  "¡Actualizado!",
+                  "La empresa ha sido actualizada.",
+                  "success"
+                ).then(() => window.location.reload());
+              } else {
+                Swal.fire("Error", data.error || "No se pudo actualizar.", "error");
+              }
+            });
+        }
+      });
     });
+
+  document.getElementById("edit-photo").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        document.getElementById("edit-photo-preview").src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 });

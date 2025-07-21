@@ -46,134 +46,178 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="col-md-6 col-xl-4">
-                    <div class="card shadow-sm company-card">
-                        <div class="card-header text-center">
-                            <h6 class="mb-0">La Polar</h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <div class="company-card-img">
-                                <img src="{% static 'assets/img/La polar.jpg' %}" alt="La Polar">
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Empreas</small><br>
-                                    <span>Empresas la Polar</span>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Localización</small><br>
-                                    <span>Al norte, se encuentran en el Círculo Polar Ártico y al sur, en la
-                                        Convergencia
-                                        Antártica.</span>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Número</small><br>
-                                    <span>0412-6776277</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
-                                data-bs-target="#empresaModal" data-title="La Polar" data-dato1="" data-dato2=""
-                                data-dato3="">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                    <div class="card shadow-sm company-card">
-                        <div class="card-header text-center">
-                            <h6 class="mb-0">Lucianos</h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <div class="company-card-img">
-                                <img src="{% static 'assets/img/Lucianos.jpg' %}" alt="Lucianoo´s">
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Empresa</small><br>
-                                    <span>Lucianoo´s</span>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Localización</small><br>
-                                    <span> Fábrica en Luján y locales en varias ubicaciones, incluyendo Galerías
-                                        Pacífico en
-                                        CABA y Quilmes.</span>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Número</small><br>
-                                    <span>0412-6675689</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
-                                data-bs-target="#empresaModal" data-title="Lucianoo´s" data-dato1="" data-dato2=""
-                                data-dato3="">
-                                Ver más
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 col-xl-4">
-                    <div class="card shadow-sm company-card">
-                        <div class="card-header text-center">
-                            <h6 class="mb-0">P.A.N</h6>
-                        </div>
-                        <div class="card-body text-center">
-                            <div class="company-card-img">
-                                <img src="{% static 'assets/img/PAN.jpg' %}" alt="P.A.N">
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Empresa</small><br>
-                                    <span>Empresas PAN</span>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Localización</small><br>
-                                    <span>En Venezuela, la producción principal se encuentra en las plantas de
-                                        Chivacoa y
-                                        Turmero.</span>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <small class="text-muted">Número</small><br>
-                                    <span>0414-6778987</span>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm mt-3 btn-ver-mas" data-bs-toggle="modal"
-                                data-bs-target="#empresaModal" data-title="P.A.N" data-dato1="" data-dato2=""
-                                data-dato3="">
-                                Ver más
-                            </button>
-                        </div>
+            <!-- Cards de empresas ajustables automáticamente -->
+            <div class="row justify-content-center mb-3">
+                <div class="col-12 col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" id="buscador-empresas" class="form-control"
+                            placeholder="Buscar empresa por nombre, dirección, teléfono o RIF...">
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="row mt-4 justify-content-center" id="cards-empresas">
+                {% if companies %}
+                {% for company in companies %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch mb-4">
+                    <div class="card shadow-sm company-card w-100">
+                        <div class="card-header text-center">
+                            <h6 class="mb-0">{{ company.name }}</h6>
+                        </div>
+                        <div class="card-body text-center">
+                            <!-- Card de empresa -->
+                            <div class="company-card-img mb-2"
+                                style="width:100%; height:180px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                                {% if company.photo %}
+                                <img src="{{ company.photo.url }}" alt="{{ company.name }}"
+                                    class="img-fluid w-100 h-100"
+                                    style="object-fit: cover; cursor:pointer; border-radius: 8px;"
+                                    data-bs-toggle="modal" data-bs-target="#empresaFotoModal{{ company.id }}">
+                                {% else %}
+                                <img src="{% static 'assets/img/default-company.png' %}" alt="{{ company.name }}"
+                                    class="img-fluid w-100 h-100"
+                                    style="object-fit: cover; cursor:pointer; border-radius: 8px;"
+                                    data-bs-toggle="modal" data-bs-target="#empresaFotoModal{{ company.id }}">
+                                {% endif %}
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">Dirección</small><br>
+                                <span>{{ company.address }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">Teléfono</small><br>
+                                <span>{{ company.phone_number }}</span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">RIF</small><br>
+                                <span>{{ company.rif }}</span>
+                            </div>
+                            <div class="company-description d-none">{{ company.description }}</div>
+                            <button class="btn btn-primary btn-sm mt-2 btn-ver-mas" data-bs-toggle="modal"
+                                data-bs-target="#empresaModal{{ company.id }}">
+                                Ver más
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center my-5">
+                        No hay Empresas registradas en el sistema.
+                    </div>
+                </div>
+                {% endif %}
+            </div>
 
-    <div class="modal fade" id="empresaModal" tabindex="-1" aria-labelledby="empresaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="empresaModalLabel">Título Empresa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <div><strong>Dato 1:</strong> <span id="modalDato1"></span></div>
-                    <div><strong>Dato 2:</strong> <span id="modalDato2"></span></div>
-                    <div><strong>Dato 3:</strong> <span id="modalDato3"></span></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            {% for company in companies %}
+            <div class="modal fade" id="empresaModal{{ company.id }}" tabindex="-1"
+                aria-labelledby="empresaModalLabel{{ company.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="empresaModalLabel{{ company.id }}">{{ company.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div><strong>Descripción:</strong> {{ company.description }}</div>
+                            <div><strong>Dirección:</strong> {{ company.address }}</div>
+                            <div><strong>Teléfono:</strong> {{ company.phone_number }}</div>
+                            <div><strong>RIF:</strong> {{ company.rif }}</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
+
+            {% for company in companies %}
+            <div class="modal fade" id="empresaFotoModal{{ company.id }}" tabindex="-1"
+                aria-labelledby="empresaFotoModalLabel{{ company.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="empresaFotoModalLabel{{ company.id }}">Foto de {{ company.name
+                                }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body d-flex justify-content-center align-items-center"
+                            style="min-height:400px;">
+                            {% if company.photo %}
+                            <img src="{{ company.photo.url }}" alt="Foto de {{ company.name }}"
+                                class="img-fluid rounded" style="max-width:100%; max-height:600px; object-fit:contain;">
+                            {% else %}
+                            <img src="{% static 'assets/img/default-company.png' %}" alt="Foto de {{ company.name }}"
+                                class="img-fluid rounded" style="max-width:100%; max-height:600px; object-fit:contain;">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-    </div>
 </body>
+<script>
+    // filepath: c:\xampp\htdocs\Sistema_Luis_Empresa\company_app\home\templates\dashboard.html
+    document.addEventListener("DOMContentLoaded", function () {
+        const buscador = document.getElementById("buscador-empresas");
+        const cardsEmpresas = document.getElementById("cards-empresas");
+        const alertaNoResultados = document.createElement("div");
+        alertaNoResultados.className = "col-12";
+        alertaNoResultados.innerHTML = `
+        <div class="alert alert-warning text-center my-5">
+            No se encontraron empresas que coincidan con la búsqueda.
+        </div>
+    `;
+
+        buscador.addEventListener("input", function () {
+            const filtro = buscador.value.trim().toLowerCase();
+            let hayCoincidencias = false;
+
+            document.querySelectorAll("#cards-empresas .company-card").forEach(function (card) {
+                const nombre = card.querySelector("h6").textContent.toLowerCase();
+                const direccion = card.querySelectorAll("span")[0].textContent.toLowerCase();
+                const telefono = card.querySelectorAll("span")[1].textContent.toLowerCase();
+                const rif = card.querySelectorAll("span")[2].textContent.toLowerCase();
+                const descripcion = card.querySelector(".company-description").textContent.toLowerCase();
+
+                if (
+                    nombre.includes(filtro) ||
+                    direccion.includes(filtro) ||
+                    telefono.includes(filtro) ||
+                    rif.includes(filtro) ||
+                    descripcion.includes(filtro)
+                ) {
+                    card.parentElement.style.display = "";
+                    hayCoincidencias = true;
+                } else {
+                    card.parentElement.style.display = "none";
+                }
+            });
+
+            // Mostrar mensaje si no hay coincidencias
+            if (!hayCoincidencias) {
+                if (!cardsEmpresas.contains(alertaNoResultados)) {
+                    cardsEmpresas.appendChild(alertaNoResultados);
+                }
+            } else {
+                if (cardsEmpresas.contains(alertaNoResultados)) {
+                    cardsEmpresas.removeChild(alertaNoResultados);
+                }
+            }
+        });
+    });
+</script>
+
 {% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
 
 {% block extra_js %}
-
 {% endblock %}

@@ -40,6 +40,7 @@
                                                 <th class="centered" scope="col">Teléfono</th>
                                                 <th class="centered" scope="col">RIF</th>
                                                 <th class="centered" scope="col">Descripción</th>
+                                                <th class="centered" scope="col">Foto</th>
                                                 <th class="centered" scope="col">Opciones</th>
                                             </tr>
                                         </thead>
@@ -59,6 +60,16 @@
                                                             <i data-feather="align-left"></i>
                                                         </span>
                                                     </button>
+                                                </td>
+                                                <td>
+                                                    {% if company.photo %}
+                                                    <button type="button" class="btn btn-link p-0 show-photo-modal"
+                                                        data-photo-url="{{ company.photo.url }}">
+                                                        <i class="bi bi-image" style="font-size: 1.8rem;"></i>
+                                                    </button>
+                                                    {% else %}
+                                                    <span class="text-muted">Sin foto</span>
+                                                    {% endif %}
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary edit-company-button"
@@ -110,7 +121,7 @@
 <div class="modal fade" id="register-modal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="">
+            <form method="post" action="" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
                     <h5 class="modal-title" id="registerModalLabel">Registrar Empresa</h5>
@@ -141,7 +152,7 @@
 <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="edit-company-form" method="post">
+            <form id="edit-company-form" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="company_id" id="edit-company-id">
                 <div class="modal-header">
@@ -170,6 +181,14 @@
                         <textarea class="form-control" id="edit-description" name="description" rows="3"
                             required></textarea>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-photo">Foto actual</label>
+                        <div class="mb-2">
+                            <img id="edit-photo-preview" src="" alt="Foto actual" class="img-fluid rounded"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
+                        </div>
+                        <input type="file" class="form-control" id="edit-photo" name="photo" accept="image/*">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -179,10 +198,27 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para mostrar la foto de la empresa -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="photoModalLabel">Foto de la Empresa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center" style="min-height: 400px;">
+                <img id="company-photo-modal-img" src="" alt="Foto de la empresa" class="img-fluid rounded"
+                    style="width: 100%; max-width: 400px; max-height: 400px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'assets/css/company_css/company.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
 
 {% block extra_js %}

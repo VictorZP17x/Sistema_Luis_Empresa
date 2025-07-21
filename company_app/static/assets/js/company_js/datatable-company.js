@@ -36,3 +36,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 });
+
+// Mostrar la foto en la modal
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".show-photo-modal").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const photoUrl = btn.getAttribute("data-photo-url");
+      document.getElementById("company-photo-modal-img").src = photoUrl;
+      new bootstrap.Modal(document.getElementById("photoModal")).show();
+    });
+  });
+});

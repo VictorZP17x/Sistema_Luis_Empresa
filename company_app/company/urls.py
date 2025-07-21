@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from . import views
 
@@ -6,4 +8,4 @@ urlpatterns = [
     path("", views.company, name="company"),
     path("delete/<int:pk>/", views.delete_company, name="delete_company"),
     path("edit/<int:pk>/", views.edit_company, name="edit_company"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
