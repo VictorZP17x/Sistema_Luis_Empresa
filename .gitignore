@@ -1,5 +1,21 @@
-/.cache/
+# Ignorar carpetas de caché de Python
+__pycache__/
+*/__pycache__/
+
+# Ignorar carpetas de caché generales
+.cache/
+*/.cache/
+
+# Ignorar archivos de caché comunes
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar carpetas de entorno virtual
+env/
+venv/
 company-env/
-/__pycache__/
+
+# Ignorar archivos de migraciones (excepto __init__.py)
 */migrations/*.py
 !*/migrations/__init__.py
