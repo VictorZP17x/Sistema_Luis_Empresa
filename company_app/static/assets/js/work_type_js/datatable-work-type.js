@@ -21,42 +21,14 @@ $(document).ready(function () {
     responsive: true,
     lengthChange: true,
     columnDefs: [{ targets: "_all", searchable: true }],
+    // DOM igual al de company
     dom:
       "<'row mb-3'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
       "<'row'<'col-sm-12'tr>>" +
-      "<'row mt-3'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-    buttons: [
-      {
-        extend: "excelHtml5",
-        text: '<i class="bi bi-file-earmark-excel"></i> Excel',
-        className: "btn btn-success btn-sm",
-      },
-      {
-        extend: "pdfHtml5",
-        text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
-        className: "btn btn-danger btn-sm",
-      },
-      {
-        extend: "print",
-        text: '<i class="bi bi-printer"></i> Imprimir',
-        className: "btn btn-secondary btn-sm",
-      },
-    ],
+      "<'row mt-3'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>",
   });
 
-  $("#datatable-company").DataTable({
-    language: {
-      url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json",
-    },
-    paging: true,
-    searching: true,
-    responsive: true,
-    lengthChange: true,
-    columnDefs: [{ targets: "_all", searchable: true }],
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
+  // Modal descripción
   document
     .querySelectorAll(".description-service-button")
     .forEach(function (btn) {
