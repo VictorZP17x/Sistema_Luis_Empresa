@@ -6,11 +6,11 @@ from .forms import UserForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 
-@login_required
+# @login_required
 def user(request):
-    user_profiles = UserProfile.objects.exclude(user=request.user)
+    user_profiles = UserProfile.objects.filter(role__in=[0, 1])  # Solo admins y usuarios
     users = [profile.user for profile in user_profiles]
 
     form = UserForm(request.POST or None)
@@ -21,7 +21,7 @@ def user(request):
             first_name = form.cleaned_data.get("first_name")
             last_name = form.cleaned_data.get("last_name")
             email = form.cleaned_data.get("email")
-            phone = form.cleaned_data.get("phone")  # '+58 412-825-2499' o '+584128252499'
+            phone = form.cleaned_data.get("phone")
 
             user = User(
                 username=username,
@@ -31,7 +31,6 @@ def user(request):
             )
             user.set_password(password)
             user.save()
-            # Guardar phone tal cual, sin encriptar ni modificar
             UserProfile.objects.create(user=user, role=1, phone=phone)
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({"success": True})
