@@ -25,6 +25,7 @@ $(document).ready(function () {
   });
 });
 
+//Mostrar descripción de la empresa
 document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelectorAll(".description-company-button")

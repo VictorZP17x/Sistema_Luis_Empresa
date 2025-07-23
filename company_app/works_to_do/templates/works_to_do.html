@@ -1,7 +1,224 @@
 {% extends 'home.html' %}
 {% block content %}
 {% load static %}
-<h1>Trabajos</h1>
+{% load widget_tweaks %}
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card custom-card-height mb-3 mt-3 me-3 ms-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Trabajos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="data-container">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <button class="btn btn-md btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#register-works_to_do-modal">
+                                            <span class="pc-micon">
+                                                <i data-feather="plus-circle"></i>
+                                            </span><strong>Añadir Trabajo</strong>
+                                        </button>
+                                    </div>
+                                    <!-- Buscador DataTable -->
+                                    <table id="datatable-works_to_do" class="table responsive">
+                                        <thead>
+                                            <tr>
+                                                <th class="centered" scope="col">#</th>
+                                                <th class="centered" scope="col">Nombre</th>
+                                                <th class="centered" scope="col">Encargado</th>
+                                                <th class="centered" scope="col">Cliente</th>
+                                                <th class="centered" scope="col">Servicio</th>
+                                                <th class="centered" scope="col">Descripción</th>
+                                                <th class="centered" scope="col">Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for works_to_do in works_to_do %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ works_to_do.name }}</td>
+                                                <td>{{ works_to_do.fk_company }}</td>
+                                                <td>{{ works_to_do.fk_user }}</td>
+                                                <td>{{ works_to_do.fk_work_type }}</td>
+                                                <td>
+                                                    <button
+                                                        class="btn btn-sm btn-warning description-works_to_do-button"
+                                                        data-bs-toggle="modal" data-bs-target="#works_to_doModal"
+                                                        data-description="{{ works_to_do.description|escapejs }}">
+                                                        <span class="pc-micon">
+                                                            <i data-feather="align-left"></i>
+                                                        </span>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary edit-works_to_do-button"
+                                                        data-id="{{ works_to_do.id }}"
+                                                        data-name="{{ works_to_do.name|escapejs }}"
+                                                        data-description="{{ works_to_do.description|escapejs }}"
+                                                        data-fk_company_id="{{ works_to_do.fk_company_id|escapejs }}"
+                                                        data-fk_user_id="{{ works_to_do.fk_user_id|escapejs }}"
+                                                        data-fk_work_type_id="{{ works_to_do.fk_work_type_id|escapejs }}">
+                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm delete-works_to_do-button"
+                                                        data-id="{{ works_to_do.id }}">
+                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Descripción del Trabajo -->
+<div class="modal fade" id="works_to_doModal" tabindex="-1" aria-labelledby="works_to_doModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="works_to_doModalLabel">Descripción</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="works_to_do-description-modal" class="works_to_do-description text-break"
+                    style="text-align: justify;">
+                    <!-- Descripción del Trabajo (JS) -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Añadir Trabajo -->
+<div class="modal fade" id="register-works_to_do-modal" tabindex="-1" aria-labelledby="registerWorksToDoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="add-works_to_do-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerWorksToDoLabel">Añadir Trabajo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="add-name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="add-name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-fk_company" class="form-label">Encargado</label>
+                        <select class="form-select select2" id="add-fk_company" name="fk_company" required>
+                            <option value="" selected>Seleccione la empresa</option>
+                            {% for company in companies %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-fk_user" class="form-label">Cliente</label>
+                        <select class="form-select select2" id="add-fk_user" name="fk_user" required>
+                            <option value="" selected>Seleccione el cliente</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-fk_work_type" class="form-label">Servicio</label>
+                        <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" required>
+                            <option value="" selected>Seleccione el servicio</option>
+                            {% for work_type in work_types %}
+                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-description" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="add-description" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Editar Trabajo -->
+<div class="modal fade" id="edit-works_to_do-modal" tabindex="-1" aria-labelledby="editWorksToDoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="edit-works_to_do-form">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editWorksToDoLabel">Editar Trabajo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-id" name="id">
+                    <div class="mb-3">
+                        <label for="edit-name" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="edit-name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-fk_company" class="form-label">Encargado</label>
+                        <select class="form-select select2" id="edit-fk_company" name="fk_company" required>
+                            <option value="" selected>Seleccione la empresa</option>
+                            {% for company in companies %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-fk_user" class="form-label">Cliente</label>
+                        </select>
+                        <select class="form-select select2" id="edit-fk_user" name="fk_user" required>
+                            <option value="" selected>Seleccione el cliente</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-fk_work_type" class="form-label">Servicio</label>
+                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" required>
+                            <option value="" selected>Seleccione el servicio</option>
+                            {% for work_type in work_types %}
+                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-description" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="edit-description" name="description" rows="3"></textarea>
+                    </div>
+                    <!-- Los mismos campos que el modal de añadir, pero con IDs edit-... -->
+                    <!-- ... -->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_css %}
@@ -9,5 +226,10 @@
 {% endblock %}
 
 {% block extra_js %}
-
+<script src="{% static 'assets/js/works_to_do_js/datatable-works_to_do.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/añadir.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/editar.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/borrar.js' %}"></script>
+<!-- <script src="{% static 'assets/js/works_to_do_js/añadir.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/editar.js' %}"></script> -->
 {% endblock %}
