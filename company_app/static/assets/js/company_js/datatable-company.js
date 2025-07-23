@@ -32,8 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
     .forEach(function (btn) {
       btn.addEventListener("click", function () {
         var description = btn.getAttribute("data-description") || "";
-        document.getElementById("company-description-modal").textContent =
-          description;
+        var services = btn.getAttribute("data-services") || "Sin servicios";
+        var modalContent = `
+          <strong>Servicios:</strong>
+          <div class="mb-2">
+            ${services.split(',').map(s => `<span class="badge bg-info me-1">${s.trim()}</span>`).join('')}
+          </div>
+          <strong>Descripción:</strong>
+          <div>${description}</div>
+        `;
+        document.getElementById("company-description-modal").innerHTML = modalContent;
       });
     });
 });

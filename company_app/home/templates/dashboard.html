@@ -51,9 +51,14 @@
         <div class="row justify-content-center mb-3">
             <div class="col-12 col-md-6">
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <span class="input-group-text"><i data-feather="search"></i></span>
                     <input type="text" id="buscador-empresas" class="form-control"
                         placeholder="Buscar empresa por nombre, dirección, teléfono o RIF...">
+                </div>
+                <div id="no-coincidencias-empresas" class="col-12" style="display:none;">
+                    <div class="alert alert-warning text-center my-5">
+                        No se encontraron empresas que coincidan con la búsqueda.
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,6 +125,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
+                        <div>
+                            <strong>Servicios:</strong>
+                            {% if company.work_types.all %}
+                            {% for wt in company.work_types.all %}
+                            <span class="badge bg-info me-1">{{ wt.name }}</span>
+                            {% endfor %}
+                            {% else %}
+                            <span class="text-muted">Sin servicios</span>
+                            {% endif %}
+                        </div>
                         <div><strong>Descripción:</strong> {{ company.description }}</div>
                         <div><strong>Dirección:</strong> {{ company.address }}</div>
                         <div><strong>Teléfono:</strong> {{ company.phone_number }}</div>
@@ -162,8 +177,9 @@
 {% endblock %}
 
 {% block extra_css %}
-
+<link rel="stylesheet" href="{% static 'assets/css/dashboard_css/dashboard.css' %}">
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'assets/js/dashboard_js/dashboard.js' %}"></script>
 {% endblock %}

@@ -4,7 +4,8 @@ from .models import Company
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = ['name', 'address', 'phone_number', 'rif', 'description', 'photo']
+        fields = ['name', 'address', 'phone_number', 'rif', 'description', 'photo', 'work_types']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
+            'work_types': forms.SelectMultiple(attrs={'class': 'form-control'}),
         }

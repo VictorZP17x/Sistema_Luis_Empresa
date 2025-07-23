@@ -43,6 +43,14 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("edit-rif").setAttribute("data-original", document.getElementById("edit-rif").value);
       document.getElementById("edit-description").setAttribute("data-original", document.getElementById("edit-description").value);
       document.getElementById("edit-photo-preview").setAttribute("data-original", document.getElementById("edit-photo-preview").src);
+
+      const workTypesSelect = document.getElementById("edit-work-types");
+      const selectedWorkTypes = btn.getAttribute("data-work-types")?.split(",") || [];
+      if (workTypesSelect) {
+        Array.from(workTypesSelect.options).forEach(opt => {
+          opt.selected = selectedWorkTypes.includes(opt.value);
+        });
+      }
     });
   });
 
@@ -186,4 +194,16 @@ document.addEventListener("DOMContentLoaded", function () {
       reader.readAsDataURL(file);
     }
   });
+});
+
+$(document).ready(function () {
+
+    $('#edit-modal').on('shown.bs.modal', function () {
+        $('#edit-work-types').select2({
+            placeholder: "Seleccionar servicios",
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#edit-modal')
+        });
+    });
 });
