@@ -52,7 +52,7 @@
                                                         data-name="{{ client.first_name|escapejs }}"
                                                         data-lastname="{{ client.last_name|escapejs }}"
                                                         data-email="{{ client.email|escapejs }}"
-                                                        data-phone="{{ client.userprofile.phone|escapejs }}">
+                                                        data-phone="{{ client.userprofile.phone }}">
                                                         <span class="pc-micon"><i data-feather="edit"></i></span>
                                                     </button>
                                                     <button class="btn btn-danger btn-sm delete-client-button"
@@ -191,4 +191,5 @@
 <script src="{% static 'assets/js/client_js/datatable-client.js' %}"></script>
 <script src="{% static 'assets/js/client_js/añadir.js' %}"></script>
 <script src="{% static 'assets/js/client_js/editar.js' %}"></script>
+<script src="{% static 'assets/js/client_js/borrar.js' %}"></script>
 {% endblock %}

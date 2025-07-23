@@ -68,3 +68,14 @@ def edit_client(request):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
+
+@csrf_exempt
+def delete_client(request, client_id):
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        try:
+            user = User.objects.get(pk=client_id)
+            user.delete()
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Petición inválida"})

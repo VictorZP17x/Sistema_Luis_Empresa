@@ -6,15 +6,11 @@ from .forms import UserForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 
-# @login_required
+@login_required
 def user(request):
-    return render(request, 'user.html', {
-    })
-
-def user(request):
-    user_profiles = UserProfile.objects.filter(role=1)
+    user_profiles = UserProfile.objects.exclude(user=request.user)
     users = [profile.user for profile in user_profiles]
 
     form = UserForm(request.POST or None)
@@ -25,7 +21,7 @@ def user(request):
             first_name = form.cleaned_data.get("first_name")
             last_name = form.cleaned_data.get("last_name")
             email = form.cleaned_data.get("email")
-            phone = form.cleaned_data.get("phone")
+            phone = form.cleaned_data.get("phone")  # '+58 412-825-2499' o '+584128252499'
 
             user = User(
                 username=username,
@@ -35,6 +31,7 @@ def user(request):
             )
             user.set_password(password)
             user.save()
+            # Guardar phone tal cual, sin encriptar ni modificar
             UserProfile.objects.create(user=user, role=1, phone=phone)
             if request.headers.get("x-requested-with") == "XMLHttpRequest":
                 return JsonResponse({"success": True})
@@ -72,6 +69,33 @@ def edit_user(request):
             profile.phone = phone
             profile.save()
             return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Petición inválida"})
+
+@csrf_exempt
+def delete_user(request, user_id):
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        try:
+            user = User.objects.get(pk=user_id)
+            user.delete()
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    return JsonResponse({"success": False, "error": "Petición inválida"})
+
+@csrf_exempt
+def toggle_role(request, user_id):
+    if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
+        try:
+            profile = UserProfile.objects.get(user__id=user_id)
+            # Cambia entre 1 (usuario) y 0 (admin)
+            if profile.role == 1:
+                profile.role = 0
+            else:
+                profile.role = 1
+            profile.save()
+            return JsonResponse({"success": True, "new_role": profile.role})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
