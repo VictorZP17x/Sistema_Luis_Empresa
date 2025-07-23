@@ -1,13 +1,196 @@
 {% extends 'home.html' %}
 {% block content %}
 {% load static %}
-<h1>Usuarios</h1>
+{% load widget_tweaks %}
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card custom-card-height mb-3 mt-3 me-3 ms-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Usuarios</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="data-container">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <button class="btn btn-md btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#register-user-modal">
+                                            <span class="pc-micon">
+                                                <i data-feather="plus-circle"></i>
+                                            </span><strong>Añadir Usuario</strong>
+                                        </button>
+                                    </div>
+                                    <table id="datatable-user" class="table responsive">
+                                        <thead>
+                                            <tr>
+                                                <th class="centered" scope="col">#</th>
+                                                <th class="centered" scope="col">Usuario</th>
+                                                <th class="centered" scope="col">Contraseña</th>
+                                                <th class="centered" scope="col">Nombre</th>
+                                                <th class="centered" scope="col">Apellido</th>
+                                                <th class="centered" scope="col">Email</th>
+                                                <th class="centered" scope="col">Teléfono</th>
+                                                <th class="centered" scope="col">Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in users %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ user.username }}</td>
+                                                <td>Contraseña oculta</td>
+                                                <td>{{ user.first_name }}</td>
+                                                <td>{{ user.last_name }}</td>
+                                                <td>{{ user.email }}</td>
+                                                <td>{{ user.userprofile.phone }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-primary edit-user-button"
+                                                        data-id="{{ user.id }}"
+                                                        data-name="{{ user.first_name|escapejs }}"
+                                                        data-lastname="{{ user.last_name|escapejs }}"
+                                                        data-email="{{ user.email|escapejs }}"
+                                                        data-phone="{{ user.userprofile.phone|escapejs }}">
+                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm delete-user-button"
+                                                        data-id="{{ user.id }}">
+                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                    </button>
+                                                    <button class="btn btn-success btn-sm profile-user-button"
+                                                        data-id="{{ user.id }}">
+                                                        <span class="pc-micon"><i class="bi bi-person-vcard"></i></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal registrar usuario -->
+<div class="modal fade" id="register-user-modal" tabindex="-1" aria-labelledby="registerUserModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-user-form" method="post" action="" autocomplete="off">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerUserModalLabel">Registrar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    {% for field in form %}
+                    <div class="mb-3" style="position: relative;">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% if field.name == "password" %}
+                        <div style="position: relative;">
+                            {{ field|add_class:"form-control" }}
+                            <button type="button"
+                                class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+                                id="toggle-password" tabindex="-1" style="z-index:2;">
+                                <i class="bi bi-eye" id="icon-eye"></i>
+                            </button>
+                        </div>
+                        {% else %}
+                        {{ field|add_class:"form-control" }}
+                        {% endif %}
+                        {% if field.name == "username" or field.name == "password" %}
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                var input = document.getElementById("{{ field.id_for_label }}");
+                                if (input) input.setAttribute("autocomplete", "off");
+                            });
+                        </script>
+                        {% endif %}
+                        {% if field.errors %}
+                        <div class="text-danger">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-user">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal editar usuario -->
+<div class="modal fade" id="edit-user-modal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="edit-user-form" autocomplete="off">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-user-id" name="user_id">
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-username">Usuario</label>
+                        <input type="text" class="form-control" id="edit-username" name="username" autocomplete="off"
+                            required>
+                    </div>
+                    <div class="mb-3" style="position: relative;">
+                        <label class="form-label" for="edit-password">Contraseña</label>
+                        <div style="position: relative;">
+                            <input type="password" class="form-control" id="edit-password" name="password"
+                                autocomplete="off" placeholder="Solo puedes cambiar la contraseña mas no verla.">
+                            <button type="button"
+                                class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+                                id="toggle-edit-password" tabindex="-1" style="z-index:2;">
+                                <i class="bi bi-eye" id="icon-edit-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-first-name">Nombre</label>
+                        <input type="text" class="form-control" id="edit-first-name" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-last-name">Apellido</label>
+                        <input type="text" class="form-control" id="edit-last-name" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-email">Email</label>
+                        <input type="email" class="form-control" id="edit-email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-phone">Teléfono</label>
+                        <input type="text" class="form-control" id="edit-phone" name="phone" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
-
+<link rel="stylesheet" href="{% static 'assets/css/company_css/company.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 {% endblock %}
 
 {% block extra_js %}
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'assets/js/user_js/datatable-user.js' %}"></script>
+<script src="{% static 'assets/js/user_js/añadir.js' %}"></script>
+<script src="{% static 'assets/js/user_js/editar.js' %}"></script>
 {% endblock %}
