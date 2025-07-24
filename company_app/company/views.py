@@ -13,7 +13,8 @@ def company(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            company = form.save()
+            form.save_m2m()  # Guarda la relación muchos a muchos
             return redirect(reverse('company:company') + '?success=1')
     else:
         form = CompanyForm()
