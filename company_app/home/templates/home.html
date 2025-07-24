@@ -65,25 +65,21 @@
                                     <a href="#" class="dropdown-item">
                                         <span>
                                             <svg class="pc-icon text-muted me-2">
-                                                <use xlink:href="#custom-setting-outline"></use>
-                                            </svg>
-                                            <span>Settings</span>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <span>
-                                            <svg class="pc-icon text-muted me-2">
                                                 <use xlink:href="#custom-lock-outline"></use>
                                             </svg>
-                                            <span>Change Password</span>
+                                            <span>Cambiar datos Personales</span>
                                         </span>
                                     </a>
                                     <div class="d-grid my-2">
-                                        <a href="" class="btn btn-primary">
-                                            <svg class="pc-icon me-2">
-                                                <use xlink:href="#custom-logout-1-outline"></use>
-                                            </svg>Logout
-                                        </a>
+                                        <form action="{% url 'home:logout' %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary">
+                                                <svg class="pc-icon me-2">
+                                                    <use xlink:href="#custom-logout-1-outline"></use>
+                                                </svg>
+                                                Cerrar Sesión
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
