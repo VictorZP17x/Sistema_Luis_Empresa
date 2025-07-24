@@ -8,6 +8,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.urls import reverse
+import os
+from django.conf import settings
 
 from work_type.models import WorkType
 # ...existing code...
@@ -32,6 +34,10 @@ def delete_company(request, pk):
     if request.method == "POST":
         try:
             company = Company.objects.get(pk=pk)
+            if company.photo and company.photo.name:
+                photo_path = company.photo.path
+                if os.path.isfile(photo_path):
+                    os.remove(photo_path)
             company.delete()
             return JsonResponse({'success': True})
         except Company.DoesNotExist:
