@@ -115,18 +115,18 @@
                             <span class="pc-mtext">Inicio</span>
                         </a>
                     </li>
-                    <li class="pc-item">
-                        <a href="{% url 'home:works_to_do' %}" class="pc-link">
-                            <span class="pc-micon"><i data-feather="file-text"></i></span>
-                            <span class="pc-mtext">Trabajos</span>
-                        </a>
-                    </li>
                     <!-- SOLO para NO clientes -->
                     {% if not is_cliente %}
                     <li class="pc-item pc-hasmenu">
                         <a href="{% url 'home:company' %}" class="pc-link">
                             <span class="pc-micon"><i data-feather="briefcase"></i></span>
                             <span class="pc-mtext">Empresas</span>
+                        </a>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{% url 'home:works_to_do' %}" class="pc-link">
+                            <span class="pc-micon"><i data-feather="file-text"></i></span>
+                            <span class="pc-mtext">Trabajos</span>
                         </a>
                     </li>
                     <li class="pc-item">
