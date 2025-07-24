@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
               if (data.success) {
                 button.closest("tr").remove();
                 Swal.fire("¡Eliminado!", "La empresa ha sido eliminada.", "success");
+                setTimeout(function () {
+                  location.reload();
+                }, 600);
               } else {
                 Swal.fire("Error", data.error || "No se pudo eliminar.", "error");
               }

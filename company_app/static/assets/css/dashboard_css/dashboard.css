@@ -1,0 +1,9 @@
+#cards-empresas > div[class*="col-"] {
+  transition: all 0.2s;
+}
+#cards-empresas > div[class*="col-"] {
+  display: block !important;
+}
+#cards-empresas > div[class*="col-"].oculto {
+  display: none !important;
+}

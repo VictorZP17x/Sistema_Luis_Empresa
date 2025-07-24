@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const phoneInput = form.querySelector('input[name="phone_number"]');
     const rifInput = form.querySelector('input[name="rif"]');
 
-    // Al cargar, si el campo está vacío, coloca el prefijo
+    //Al cargar, si el campo está vacío, coloca el prefijo
     if (phoneInput && phoneInput.value.trim() === "") {
       phoneInput.value = "+58 ";
     }
@@ -144,4 +144,15 @@ document.addEventListener("DOMContentLoaded", function () {
           window.history.replaceState({}, document.title, url.pathname);
       }
   }
+});
+
+$(document).ready(function () {
+    $('#register-modal').on('shown.bs.modal', function () {
+        $('#register-modal select[name="work_types"]').select2({
+            placeholder: "Seleccionar servicios",
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#register-modal')
+        });
+    });
 });

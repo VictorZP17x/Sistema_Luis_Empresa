@@ -55,7 +55,8 @@
                                                 <td>
                                                     <button class="btn btn-sm btn-warning description-company-button"
                                                         data-bs-toggle="modal" data-bs-target="#companyModal"
-                                                        data-description="{{ company.description|escapejs }}">
+                                                        data-description="{{ company.description|escapejs }}"
+                                                        data-services="{% for wt in company.work_types.all %}{{ wt.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
                                                         <span class="pc-micon">
                                                             <i data-feather="align-left"></i>
                                                         </span>
@@ -73,7 +74,8 @@
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-primary edit-company-button"
-                                                        data-id="{{ company.id }}">
+                                                        data-id="{{ company.id }}"
+                                                        data-work-types="{% for wt in company.work_types.all %}{{ wt.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
                                                         <span class="pc-micon">
                                                             <i data-feather="edit"></i>
                                                         </span>
@@ -134,7 +136,9 @@
                         {{ field|add_class:"form-control" }}
                         {% if field.name == "photo" %}
                         <div class="mt-2">
-                            <img id="register-photo-preview" src="{% static 'assets/img/default-company.png' %}" alt="Vista previa" class="img-fluid rounded" style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
+                            <img id="register-photo-preview" src="{% static 'assets/img/default-company.png' %}"
+                                alt="Vista previa" class="img-fluid rounded"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
                         </div>
                         {% endif %}
                         {% if field.errors %}
@@ -193,6 +197,14 @@
                                 style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
                         </div>
                         <input type="file" class="form-control" id="edit-photo" name="photo" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-work-types">Servicios</label>
+                        <select multiple class="form-select select2" id="edit-work-types" name="work_types">
+                            {% for wt in work_types %}
+                            <option value="{{ wt.id }}">{{ wt.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -7,7 +7,7 @@ class Company(models.Model):
     rif = models.CharField(max_length=20, null=False, verbose_name='RIF')
     description = models.CharField(max_length=255, null=False, verbose_name='Descripción')
     photo = models.ImageField(upload_to='company_photos/', null=True, blank=True, verbose_name='Foto')
-    work_types = models.ManyToManyField('work_type.WorkType', verbose_name='Tipos de Trabajo')
+    work_types = models.ManyToManyField('work_type.WorkType', verbose_name='Servicios')
 
     class Meta:
         db_table = 'company'

@@ -9,19 +9,23 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.urls import reverse
 
+from work_type.models import WorkType
+# ...existing code...
+
 def company(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
         if form.is_valid():
-            company = form.save()
-            form.save_m2m()  # Guarda la relación muchos a muchos
+            form.save()
             return redirect(reverse('company:company') + '?success=1')
     else:
         form = CompanyForm()
     companies = Company.objects.all()
+    work_types = WorkType.objects.all()
     return render(request, 'company.html', {
         'company': companies,
         'form': form,
+        'work_types': work_types,
     })
     
 def delete_company(request, pk):
@@ -50,6 +54,8 @@ def edit_company(request, pk):
             if 'photo' in request.FILES and request.FILES['photo']:
                 company.photo = request.FILES['photo']
             company.save()
+            work_types_ids = request.POST.getlist('work_types')
+            company.work_types.set(work_types_ids)
             return JsonResponse({'success': True})
         except Company.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Empresa no encontrada'})
