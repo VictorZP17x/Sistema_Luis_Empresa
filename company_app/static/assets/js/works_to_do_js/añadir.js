@@ -1,10 +1,18 @@
 $(document).ready(function () {
     // Inicializa select2
-    $('#add-fk_company, #add-fk_user, #add-fk_work_type').select2({
+    $('#add-fk_company, #add-fk_user').select2({
         placeholder: "Seleccionar",
         allowClear: true,
         width: '100%',
         dropdownParent: $('#register-works_to_do-modal')
+    });
+    // El de servicios es múltiple
+    $('#add-fk_work_type').select2({
+        placeholder: "Seleccionar",
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#register-works_to_do-modal'),
+        multiple: true
     });
 
     // Añadir trabajo
@@ -33,5 +41,17 @@ $(document).ready(function () {
                 }
             });
         }, 300);
+    });
+
+    // Cuando cambia la empresa seleccionada
+    $('#add-fk_company').on('change', function () {
+        var companyId = $(this).val();
+        filterWorkTypes(companyId, '#add-fk_work_type');
+    });
+
+    // Al abrir el modal de añadir (por si ya hay una empresa seleccionada)
+    $('#register-works_to_do-modal').on('shown.bs.modal', function () {
+        var companyId = $('#add-fk_company').val();
+        filterWorkTypes(companyId, '#add-fk_work_type');
     });
 });

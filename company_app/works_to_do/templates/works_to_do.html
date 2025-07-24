@@ -21,6 +21,11 @@
                                                 <i data-feather="plus-circle"></i>
                                             </span><strong>Añadir Trabajo</strong>
                                         </button>
+                                        <button class="btn btn-danger"
+                                            onclick="window.location.href='{% url 'works_to_do:generate_pdf_all' %}'">
+                                            <span class="pc-micon"><i data-feather="file"></i></span>
+                                            <strong>Generar Reporte PDF</strong>
+                                        </button>
                                     </div>
                                     <!-- Buscador DataTable -->
                                     <table id="datatable-works_to_do" class="table responsive">
@@ -30,8 +35,9 @@
                                                 <th class="centered" scope="col">Nombre</th>
                                                 <th class="centered" scope="col">Encargado</th>
                                                 <th class="centered" scope="col">Cliente</th>
-                                                <th class="centered" scope="col">Servicio</th>
+                                                <th class="centered" scope="col">Servicio(s)</th>
                                                 <th class="centered" scope="col">Descripción</th>
+                                                <th class="centered" scope="col">Estado</th>
                                                 <th class="centered" scope="col">Opciones</th>
                                             </tr>
                                         </thead>
@@ -42,7 +48,11 @@
                                                 <td>{{ works_to_do.name }}</td>
                                                 <td>{{ works_to_do.fk_company }}</td>
                                                 <td>{{ works_to_do.fk_user }}</td>
-                                                <td>{{ works_to_do.fk_work_type }}</td>
+                                                <td>
+                                                    {% for wt in works_to_do.fk_work_type.all %}
+                                                    {{ wt.name }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </td>
                                                 <td>
                                                     <button
                                                         class="btn btn-sm btn-warning description-works_to_do-button"
@@ -54,18 +64,39 @@
                                                     </button>
                                                 </td>
                                                 <td>
+                                                    {% if works_to_do.status == 0 %}
+                                                    <span class="badge bg-secondary">Programado</span>
+                                                    {% elif works_to_do.status == 1 %}
+                                                    <span class="badge bg-warning text-dark">En Proceso</span>
+                                                    {% elif works_to_do.status == 2 %}
+                                                    <span class="badge bg-success">Terminado</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if works_to_do.status != 2 %}
                                                     <button class="btn btn-sm btn-primary edit-works_to_do-button"
                                                         data-id="{{ works_to_do.id }}"
                                                         data-name="{{ works_to_do.name|escapejs }}"
                                                         data-description="{{ works_to_do.description|escapejs }}"
                                                         data-fk_company_id="{{ works_to_do.fk_company_id|escapejs }}"
                                                         data-fk_user_id="{{ works_to_do.fk_user_id|escapejs }}"
-                                                        data-fk_work_type_id="{{ works_to_do.fk_work_type_id|escapejs }}">
+                                                        data-fk_work_type_id='{{ works_to_do.fk_work_type_ids_json }}'>
                                                         <span class="pc-micon"><i data-feather="edit"></i></span>
                                                     </button>
                                                     <button class="btn btn-danger btn-sm delete-works_to_do-button"
                                                         data-id="{{ works_to_do.id }}">
                                                         <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                    </button>
+                                                    <button class="btn btn-info btn-sm change-status-works_to_do-button"
+                                                        data-id="{{ works_to_do.id }}"
+                                                        data-status="{{ works_to_do.status }}">
+                                                        <i data-feather="chevrons-right"></i>
+                                                    </button>
+                                                    {% endif %}
+                                                    <button class="btn btn-success btn-sm"
+                                                        onclick="window.location.href='{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}'"
+                                                        title="Descargar PDF individual">
+                                                        <i data-feather="download"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -138,8 +169,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="add-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" required>
-                            <option value="" selected>Seleccione el servicio</option>
+                        <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" multiple required>
                             {% for work_type in work_types %}
                             <option value="{{ work_type.id }}">{{ work_type.name }}</option>
                             {% endfor %}
@@ -196,8 +226,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" required>
-                            <option value="" selected>Seleccione el servicio</option>
+                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" multiple
+                            required>
                             {% for work_type in work_types %}
                             <option value="{{ work_type.id }}">{{ work_type.name }}</option>
                             {% endfor %}
@@ -230,6 +260,9 @@
 <script src="{% static 'assets/js/works_to_do_js/añadir.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/editar.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/borrar.js' %}"></script>
-<!-- <script src="{% static 'assets/js/works_to_do_js/añadir.js' %}"></script>
-<script src="{% static 'assets/js/works_to_do_js/editar.js' %}"></script> -->
+<script src="{% static 'assets/js/works_to_do_js/filter-work-types.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/change-work-status.js' %}"></script>
+<script>
+    var companyServices = {{ company_services| safe }};
+</script>
 {% endblock %}
