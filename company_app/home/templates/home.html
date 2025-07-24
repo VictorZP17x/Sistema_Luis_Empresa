@@ -100,9 +100,10 @@
 
     <nav class="pc-sidebar">
         <div class="navbar-wrapper">
-            <div class="m-header">
-                <a href="" class="b-brand text-primary">
-                    <img src="{% static 'assets/images/logo-white.svg' %}" class="img-fluid" alt="logo">
+            <div class="m-header d-flex align-items-center justify-content-center my-4">
+                <a href="{% url 'home:dashboard' %}" class="b-brand text-primary">
+                    <img src="{% static 'assets/images/logo.png' %}" class="img-fluid sidebar-logo-custom me-2"
+                        alt="logo">
                 </a>
             </div>
             <div class="navbar-content">
