@@ -1,10 +1,12 @@
 {% load static %}
 <html>
+
 <body>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Datta able is trending dashboard template made using Bootstrap 5 design framework and Flask, a leading backend framework written in Python.">
+  <meta name="description"
+    content="Datta able is trending dashboard template made using Bootstrap 5 design framework and Flask, a leading backend framework written in Python.">
   <meta name="keywords" content="datta able, flask datta able, flask theme UI, flask admin theme">
   <meta name="author" content="App-Generator">
 
@@ -50,7 +52,7 @@
                   </div>
                 </a>
               </div>
-              
+
 
               <h4 class="text-center f-w-500 mt-4 mb-3">Login</h4>
               <p class="text-center">
@@ -67,8 +69,11 @@
                 <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                   <i data-feather="lock"></i>
                 </span>
-                <input type="password" name="password" id="password-input" class="form-control ps-5 pe-5" placeholder="Contraseña" required>
-                <span class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor:pointer;" onclick="togglePassword()">
+                <input type="password" name="password" id="password-input" class="form-control ps-5 pe-5"
+                  placeholder="Contraseña" required>
+                <span class="position-absolute"
+                  style="right: 15px; top: 50%; transform: translateY(-50%); cursor:pointer;"
+                  onclick="togglePassword()">
                   <i id="eye-icon" data-feather="eye"></i>
                 </span>
               </div>
@@ -87,13 +92,21 @@
 
   {% if request.GET.registered %}
   <script>
-  Swal.fire({
-    icon: "success",
-    title: "¡Registrado!",
-    text: "Se han guardado los datos correctamente. Ahora puedes iniciar sesión.",
-    confirmButtonText: "Aceptar"
-  });
+    Swal.fire({
+      icon: "success",
+      title: "¡Registrado!",
+      text: "Se han guardado los datos correctamente. Ahora puedes iniciar sesión.",
+      confirmButtonText: "Aceptar"
+    }).then(() => {
+      // Elimina el parámetro ?registered=1 de la URL sin recargar
+      if (window.history.replaceState) {
+        const url = new URL(window.location);
+        url.searchParams.delete('registered');
+        window.history.replaceState({}, document.title, url.pathname + url.search);
+      }
+    });
   </script>
   {% endif %}
 </body>
+
 </html>

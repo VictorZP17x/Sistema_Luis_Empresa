@@ -77,6 +77,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (form && btn) {
     form.addEventListener("submit", function (e) {
+      // Si hay error, NO mostrar el SweetAlert de confirmación
+      if (btn.getAttribute("data-error") === "1") {
+        return true; // Permite el submit normal para que el error del backend se muestre
+      }
       e.preventDefault();
       Swal.fire({
         title: "¿Confirmar registro?",

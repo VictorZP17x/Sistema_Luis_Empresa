@@ -15,6 +15,8 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
+            # Flag de bienvenida
+            request.session['show_welcome'] = True
             return redirect('home:dashboard')
         else:
             error = "Usuario o contraseña incorrectos"
@@ -27,15 +29,44 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            telefono = form.cleaned_data['telefono']
+
+            # Validar si ya existen usuario, email o teléfono
+            user_exists = User.objects.filter(username=username).exists()
+            email_exists = User.objects.filter(email=email).exists()
+            telefono_exists = UserProfile.objects.filter(phone=telefono).exists()
+
+            if user_exists or email_exists or telefono_exists:
+                error_msg = "El "
+                errores = []
+                if user_exists:
+                    errores.append("usuario")
+                if email_exists:
+                    errores.append("email")
+                if telefono_exists:
+                    errores.append("teléfono")
+                error_msg += ", ".join(errores) + " ya existe. Por favor intente con otro."
+                return render(request, 'register.html', {'form': form, 'register_error': error_msg})
+
+            # Si no existen, registrar normalmente
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
             user.save()
+            # Asignar grupo cliente (id=2)
             try:
                 cliente_group = Group.objects.get(id=2)
                 user.groups.add(cliente_group)
             except Group.DoesNotExist:
                 pass
-            # Redirige al login con un parámetro GET para mostrar el SweetAlert
+            # Crear el perfil de usuario con rol=2 (cliente) y teléfono
+            UserProfile.objects.create(
+                user=user,
+                role=2,  # Cliente
+                phone=telefono
+            )
+            # Redirige al login con SweetAlert
             return redirect(reverse('login:login') + '?registered=1')
     else:
         form = RegisterForm()
@@ -50,28 +81,3 @@ def log_out(request):
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
     return response
-
-def register(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            # Asignar grupo cliente (id=2)
-            try:
-                cliente_group = Group.objects.get(id=2)
-                user.groups.add(cliente_group)
-            except Group.DoesNotExist:
-                pass
-            # Crear el perfil de usuario con rol=2 (cliente) y teléfono
-            UserProfile.objects.create(
-                user=user,
-                role=2,  # Cliente
-                phone=form.cleaned_data['telefono']
-            )
-            # Redirige al login con SweetAlert
-            return redirect(reverse('login:login') + '?registered=1')
-    else:
-        form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
