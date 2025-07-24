@@ -15,16 +15,29 @@ document.addEventListener('DOMContentLoaded', function () {
     }, interval);
 });
 
-$(document).ready(function() {
+$(function() {
+    // Scroll suave para los enlaces del header
+    $('.navbar-nav a.nav-link').on('click', function(e) {
+        var target = $(this).attr('href');
+        if (target.startsWith('#') && $(target).length) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $(target).offset().top - 70 // Ajusta el offset si cambias la altura de la navbar
+            }, 600);
+        }
+    });
+
     // Delegación para enlaces de paginación dentro de servicios
-    $('#servicios-section').on('click', '.pagination a', function(e) {
+    $(document).on('click', '#servicios-section .pagination a', function(e) {
         e.preventDefault();
         var url = $(this).attr('href');
         $.get(url, function(data) {
-            // Solo reemplaza el contenido interno, no el div principal
-            $('#servicios-section').find('> div, nav, .row').remove(); // Limpia el contenido anterior
-            $('#servicios-section').append(data); // Inserta el nuevo contenido
-            // No hagas scroll aquí
+            $('#servicios-section').html(data);
+            // Scroll suave a la sección de servicios
+            $('html, body').animate({
+                scrollTop: $('#servicios-section').offset().top - 80
+            }, 400);
         });
+        return false; // Previene cualquier acción por defecto restante
     });
 });
