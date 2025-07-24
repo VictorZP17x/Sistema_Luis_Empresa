@@ -176,6 +176,17 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".pc-sidebar").classList.add("pc-sidebar-hide");
       }
     });
+    // Agrega la clase al body para el estado colapsado
+    if (sidebar_hide) {
+      sidebar_hide.addEventListener("click", function () {
+        var sidebar = document.querySelector(".pc-sidebar");
+        if (sidebar.classList.contains("pc-sidebar-hide")) {
+          document.body.classList.add("sidebar-collapsed");
+        } else {
+          document.body.classList.remove("sidebar-collapsed");
+        }
+      });
+    }
   }
 
   if (document.querySelector(".trig-drp-search")) {
@@ -201,7 +212,7 @@ function menu_click() {
   var vw = window.innerWidth;
   var elem = document.querySelectorAll(".pc-navbar li");
   for (var j = 0; j < elem.length; j++) {
-    elem[j].removeEventListener("click", function () {});
+    elem[j].removeEventListener("click", function () { });
   }
 
   var elem = document.querySelectorAll(
@@ -368,13 +379,13 @@ for (var t = 0; t < tc.length; t++) {
       setTimeout(function () {
         try {
           prod_like.parentNode.querySelector(".pc-like").remove();
-        } catch (error) {}
+        } catch (error) { }
       }, 3000);
     } else {
       prod_like = event.target;
       try {
         prod_like.parentNode.querySelector(".pc-like").remove();
-      } catch (error) {}
+      } catch (error) { }
     }
   });
 }
