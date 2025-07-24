@@ -8,6 +8,8 @@ from work_type import views as work_type_views
 from works_to_do import views as works_to_do_views
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
+from django.urls import reverse_lazy
+from login.views import log_out
 
 app_name = 'home'
 urlpatterns = [
@@ -19,6 +21,6 @@ urlpatterns = [
     path("user/", user_views.user, name="user"),
     path("work_type/", work_type_views.work_type, name="work_type"),
     path("works_to_do/", works_to_do_views.works_to_do, name="works_to_do"),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('logout/', log_out, name='logout'),
     path('admin/', admin.site.urls),
 ]

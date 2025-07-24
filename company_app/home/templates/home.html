@@ -135,6 +135,7 @@
                             <span class="pc-mtext">Servicios</span>
                         </a>
                     </li>
+                    {% if not is_empleado %}
                     <li class="pc-item">
                         <a href="{% url 'home:log_history' %}" class="pc-link">
                             <span class="pc-micon"><i data-feather="list"></i></span>
@@ -153,6 +154,7 @@
                             <span class="pc-mtext">Usuarios</span>
                         </a>
                     </li>
+                    {% endif %}
                     {% endif %}
                 </ul>
             </div>
