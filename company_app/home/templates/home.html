@@ -20,9 +20,15 @@
     <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
     <!-- Template CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
+    <style>
+    /* Oculta los módulos solo para clientes */
+    body.cliente .pc-navbar .pc-item:not(:nth-child(1)):not(:nth-child(2)) {
+        display: none !important;
+    }
+    </style>
 </head>
 
-<body{% if show_header_search %} class="dashboard-page" {% endif %}>
+<body class="{% if show_header_search %}dashboard-page {% endif %}{% if is_cliente %}cliente{% endif %}">
     <!-- Navegation-Bar -->
     <header class="pc-header">
         <div class="header-wrapper">
@@ -101,62 +107,52 @@
             </div>
             <div class="navbar-content">
                 <ul class="pc-navbar">
+                    <!-- SIEMPRE visible para todos -->
                     <li class="pc-item pc-hasmenu">
                         <a href="{% url 'home:dashboard' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="grid"></i>
-                            </span>
+                            <span class="pc-micon"><i data-feather="grid"></i></span>
                             <span class="pc-mtext">Inicio</span>
                         </a>
                     </li>
+                    <li class="pc-item">
+                        <a href="{% url 'home:works_to_do' %}" class="pc-link">
+                            <span class="pc-micon"><i data-feather="file-text"></i></span>
+                            <span class="pc-mtext">Trabajos</span>
+                        </a>
+                    </li>
+                    <!-- SOLO para NO clientes -->
+                    {% if not is_cliente %}
                     <li class="pc-item pc-hasmenu">
                         <a href="{% url 'home:company' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="briefcase"></i>
-                            </span>
+                            <span class="pc-micon"><i data-feather="briefcase"></i></span>
                             <span class="pc-mtext">Empresas</span>
                         </a>
                     </li>
                     <li class="pc-item">
                         <a href="{% url 'home:work_type' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="clipboard"></i>
-                            </span>
+                            <span class="pc-micon"><i data-feather="clipboard"></i></span>
                             <span class="pc-mtext">Servicios</span>
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="{% url 'home:works_to_do' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="file-text"></i>
-                            </span>
-                            <span class="pc-mtext">Trabajos</span>
-                        </a>
-                    </li>
-                    <li class="pc-item">
                         <a href="{% url 'home:log_history' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="list"></i>
-                            </span>
+                            <span class="pc-micon"><i data-feather="list"></i></span>
                             <span class="pc-mtext">Historial</span>
                         </a>
                     </li>
                     <li class="pc-item">
                         <a href="{% url 'home:client' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="user"></i>
-                            </span>
+                            <span class="pc-micon"><i data-feather="user"></i></span>
                             <span class="pc-mtext">Clientes</span>
                         </a>
                     </li>
                     <li class="pc-item pc-hasmenu">
                         <a href="{% url 'home:user' %}" class="pc-link">
-                            <span class="pc-micon">
-                                <i data-feather="users"></i>
-                            </span>
+                            <span class="pc-micon"><i data-feather="users"></i></span>
                             <span class="pc-mtext">Usuarios</span>
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

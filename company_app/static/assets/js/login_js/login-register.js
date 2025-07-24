@@ -61,7 +61,8 @@ document.addEventListener("DOMContentLoaded", function () {
 function formatVenezuelanPhone(raw) {
   let value = raw.replace(/\D/g, "");
   if (!value.startsWith("58")) value = "58" + value.replace(/^0+/, "");
-  if (value.length > 2 && value[2] === "0") value = value.slice(0, 2) + value.slice(3);
+  if (value.length > 2 && value[2] === "0")
+    value = value.slice(0, 2) + value.slice(3);
   value = value.slice(0, 12);
   let formatted = "+58";
   if (value.length > 2) formatted += " " + value.slice(2, 5);
@@ -69,3 +70,37 @@ function formatVenezuelanPhone(raw) {
   if (value.length > 8) formatted += "-" + value.slice(8, 12);
   return formatted;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("register-form");
+  const btn = document.getElementById("register-btn");
+
+  if (form && btn) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      Swal.fire({
+        title: "¿Confirmar registro?",
+        text: "¿Estás seguro de que los datos ingresados son correctos?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, registrar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Envía el formulario realmente
+          form.submit();
+        }
+      });
+    });
+  }
+});
+
+Swal.fire({
+  icon: "success",
+  title: "¡Registrado!",
+  text: "Se han guardado los datos correctamente.",
+  confirmButtonText: "Aceptar",
+}).then(() => {
+  window.location.href = "{% url 'login:login' %}";
+});
+

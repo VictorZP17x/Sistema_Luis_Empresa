@@ -4,14 +4,18 @@ from company.models import Company
 
 # @login_required
 def home(request):
+    is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
     return render(request, 'home.html', {
+        'is_cliente': is_cliente,
     })
 
 def dashboard(request):
     companies = Company.objects.all()
     companies_count = companies.count()
+    is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
     return render(request, 'dashboard.html', {
         'companies': companies,
         'companies_count': companies_count,
-        'show_header_search': True
+        'show_header_search': True,
+        'is_cliente': is_cliente,
     })
