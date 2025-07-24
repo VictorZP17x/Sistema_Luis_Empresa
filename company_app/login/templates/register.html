@@ -1,33 +1,38 @@
 {% load static %}
 <html>
+
 <body>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description"
-        content="Datta able is trending dashboard template made using Bootstrap 5 design framework and Flask, a leading backend framework written in Python.">
-    <meta name="keywords" content="datta able, flask datta able, flask theme UI, flask admin theme">
-    <meta name="author" content="App-Generator">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description"
+    content="Datta able is trending dashboard template made using Bootstrap 5 design framework and Flask, a leading backend framework written in Python.">
+  <meta name="keywords" content="datta able, flask datta able, flask theme UI, flask admin theme">
+  <meta name="author" content="App-Generator">
 
-    <!-- [Favicon] icon -->
-    <link rel="icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon">
-    <!-- [Font] Family -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- [Tabler Icons] https://tablericons.com -->
-    <link rel="stylesheet" href="{% static 'assets/fonts/tabler-icons.min.css' %}">
-    <!-- [Feather Icons] https://feathericons.com -->
-    <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
-    <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
-    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome.css' %}">
-    <!-- [Material Icons] https://fonts.google.com/icons -->
-    <link rel="stylesheet" href="{% static 'assets/fonts/material.css' %}">
-    <!-- [Template CSS Files] -->
-    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
-    <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/dashboard_css/dashboard.css' %}">
-
-    <!-- Your Custom CSS -->
-    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
+  <!-- [Favicon] icon -->
+  <link rel="icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon">
+  <!-- [Font] Family -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- [Tabler Icons] https://tablericons.com -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/tabler-icons.min.css' %}">
+  <!-- [Feather Icons] https://feathericons.com -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
+  <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome.css' %}">
+  <!-- [Material Icons] https://fonts.google.com/icons -->
+  <link rel="stylesheet" href="{% static 'assets/fonts/material.css' %}">
+  <!-- [Template CSS Files] -->
+  <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
+  <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/dashboard_css/dashboard.css' %}">
+  <!--Iconos y Js del login-register -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="{% static 'assets/js/login_js/login-register.js' %}"></script>
+  <!-- Sweet alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Your Custom CSS -->
+  <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
 
   <div class="auth-main">
     <div class="auth-wrapper v1">
@@ -41,16 +46,9 @@
           </div>
           <div class="card mb-0">
 
-            <div class="text-center">
-              <span class="d-block text-primary mt-4 mb-2"></span>
-              <br />
-              <a href="" class="btn btn-primary shadow-2 mb-4">Sign IN</a>
-            </div>              
 
-           
             <form method="post" class="card-body">
 
-              
               <div class="text-center">
                 <a href="">
                   <div>
@@ -60,36 +58,67 @@
               </div>
 
 
-              <div class="text-center mt-4">
-                <a href="" style="cursor: pointer;" class="d-inline-block p-2 rounded border text-secondary">
-                  <span class="pc-micon">
-                    <i data-feather="github"></i>
-                  </span>
-                </a>
-              </div>
-
-              
-              <h4 class="text-center f-w-500 mt-4 mb-3">Sign up</h4>
-
+              <h4 class="text-center f-w-500 mt-4 mb-3">Register</h4>
+              <p class="text-center">
+                Registre sus datos
+              </p>
               <div class="text-center">
                 <span class="d-block text-danger mb-3"></span>
-              </div>  
+              </div>
 
               <div class="form-group mb-3">
-
-
-              <div class="d-flex mt-1 justify-content-between">
-                <div class="form-check">
-                  <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="">
-                  <label class="form-check-label text-muted" for="customCheckc1">I agree to all the Terms & Condition</label>
+                <div class="form-group mb-3 position-relative">
+                  <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
+                    <i data-feather="user"></i>
+                  </span>
+                  <input type="text" name="username" class="form-control ps-5" placeholder="Usuario" required>
                 </div>
-              </div>
-              <div class="text-center mt-4">
-                <button type="submit" name="register" class="btn btn-primary shadow px-sm-4">Sign up</button>
-              </div>
-              <div class="d-flex justify-content-center align-items-end mt-4">
-                <a href="" class="link-primary">Login</a>
-              </div>
+                <div class="form-group mb-3 position-relative">
+                  <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
+                    <i data-feather="lock"></i>
+                  </span>
+                  <input type="password" name="password" id="password-input" class="form-control ps-5 pe-5"
+                    placeholder="Contraseña" required>
+                  <span class="position-absolute"
+                    style="right: 15px; top: 50%; transform: translateY(-50%); cursor:pointer;"
+                    onclick="togglePassword()">
+                    <i id="eye-icon" data-feather="eye"></i>
+                  </span>
+                </div>
+                <div class="form-group mb-3 position-relative">
+                  <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
+                    <i data-feather="user-check"></i>
+                  </span>
+                  <input type="text" name="first_name" class="form-control ps-5" placeholder="Nombre" required>
+                </div>
+                <div class="form-group mb-3 position-relative">
+                  <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
+                    <i data-feather="user-plus"></i>
+                  </span>
+                  <input type="text" name="last_name" class="form-control ps-5" placeholder="Apellido" required>
+                </div>
+                <div class="form-group mb-3 position-relative">
+                  <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
+                    <i data-feather="mail"></i>
+                  </span>
+                  <input type="email" name="email" class="form-control ps-5" placeholder="Email" required>
+                </div>
+                <div class="form-group mb-3 position-relative">
+                  <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
+                    <i data-feather="phone"></i>
+                  </span>
+                  <input type="text" name="telefono" id="telefono-input" class="form-control ps-5"
+                    placeholder="Teléfono" required autocomplete="off" value="+58 ">
+                </div>
+
+                <div class="d-flex mt-1 justify-content-between">
+                </div>
+                <div class="text-center mt-4">
+                  <button type="submit" name="register" class="btn btn-primary shadow px-sm-4">Registrarse</button>
+                </div>
+                <div class="d-flex justify-content-center align-items-end mt-4">
+                  <a href="{% url 'login:login' %}" class="link-primary">Iniciar Sesión</a>
+                </div>
             </form>
 
           </div>
