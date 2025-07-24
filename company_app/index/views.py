@@ -1,7 +1,12 @@
 from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
+from company.models import Company
+from django.core.paginator import Paginator
 
-# @login_required
 def index(request):
-    return render(request, 'index.html', {
-    })
+    companies = Company.objects.all()
+    paginator = Paginator(companies, 6)  # 6 empresas por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'partials/servicios_section.html', {'page_obj': page_obj})
+    return render(request, 'index.html', {'page_obj': page_obj})

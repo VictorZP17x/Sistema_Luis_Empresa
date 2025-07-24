@@ -14,3 +14,17 @@ document.addEventListener('DOMContentLoaded', function () {
         showSlide(current);
     }, interval);
 });
+
+$(document).ready(function() {
+    // Delegación para enlaces de paginación dentro de servicios
+    $('#servicios-section').on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $.get(url, function(data) {
+            // Solo reemplaza el contenido interno, no el div principal
+            $('#servicios-section').find('> div, nav, .row').remove(); // Limpia el contenido anterior
+            $('#servicios-section').append(data); // Inserta el nuevo contenido
+            // No hagas scroll aquí
+        });
+    });
+});

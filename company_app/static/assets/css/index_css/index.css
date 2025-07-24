@@ -49,16 +49,15 @@ nav {
   background: #fff !important;
 }
 .main-content {
-  background: #fff;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
-  margin: 0 auto;
-  padding: 40px 30px;
-  max-width: 1200px;
-  min-height: 200;
-  height: 200;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+    background: #fff;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
+    padding: 40px 30px; /* Puedes aumentar a 40px 40px si quieres más espacio */
+    max-width: 1200px;
+    min-height: 200px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }

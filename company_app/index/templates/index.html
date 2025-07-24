@@ -58,7 +58,7 @@
         </div>
     </nav>
     <div class="main-content">
-        <div class="container mt-5 rounded-4 p-4">
+        <div class="container mt-1 rounded-4 p-4">
             <div class="text-center">
                 <h1 class="display-4">Bienvenido al Sistema de Gestión Empresarial</h1>
                 <p class="lead mt-4">
@@ -68,8 +68,8 @@
                 <hr>
                 <div class="custom-carousel mt-5" id="customCarousel">
                     <div class="carousel-slide active">
-                        <img src="{% static 'assets/img/clientes.jpg' %}" class="d-block w-100" alt="Gestión de Clientes"
-                            style="max-height:380px;object-fit:cover;">
+                        <img src="{% static 'assets/img/clientes.jpg' %}" class="d-block w-100"
+                            alt="Gestión de Clientes" style="max-height:380px;object-fit:cover;">
                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
                             <h4>Gestión de Clientes</h4>
                             <p>Administra la información de tus clientes de forma sencilla y segura.</p>
@@ -96,7 +96,8 @@
                             style="max-height:380px;object-fit:cover;">
                         <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3">
                             <h4>Reportes en PDF</h4>
-                            <p>Ofrece la posibilidad de generar reportes en formato PDF para una salida de información.</p>
+                            <p>Ofrece la posibilidad de generar reportes en formato PDF para una salida de información.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -111,14 +112,20 @@
                 <div class="card-body text-center">
                     <h3 class="card-title mb-3">Acerca de Nosotros</h3>
                     <p class="card-text">
-                        Oltec es una empresa líder especializada en ofrecer soluciones integrales y personalizadas para la
-                        gestión empresarial moderna. Nuestro sistema avanzado ha sido diseñado para que las organizaciones
-                        optimicen sus procesos internos, administren eficientemente la relación con sus clientes, gestionen
-                        múltiples empresas y tareas de manera organizada, y tomen decisiones basadas en información precisa
+                        Oltec es una empresa líder especializada en ofrecer soluciones integrales y personalizadas para
+                        la
+                        gestión empresarial moderna. Nuestro sistema avanzado ha sido diseñado para que las
+                        organizaciones
+                        optimicen sus procesos internos, administren eficientemente la relación con sus clientes,
+                        gestionen
+                        múltiples empresas y tareas de manera organizada, y tomen decisiones basadas en información
+                        precisa
                         y oportuna.
                         Con Oltec, la administración de la información de tus clientes es sencilla, segura y totalmente
-                        centralizada, garantizando confidencialidad y acceso controlado. Además, ofrecemos una plataforma
-                        intuitiva que permite visualizar, editar y mantener actualizados los datos de las empresas asociadas
+                        centralizada, garantizando confidencialidad y acceso controlado. Además, ofrecemos una
+                        plataforma
+                        intuitiva que permite visualizar, editar y mantener actualizados los datos de las empresas
+                        asociadas
                         a tu organización, facilitando así la comunicación y coordinación interdepartamental.
                     </p>
                 </div>
@@ -126,19 +133,13 @@
         </div>
         <hr class="my-5" style="border-top: 1px solid #0074e7;">
 
-        <div class="container d-flex justify-content-center mb-5 rounded-4 p-4">
-            <div class="card shadow-lg" style="max-width: 1600px; width: 100%;">
-                <img src="{% static 'assets/img/nosotros.jpg' %}" class="card-img-top" alt="Acerca de Nosotros"
-                    style="object-fit:cover; max-height:150px;">
-                <div class="card-body text-center">
-                    <h3 class="card-title mb-3">Servicios</h3>
-                </div>
-            </div>
+        <div class="mb-5" id="servicios-section">
+            {% include 'partials/servicios_section.html' %}
         </div>
-    </div>
-    <!-- Bootstrap JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_js %}{% endblock %}
+        <!-- Bootstrap JS CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        {% block extra_js %}{% endblock %}
 </body>
 
 </html>

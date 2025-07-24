@@ -1,0 +1,83 @@
+{% load static %}
+<h3 class="text-center mb-4">Servicios</h3>
+<div>
+    <div class="row mt-4 justify-content-center" id="cards-empresas">
+        {% if page_obj.object_list %}
+        {% for company in page_obj.object_list %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-4 d-flex align-items-stretch mb-4">
+            <div class="card shadow-sm company-card w-100">
+                <div class="card-header text-center">
+                    <h6 class="mb-0">{{ company.name }}</h6>
+                </div>
+                <div class="card-body text-center">
+                    <div class="company-card-img mb-2"
+                        style="width:100%; height:180px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                        {% if company.photo %}
+                        <img src="{{ company.photo.url }}" alt="{{ company.name }}"
+                            class="img-fluid w-100 h-100"
+                            style="object-fit: cover; cursor:pointer; border-radius: 8px;">
+                        {% else %}
+                        <img src="{% static 'assets/img/default-company.png' %}" alt="{{ company.name }}"
+                            class="img-fluid w-100 h-100"
+                            style="object-fit: cover; cursor:pointer; border-radius: 8px;">
+                        {% endif %}
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-muted">Dirección</small><br>
+                        <span class="empresa-direccion">{{ company.address }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-muted">Teléfono</small><br>
+                        <span class="empresa-telefono">{{ company.phone_number }}</span>
+                    </div>
+                    <div class="mb-2">
+                        <small class="text-muted">RIF</small><br>
+                        <span class="empresa-rif">{{ company.rif }}</span>
+                    </div>
+                    <div class="company-description d-none">{{ company.description }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center my-5">
+                No hay Empresas registradas en el sistema.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Paginación -->
+    {% if page_obj.paginator.num_pages > 1 %}
+    <nav aria-label="Paginación de empresas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Anterior</span>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">Siguiente</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
