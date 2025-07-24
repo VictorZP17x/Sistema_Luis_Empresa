@@ -22,14 +22,43 @@ document.addEventListener("DOMContentLoaded", function () {
   // Prefijo fijo y validación para teléfono venezolano
   const telefonoInput = document.getElementById("telefono-input");
   if (telefonoInput) {
-    if (telefonoInput.value.trim() === "") telefonoInput.value = "+58";
+    // Al cargar, si el campo está vacío, coloca el prefijo
+    if (telefonoInput.value.trim() === "") telefonoInput.value = "+58 ";
+
+    // Formato automático para teléfono al escribir
     telefonoInput.addEventListener("input", function (e) {
-      e.target.value = formatVenezuelanPhone(e.target.value);
+      let value = e.target.value.replace(/\D/g, "");
+
+      // Siempre inicia con 58
+      if (!value.startsWith("58")) {
+        value = "58" + value.replace(/^0+/, "");
+      }
+
+      // Elimina el cero si lo ponen después del prefijo
+      if (value.length > 2 && value[2] === "0") {
+        value = value.slice(0, 2) + value.slice(3);
+      }
+
+      value = value.slice(0, 12); // +58 y 10 números
+
+      // Formatea como +58 412-123-4567
+      let formatted = "+58 ";
+      if (value.length > 2) {
+        formatted += value.slice(2, 5);
+      }
+      if (value.length > 5) {
+        formatted += "-" + value.slice(5, 8);
+      }
+      if (value.length > 8) {
+        formatted += "-" + value.slice(8, 12);
+      }
+      e.target.value = formatted;
     });
+
+    // Evita borrar el prefijo +58
     telefonoInput.addEventListener("keydown", function (e) {
-      // No permitir borrar el prefijo
       if (
-        telefonoInput.selectionStart <= 3 &&
+        telefonoInput.selectionStart <= 4 &&
         (e.key === "Backspace" || e.key === "Delete")
       ) {
         e.preventDefault();
@@ -37,14 +66,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Validación al enviar el formulario
-  const form = document.querySelector("form.card-body");
-  if (form && telefonoInput) {
+  // Validación y confirmación en un solo submit
+  const form = document.getElementById("register-form");
+  const btn = document.getElementById("register-btn");
+  if (form && btn && telefonoInput) {
     form.addEventListener("submit", function (e) {
+      // Si hay error del backend, NO mostrar el SweetAlert de confirmación
+      if (btn.getAttribute("data-error") === "1") {
+        e.preventDefault();
+        return false;
+      }
+
+      // Validación de teléfono venezolano
       const phoneValue = telefonoInput.value.replace(/\s|-/g, "");
-      // Solo permite códigos válidos venezolanos y 7 dígitos después
-      const phoneRegex = /^\+58\s?(412|414|416|424|426|212)-?\d{3}-?\d{4}$/;
-      if (!phoneRegex.test(telefonoInput.value)) {
+      const phoneRegex = /^\+58(412|414|416|424|426|212)\d{7}$/;
+      if (!phoneRegex.test(phoneValue)) {
         e.preventDefault();
         Swal.fire({
           icon: "error",
@@ -54,33 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
         telefonoInput.focus();
         return false;
       }
-    });
-  }
-});
 
-function formatVenezuelanPhone(raw) {
-  let value = raw.replace(/\D/g, "");
-  if (!value.startsWith("58")) value = "58" + value.replace(/^0+/, "");
-  if (value.length > 2 && value[2] === "0")
-    value = value.slice(0, 2) + value.slice(3);
-  value = value.slice(0, 12);
-  let formatted = "+58";
-  if (value.length > 2) formatted += " " + value.slice(2, 5);
-  if (value.length > 5) formatted += "-" + value.slice(5, 8);
-  if (value.length > 8) formatted += "-" + value.slice(8, 12);
-  return formatted;
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("register-form");
-  const btn = document.getElementById("register-btn");
-
-  if (form && btn) {
-    form.addEventListener("submit", function (e) {
-      // Si hay error, NO mostrar el SweetAlert de confirmación
-      if (btn.getAttribute("data-error") === "1") {
-        return true; // Permite el submit normal para que el error del backend se muestre
-      }
+      // Si todo está bien, mostrar confirmación
       e.preventDefault();
       Swal.fire({
         title: "¿Confirmar registro?",
@@ -91,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.isConfirmed) {
-          // Envía el formulario realmente
           form.submit();
         }
       });
@@ -99,12 +109,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-Swal.fire({
-  icon: "success",
-  title: "¡Registrado!",
-  text: "Se han guardado los datos correctamente.",
-  confirmButtonText: "Aceptar",
-}).then(() => {
-  window.location.href = "{% url 'login:login' %}";
-});
-
+// Mostrar SweetAlert de éxito solo si viene de ?registered=1
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("registered") === "1") {
+  Swal.fire({
+    icon: "success",
+    title: "¡Registrado!",
+    text: "Se han guardado los datos correctamente.",
+    confirmButtonText: "Aceptar",
+  }).then(() => {
+    window.location.href = "/";
+  });
+}

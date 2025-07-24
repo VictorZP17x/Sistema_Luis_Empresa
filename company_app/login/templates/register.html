@@ -29,6 +29,7 @@
   <!--Iconos y Js del login-register -->
   <script src="https://unpkg.com/feather-icons"></script>
   <script src="{% static 'assets/js/login_js/login-register.js' %}"></script>
+  <script src="{% static 'assets/js/login_js/sweet_alerts.js' %}"></script>
 
   <!-- Your Custom CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
@@ -71,7 +72,8 @@
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                     <i data-feather="user"></i>
                   </span>
-                  <input type="text" name="username" class="form-control ps-5" placeholder="Usuario" required>
+                  <input type="text" name="username" class="form-control ps-5" placeholder="Usuario" required
+                    value="{{ form.username.value|default_if_none:'' }}">
                 </div>
                 <div class="form-group mb-3 position-relative">
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
@@ -89,26 +91,30 @@
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                     <i data-feather="user-check"></i>
                   </span>
-                  <input type="text" name="first_name" class="form-control ps-5" placeholder="Nombre" required>
+                  <input type="text" name="first_name" class="form-control ps-5" placeholder="Nombre" required
+                    value="{{ form.first_name.value|default_if_none:'' }}">
                 </div>
                 <div class="form-group mb-3 position-relative">
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                     <i data-feather="user-plus"></i>
                   </span>
-                  <input type="text" name="last_name" class="form-control ps-5" placeholder="Apellido" required>
+                  <input type="text" name="last_name" class="form-control ps-5" placeholder="Apellido" required
+                    value="{{ form.last_name.value|default_if_none:'' }}">
                 </div>
                 <div class="form-group mb-3 position-relative">
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                     <i data-feather="mail"></i>
                   </span>
-                  <input type="email" name="email" class="form-control ps-5" placeholder="Email" required>
+                  <input type="email" name="email" class="form-control ps-5" placeholder="Email" required
+                    value="{{ form.email.value|default_if_none:'' }}">
                 </div>
                 <div class="form-group mb-3 position-relative">
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                     <i data-feather="phone"></i>
                   </span>
                   <input type="text" name="telefono" id="telefono-input" class="form-control ps-5"
-                    placeholder="Teléfono" required autocomplete="off" value="+58 ">
+                    placeholder="Teléfono" required autocomplete="off"
+                    value="{{ form.telefono.value|default_if_none:'+58 ' }}">
                 </div>
 
                 <div class="d-flex mt-1 justify-content-between">
@@ -130,14 +136,8 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   {% if register_error %}
-  <div style="color:red; font-weight:bold;">{{ register_error }}</div>
   <script>
-    Swal.fire({
-      icon: "error",
-      title: "¡Error de registro!",
-      text: "{{ register_error|escapejs }}",
-      confirmButtonText: "Aceptar"
-    });
+    window.registerError = "{{ register_error|escapejs }}";
   </script>
   {% endif %}
 </body>
