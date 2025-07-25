@@ -1,5 +1,19 @@
 {% load static %}
 <h3 class="text-center mb-4">Servicios</h3>
+<div class="row justify-content-center mb-3">
+    <div class="col-12 col-md-6">
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" id="buscador-empresas" class="form-control"
+                placeholder="Buscar empresa por nombre, dirección, teléfono o RIF...">
+        </div>
+        <div id="no-coincidencias-empresas" class="col-12" style="display:none;">
+            <div class="alert alert-warning text-center my-5">
+                No se encontraron empresas que coincidan con la búsqueda.
+            </div>
+        </div>
+    </div>
+</div>
 <div>
     <div class="row mt-4 justify-content-center" id="cards-empresas">
         {% if page_obj.object_list %}
@@ -11,10 +25,9 @@
                 </div>
                 <div class="card-body text-center">
                     <div class="company-card-img mb-2"
-                        style="width:100%; height:180px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                        style="width:100%; height:120px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
                         {% if company.photo %}
-                        <img src="{{ company.photo.url }}" alt="{{ company.name }}"
-                            class="img-fluid w-100 h-100"
+                        <img src="{{ company.photo.url }}" alt="{{ company.name }}" class="img-fluid w-100 h-100"
                             style="object-fit: cover; cursor:pointer; border-radius: 8px;">
                         {% else %}
                         <img src="{% static 'assets/img/default-company.png' %}" alt="{{ company.name }}"
@@ -34,7 +47,38 @@
                         <small class="text-muted">RIF</small><br>
                         <span class="empresa-rif">{{ company.rif }}</span>
                     </div>
-                    <div class="company-description d-none">{{ company.description }}</div>
+                    <button class="btn btn-primary btn-sm mt-2 btn-ver-mas" data-bs-toggle="modal"
+                        data-bs-target="#empresaServiciosModal{{ company.id }}">
+                        Ver más
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de servicios de la empresa -->
+        <div class="modal fade" id="empresaServiciosModal{{ company.id }}" tabindex="-1"
+            aria-labelledby="empresaServiciosModalLabel{{ company.id }}" aria-hidden="true">
+            <div class="modal-dialog"> <!-- Elimina modal-dialog-centered -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="empresaServiciosModalLabel{{ company.id }}">
+                            Servicios de {{ company.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <strong>Servicios:</strong>
+                        {% if company.work_types.all %}
+                        {% for wt in company.work_types.all %}
+                        <span class="badge bg-info me-1">{{ wt.name }}</span>
+                        {% endfor %}
+                        {% else %}
+                        <span class="text-muted">Sin servicios</span>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,8 +91,7 @@
         </div>
         {% endif %}
     </div>
-
-    <!-- Paginación -->
+    <!-- ...paginación... -->
     {% if page_obj.paginator.num_pages > 1 %}
     <nav aria-label="Paginación de empresas">
         <ul class="pagination justify-content-center">

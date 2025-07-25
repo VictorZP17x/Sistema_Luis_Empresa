@@ -43,37 +43,51 @@ body::before {
 .main-content,
 nav {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 .bg-white {
   background: #fff !important;
 }
 .main-content {
-    background: #fff;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
-    margin: 0 auto;
-    padding: 40px 30px; /* Puedes aumentar a 40px 40px si quieres más espacio */
-    max-width: 1200px;
-    min-height: 200px;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+  background: #fff;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+  padding: 40px 30px; /* Puedes aumentar a 40px 40px si quieres más espacio */
+  max-width: 1200px;
+  min-height: 200px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .footer-fixed {
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    z-index: 100;
-    box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.08);
 }
 body {
-    padding-bottom: 90px; /* Ajusta si el footer es más alto */
+  padding-bottom: 90px; /* Ajusta si el footer es más alto */
 }
 
 /* Centrado y tamaño del footer */
 footer.bg-primary {
-    text-align: center;
+  text-align: center;
+}
+.modal-dialog {
+  margin-top: 80px !important;
+}
+
+/* Asegura que el modal y el backdrop estén por encima del fondo difuminado */
+.modal-backdrop {
+  z-index: 2050 !important;
+}
+.modal {
+  z-index: 2060 !important;
+}
+.modal-content {
+  z-index: 2070 !important;
 }

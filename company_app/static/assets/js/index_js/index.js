@@ -33,14 +33,51 @@ $(function () {
     }
   });
 
-  // Paginación AJAX sin scroll ni animación
-  $(document).off("click", "#servicios-section .pagination a"); // Evita duplicados
+  // Paginación AJAX con scroll al centro de la sección
+  $(document).off("click", "#servicios-section .pagination a");
   $(document).on("click", "#servicios-section .pagination a", function (e) {
     e.preventDefault();
     var url = $(this).attr("href");
     $.get(url, function (data) {
       $("#servicios-section").html(data);
+      // Scroll para mostrar el título y las cards/paginación juntas
+      var $serviciosSection = $("#servicios-section");
+      if ($serviciosSection.length) {
+        // Ajusta el margen superior (ejemplo: 120px)
+        var scrollTo = $serviciosSection.offset().top - 40; // Menor margen para mostrar el título
+        $("html, body").animate({ scrollTop: scrollTo }, 300);
+      }
     });
     return false;
+  });
+});
+
+$(function () {
+  $(document).on("input", "#buscador-empresas", function () {
+    const texto = $(this).val().toLowerCase();
+    let visibles = 0;
+
+    $('#cards-empresas > div[class*="col-"]').each(function () {
+      const $col = $(this);
+      const nombre = $col.find("h6").text().toLowerCase();
+      const direccion = $col.find(".empresa-direccion").text().toLowerCase();
+      const telefono = $col.find(".empresa-telefono").text().toLowerCase();
+      const rif = $col.find(".empresa-rif").text().toLowerCase();
+
+      if (
+        nombre.includes(texto) ||
+        direccion.includes(texto) ||
+        telefono.includes(texto) ||
+        rif.includes(texto)
+      ) {
+        $col.removeClass("d-none");
+        visibles++;
+      } else {
+        $col.addClass("d-none");
+      }
+    });
+
+    // Mostrar/ocultar mensaje según resultado
+    $("#no-coincidencias-empresas").toggle(visibles === 0);
   });
 });
