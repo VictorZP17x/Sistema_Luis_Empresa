@@ -8,7 +8,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("home/", include("home.urls")),
-    path("login/", include("login.urls")),  # <-- Cambia esto
+    path("login/", include("login.urls")),  
     path('', lambda request: redirect('login:login')),
     path("client/", include("client.urls")),
     path("company/", include("company.urls")),
@@ -16,6 +16,7 @@ urlpatterns = [
     path("user/", include("user.urls")),
     path("work_type/", include("work_type.urls")),
     path("works_to_do/", include("works_to_do.urls")),
+    path("index/", include("index.urls")), 
 
 ]
 

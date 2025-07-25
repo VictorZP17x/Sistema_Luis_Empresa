@@ -1,0 +1,64 @@
+.custom-carousel {
+  position: relative;
+  width: 100%;
+  height: 370px;
+  overflow: hidden;
+}
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+  z-index: 1;
+}
+.carousel-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+body {
+  background: #fff url("/static/assets/img/fondo.jpg") no-repeat center center
+    fixed;
+  background-size: cover;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45); /* Ajusta la opacidad aquí */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Asegúrate que el contenido principal esté por encima */
+.main-content,
+nav {
+  position: relative;
+  z-index: 1;
+}
+.bg-white {
+  background: #fff !important;
+}
+.main-content {
+  background: #fff;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
+  padding: 40px 30px;
+  max-width: 1200px;
+  min-height: 200;
+  height: 200;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
