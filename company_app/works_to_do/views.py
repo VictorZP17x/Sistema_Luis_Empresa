@@ -19,7 +19,7 @@ from django.views.decorators.http import require_POST
 def works_to_do(request):
     works_to_do = WorksToDo.objects.all()
     companies = Company.objects.all()
-    users = User.objects.all()
+    users = User.objects.filter(userprofile__role=2)
     work_types = WorkType.objects.all()
     company_services = {
         company.id: list(company.work_types.values_list('id', flat=True))

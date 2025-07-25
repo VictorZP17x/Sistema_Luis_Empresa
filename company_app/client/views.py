@@ -5,6 +5,14 @@ from .forms import ClientForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
+import os
+import datetime
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from django.conf import settings
 
 def client(request):
     client_profiles = UserProfile.objects.filter(role=2)
@@ -79,3 +87,112 @@ def delete_client(request, client_id):
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
+
+def footer(canvas, doc):
+    fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
+    canvas.saveState()
+    canvas.setFont('Helvetica', 8)
+    width, height = letter
+    canvas.drawRightString(width - 20, 15, footer_text)
+    canvas.restoreState()
+
+def generate_pdf_clients(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Reporte_Clientes.pdf"'
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=letter,
+        rightMargin=20,
+        leftMargin=20,
+        topMargin=30,
+        bottomMargin=20
+    )
+    elements = []
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
+    styleN.wordWrap = 'CJK'
+
+    # Logo
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'assets', 'images', 'logo_pdf.png')
+    if os.path.exists(logo_path):
+        img = Image(logo_path, width=60, height=60)
+    else:
+        img = Spacer(1, 40)
+
+    # Título
+    title = Paragraph("Clientes", styles['Title'])
+
+    # Cabecera con logo y título
+    header_table = Table(
+        [[img, title]],
+        colWidths=[0, doc.width - 0],
+        hAlign='LEFT'
+    )
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (1, 0), (1, 0), 'CENTER'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+    ]))
+    elements.append(header_table)
+    elements.append(Spacer(1, 12))
+
+    # Encabezados de la tabla
+    data = [
+        [
+            Paragraph("<b>#</b>", styleN),
+            Paragraph("<b>Usuario</b>", styleN),
+            Paragraph("<b>Nombre</b>", styleN),
+            Paragraph("<b>Apellido</b>", styleN),
+            Paragraph("<b>Email</b>", styleN),
+            Paragraph("<b>Teléfono</b>", styleN),
+        ]
+    ]
+
+    # Datos de la tabla
+    client_profiles = UserProfile.objects.filter(role=2).select_related('user')
+    for idx, profile in enumerate(client_profiles, 1):
+        user = profile.user
+        data.append([
+            Paragraph(str(idx), styleN),
+            Paragraph(user.username or "", styleN),
+            Paragraph(user.first_name or "", styleN),
+            Paragraph(user.last_name or "", styleN),
+            Paragraph(user.email or "", styleN),
+            Paragraph(profile.phone or "", styleN),
+        ])
+
+    # Calcular el ancho total disponible
+    page_width = letter[0] - doc.leftMargin - doc.rightMargin
+    proportions = [0.06, 0.18, 0.18, 0.18, 0.24, 0.16]
+    col_widths = [page_width * p for p in proportions]
+
+    # Crear la tabla centrada y ocupando el ancho disponible
+    table = Table(data, repeatRows=1, colWidths=col_widths, hAlign='CENTER')
+
+    # Estilos de la tabla
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#ffffff")),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.HexColor("#ffffff"), colors.white]),
+        ('GRID', (0, 0), (-1, -1), 0.8, colors.HexColor("#000000")),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 4),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 4),
+    ]))
+
+    elements.append(table)
+    doc.build(elements, onFirstPage=footer, onLaterPages=footer)
+    return response

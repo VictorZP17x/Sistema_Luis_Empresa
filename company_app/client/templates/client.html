@@ -21,6 +21,10 @@
                                                 <i data-feather="plus-circle"></i>
                                             </span><strong>Añadir Cliente</strong>
                                         </button>
+                                        <button class="btn btn-danger"
+                                            onclick="window.location.href='{% url 'client:generate_pdf_clients' %}'">
+                                            <i data-feather="file"></i> Generar Reporte PDF
+                                        </button>
                                     </div>
                                     <!-- Buscador DataTable -->
                                     <table id="datatable-client" class="table responsive">
@@ -28,7 +32,6 @@
                                             <tr>
                                                 <th class="centered" scope="col">#</th>
                                                 <th class="centered" scope="col">Usuario</th>
-                                                <th class="centered" scope="col">Contraseña</th>
                                                 <th class="centered" scope="col">Nombre</th>
                                                 <th class="centered" scope="col">Apellido</th>
                                                 <th class="centered" scope="col">Email</th>
@@ -41,7 +44,6 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ client.username }}</td>
-                                                <td>Contraseña oculta</td>
                                                 <td>{{ client.first_name }}</td>
                                                 <td>{{ client.last_name }}</td>
                                                 <td>{{ client.email }}</td>
@@ -150,7 +152,7 @@
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
                                 id="toggle-edit-password" tabindex="-1" style="z-index:2;">
-                                <i class="bi bi-eye" id="icon-edit-eye"></i>
+                                <i data-feather="eye" id="icon-edit-eye"></i>
                             </button>
                         </div>
                     </div>

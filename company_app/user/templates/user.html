@@ -21,13 +21,16 @@
                                                 <i data-feather="plus-circle"></i>
                                             </span><strong>Añadir Usuario</strong>
                                         </button>
+                                        <button class="btn btn-danger"
+                                            onclick="window.location.href='{% url 'user:generate_pdf_users' %}'">
+                                            <i data-feather="file"></i> Generar Reporte PDF
+                                        </button>
                                     </div>
                                     <table id="datatable-user" class="table responsive">
                                         <thead>
                                             <tr>
                                                 <th class="centered" scope="col">#</th>
                                                 <th class="centered" scope="col">Usuario</th>
-                                                <th class="centered" scope="col">Contraseña</th>
                                                 <th class="centered" scope="col">Nombre</th>
                                                 <th class="centered" scope="col">Apellido</th>
                                                 <th class="centered" scope="col">Email</th>
@@ -40,7 +43,6 @@
                                             <tr>
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ user.username }}</td>
-                                                <td>Oculta</td>
                                                 <td>{{ user.first_name }}</td>
                                                 <td>{{ user.last_name }}</td>
                                                 <td>{{ user.email }}</td>
