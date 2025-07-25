@@ -1,18 +1,18 @@
 from django.shortcuts import render, redirect
 from .models import Company
+from work_type.models import WorkType
 from .forms import CompanyForm
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib import colors
+from reportlab.pdfgen import canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from django.urls import reverse
 import os
 from django.conf import settings
-
-from work_type.models import WorkType
-# ...existing code...
+import datetime
 
 def company(request):
     if request.method == 'POST':
@@ -67,10 +67,18 @@ def edit_company(request, pk):
             return JsonResponse({'success': False, 'error': 'Empresa no encontrada'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
+def footer(canvas, doc):
+    fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
+    canvas.saveState()
+    canvas.setFont('Helvetica', 8)
+    width, height = letter
+    canvas.drawRightString(width - 20, 15, footer_text)
+    canvas.restoreState()
 
 def generate_pdf(request):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="empresas.pdf"'
+    response['Content-Disposition'] = 'attachment; filename="Reporte_Empresas.pdf"'
 
     doc = SimpleDocTemplate(
         response,
@@ -85,9 +93,32 @@ def generate_pdf(request):
     styleN = styles['Normal']
     styleN.wordWrap = 'CJK'
 
+    # Logo
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'assets', 'images', 'logo_pdf.png')
+    if os.path.exists(logo_path):
+        img = Image(logo_path, width=60, height=60)
+    else:
+        img = Spacer(1, 40)
+
     # Título
-    title = Paragraph("Reporte de Empresas", styles['Title'])
-    elements.append(title)
+    title = Paragraph("Empresas", styles['Title'])
+
+    # Tabla de una fila y dos columnas: imagen y título
+    header_table = Table(
+        [[img, title]],
+        colWidths=[0, doc.width - 0],
+        hAlign='LEFT'
+    )
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (1, 0), (1, 0), 'CENTER'),  # Título alineado a la izquierda
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+    ]))
+
+    elements.append(header_table)
     elements.append(Spacer(1, 12))
 
     # Encabezados de la tabla
@@ -105,19 +136,23 @@ def generate_pdf(request):
     # Datos de la tabla
     companies = Company.objects.all()
     for idx, company in enumerate(companies, 1):
+    # Obtener los servicios (work_types) asociados a la empresa
+        work_type = ", ".join([wt.name for wt in company.work_types.all()])
+        description = company.description or ""
+        if work_type:
+            description += f"<br/><b>Servicios:</b> {work_type}"
         data.append([
             Paragraph(str(idx), styleN),
             Paragraph(company.name or "", styleN),
             Paragraph(company.address or "", styleN),
             Paragraph(company.phone_number or "", styleN),
             Paragraph(company.rif or "", styleN),
-            Paragraph(company.description or "", styleN)
+            Paragraph(description, styleN)
         ])
 
     # Calcular el ancho total disponible
     page_width = letter[0] - doc.leftMargin - doc.rightMargin
-    # Proporciones para cada columna (ajusta si lo deseas)
-    proportions = [0.06, 0.18, 0.24, 0.13, 0.13, 0.26]
+    proportions = [0.06, 0.18, 0.24, 0.16, 0.13, 0.24]
     col_widths = [page_width * p for p in proportions]
 
     # Crear la tabla centrada y ocupando el ancho disponible
@@ -125,15 +160,15 @@ def generate_pdf(request):
 
     # Estilos de la tabla
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#7798bd")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 11),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#e3f2fd")),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.HexColor("#e3f2fd"), colors.white]),
-        ('GRID', (0, 0), (-1, -1), 0.8, colors.HexColor("#1976d2")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#ffffff")),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.HexColor("#ffffff"), colors.white]),
+        ('GRID', (0, 0), (-1, -1), 0.8, colors.HexColor("#000000")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 9),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
@@ -143,5 +178,5 @@ def generate_pdf(request):
     ]))
 
     elements.append(table)
-    doc.build(elements)
+    doc.build(elements, onFirstPage=footer, onLaterPages=footer)
     return response
