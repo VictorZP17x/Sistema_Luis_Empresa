@@ -7,4 +7,7 @@ urlpatterns = [
     path("add_works_to_do/", views.add_works_to_do, name="add_works_to_do"),
     path("edit_works_to_do/", views.edit_works_to_do, name="edit_works_to_do"),
     path("delete_works_to_do/", views.delete_works_to_do, name="delete_works_to_do"),
+    path("change_status_works_to_do/", views.change_status_works_to_do, name="change_status_works_to_do"),
+    path('generate-pdf/', views.generate_pdf_all, name='generate_pdf_all'),
+    path('generate-pdf/<int:pk>/', views.generate_pdf_individual, name='generate_pdf_individual'),
 ]
