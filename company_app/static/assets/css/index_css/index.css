@@ -1,3 +1,16 @@
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: -1; /* Cambia de 0 a -1 para que nunca tape el modal */
+}
+
 .custom-carousel {
   position: relative;
   width: 100%;
@@ -25,21 +38,7 @@ body {
   position: relative;
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.45); /* Ajusta la opacidad aquí */
-  z-index: 0;
-  pointer-events: none;
-}
 
-/* Asegúrate que el contenido principal esté por encima */
 .main-content,
 nav {
   position: relative;
@@ -83,11 +82,11 @@ footer.bg-primary {
 
 /* Asegura que el modal y el backdrop estén por encima del fondo difuminado */
 .modal-backdrop {
-  z-index: 2050 !important;
+  z-index: 9998 !important;
 }
 .modal {
-  z-index: 2060 !important;
+  z-index: 9999 !important;
 }
 .modal-content {
-  z-index: 2070 !important;
+  z-index: 10000 !important;
 }

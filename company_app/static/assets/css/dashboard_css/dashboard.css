@@ -7,3 +7,13 @@
 #cards-empresas > div[class*="col-"].oculto {
   display: none !important;
 }
+
+.modal-backdrop {
+  z-index: 2050 !important;
+}
+.modal {
+  z-index: 2060 !important;
+}
+.modal-content {
+  z-index: 2070 !important;
+}

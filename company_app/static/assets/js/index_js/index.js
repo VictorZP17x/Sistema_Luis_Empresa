@@ -81,3 +81,21 @@ $(function () {
     $("#no-coincidencias-empresas").toggle(visibles === 0);
   });
 });
+
+$(function () {
+  $(document).on("click", ".btn-ver-mas", function () {
+    const nombre = $(this).data("nombre");
+    const servicios = $(this).data("servicios");
+    $("#modalEmpresaNombre").text(nombre);
+
+    if (servicios && servicios.trim() !== "") {
+      const badges = servicios.split(",").map(s => `<span class="badge bg-info me-1">${s.trim()}</span>`).join(" ");
+      $("#modalEmpresaServicios").html(`<strong>Servicios:</strong> ${badges}`);
+    } else {
+      $("#modalEmpresaServicios").html('<span class="text-muted">Sin servicios</span>');
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById("modalServiciosEmpresa"));
+    modal.show();
+  });
+});

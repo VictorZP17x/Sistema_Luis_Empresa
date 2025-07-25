@@ -16,7 +16,6 @@
 </div>
 <div>
     <div class="row mt-4 justify-content-center" id="cards-empresas">
-        {% if page_obj.object_list %}
         {% for company in page_obj.object_list %}
         <div class="col-12 col-sm-6 col-md-4 col-lg-4 d-flex align-items-stretch mb-4">
             <div class="card shadow-sm company-card w-100">
@@ -47,49 +46,22 @@
                         <small class="text-muted">RIF</small><br>
                         <span class="empresa-rif">{{ company.rif }}</span>
                     </div>
-                    <button class="btn btn-primary btn-sm mt-2 btn-ver-mas" data-bs-toggle="modal"
-                        data-bs-target="#empresaServiciosModal{{ company.id }}">
+                    <button class="btn btn-primary btn-sm mt-2 btn-ver-mas"
+    data-nombre="{{ company.name }}"
+    data-servicios="{% for wt in company.work_types.all %}{{ wt.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
                         Ver más
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Modal de servicios de la empresa -->
-        <div class="modal fade" id="empresaServiciosModal{{ company.id }}" tabindex="-1"
-            aria-labelledby="empresaServiciosModalLabel{{ company.id }}" aria-hidden="true">
-            <div class="modal-dialog"> <!-- Elimina modal-dialog-centered -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="empresaServiciosModalLabel{{ company.id }}">
-                            Servicios de {{ company.name }}
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <strong>Servicios:</strong>
-                        {% if company.work_types.all %}
-                        {% for wt in company.work_types.all %}
-                        <span class="badge bg-info me-1">{{ wt.name }}</span>
-                        {% endfor %}
-                        {% else %}
-                        <span class="text-muted">Sin servicios</span>
-                        {% endif %}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        {% else %}
+        {% empty %}
         <div class="col-12">
             <div class="alert alert-info text-center my-5">
                 No hay Empresas registradas en el sistema.
             </div>
         </div>
-        {% endif %}
+        {% endfor %}
     </div>
     <!-- ...paginación... -->
     {% if page_obj.paginator.num_pages > 1 %}
@@ -123,4 +95,22 @@
         </ul>
     </nav>
     {% endif %}
+</div>
+
+<!-- Modal fuera de main-content -->
+<div class="modal fade" id="modalServiciosEmpresa" tabindex="-1" aria-labelledby="modalServiciosEmpresaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="z-index: 2070;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalServiciosEmpresaLabel">Servicios de <span id="modalEmpresaNombre"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modalEmpresaServicios"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
 </div>
