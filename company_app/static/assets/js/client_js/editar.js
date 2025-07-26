@@ -29,24 +29,23 @@ function formatVenezuelanPhone(raw) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Mostrar/Ocultar contraseña
   const toggleBtn = document.getElementById("toggle-edit-password");
   const passwordInput = document.getElementById("edit-password");
-  const iconEye = document.getElementById("icon-edit-eye");
-  if (toggleBtn && passwordInput && iconEye) {
+  if (toggleBtn && passwordInput) {
     toggleBtn.addEventListener("click", function () {
+      // Busca el ícono actual cada vez
+      let iconEye = document.getElementById("icon-edit-eye");
+      if (!iconEye) return;
       if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        iconEye.classList.remove("bi-eye");
-        iconEye.classList.add("bi-eye-slash");
+        iconEye.setAttribute("data-feather", "eye-off");
       } else {
         passwordInput.type = "password";
-        iconEye.classList.remove("bi-eye-slash");
-        iconEye.classList.add("bi-eye");
+        iconEye.setAttribute("data-feather", "eye");
       }
+      if (window.feather) feather.replace();
     });
   }
-
   // Abrir modal y rellenar datos
   document.querySelectorAll(".edit-client-button").forEach(function (btn) {
     btn.addEventListener("click", function () {

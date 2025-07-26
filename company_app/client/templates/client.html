@@ -97,7 +97,7 @@
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
                                 id="toggle-password" tabindex="-1" style="z-index:2;">
-                                <i class="bi bi-eye" id="icon-eye"></i>
+                                <i data-feather="eye" id="icon-eye"></i>
                             </button>
                         </div>
                         {% else %}
@@ -192,4 +192,5 @@
 <script src="{% static 'assets/js/client_js/añadir.js' %}"></script>
 <script src="{% static 'assets/js/client_js/editar.js' %}"></script>
 <script src="{% static 'assets/js/client_js/borrar.js' %}"></script>
+<script src="{% static 'assets/js/client_js/verify-password.js' %}"></script>
 {% endblock %}
