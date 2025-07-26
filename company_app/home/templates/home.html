@@ -9,7 +9,6 @@
     <link rel="icon" href="{% static 'assets/images/logo_white.png' %}" type="image/x-icon">
     <!-- jQuery -->
     <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'assets/js/slide_bar.js' %}"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'assets/bootstrap-5.3.6/css/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/bootstrap-5.3.6/css/bootstrap.min.css' %}" />
@@ -186,9 +185,11 @@
     <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
     <!-- Plugin para Customizar Scrollbars -->
     <script src="{% static 'assets/js/plugins/simplebar.min.js' %}"></script>
+    <!-- CUSTOM JS -->
     {% if show_welcome %}
     <script src="{% static 'assets/js/home_js/welcome-alert.js' %}"></script>
     {% endif %}
+    <script src="{% static 'assets/js/slide_bar.js' %}"></script>
 
     {% block extra_css %}
 

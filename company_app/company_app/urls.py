@@ -9,7 +9,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("home/", include("home.urls")),
     path("login/", include("login.urls")),  
-    path('', lambda request: redirect('login:login')),
     path("client/", include("client.urls")),
     path("company/", include("company.urls")),
     path("log_history/", include("log_history.urls")),
@@ -17,6 +16,7 @@ urlpatterns = [
     path("work_type/", include("work_type.urls")),
     path("works_to_do/", include("works_to_do.urls")),
     path("index/", include("index.urls")), 
+    path('', include("index.urls")),
 
 ]
 

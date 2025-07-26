@@ -3,7 +3,7 @@
 <div class="row justify-content-center mb-3">
     <div class="col-12 col-md-6">
         <div class="input-group">
-            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <span class="input-group-text"><i data-feather="search"></i></span>
             <input type="text" id="buscador-empresas" class="form-control"
                 placeholder="Buscar empresa por nombre, dirección, teléfono o RIF...">
         </div>
@@ -43,14 +43,15 @@
                         <span class="empresa-telefono">{{ company.phone_number }}</span>
                     </div>
                     <div class="mb-2">
-                        <small class="text-muted">RIF</small><br>
-                        <span class="empresa-rif">{{ company.rif }}</span>
+                        <small class="text-muted">Servicios</small><br>
+                        {% if company.work_types.all %}
+                        {% for servicio in company.work_types.all %}
+                        <span class="badge bg-primary me-1 mb-1">{{ servicio.name }}</span>
+                        {% endfor %}
+                        {% else %}
+                        <span class="text-muted">Sin servicios asociados</span>
+                        {% endif %}
                     </div>
-                    <button class="btn btn-primary btn-sm mt-2 btn-ver-mas"
-    data-nombre="{{ company.name }}"
-    data-servicios="{% for wt in company.work_types.all %}{{ wt.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
-                        Ver más
-                    </button>
                 </div>
             </div>
         </div>
@@ -95,22 +96,4 @@
         </ul>
     </nav>
     {% endif %}
-</div>
-
-<!-- Modal fuera de main-content -->
-<div class="modal fade" id="modalServiciosEmpresa" tabindex="-1" aria-labelledby="modalServiciosEmpresaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="z-index: 2070;">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalServiciosEmpresaLabel">Servicios de <span id="modalEmpresaNombre"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <div id="modalEmpresaServicios"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
 </div>
