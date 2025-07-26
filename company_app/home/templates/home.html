@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -57,6 +58,11 @@
                                         <img src="{% static 'assets/images/user/avatar-2.jpg' %}" alt="user-image"
                                             class="user-avtar wid-35" />
                                     </div>
+                                    <div class="ms-2">
+                                        <span class="fw-bold text-white">{{ request.user.first_name }} {{request.user.last_name }}</span>
+                                        <br>
+                                        <small class="text-white-50">{{ request.user.username }}</small>
+                                    </div>
                                 </div>
                             </div>
                             <div class="dropdown-body">
@@ -109,18 +115,18 @@
                             <span class="pc-mtext">Inicio</span>
                         </a>
                     </li>
+                    <li class="pc-item">
+                        <a href="{% url 'home:works_to_do' %}" class="pc-link">
+                            <span class="pc-micon"><i data-feather="file-text"></i></span>
+                            <span class="pc-mtext">Trabajos</span>
+                        </a>
+                    </li>
                     <!-- SOLO para NO clientes -->
                     {% if not is_cliente %}
                     <li class="pc-item pc-hasmenu">
                         <a href="{% url 'home:company' %}" class="pc-link">
                             <span class="pc-micon"><i data-feather="briefcase"></i></span>
                             <span class="pc-mtext">Empresas</span>
-                        </a>
-                    </li>
-                    <li class="pc-item">
-                        <a href="{% url 'home:works_to_do' %}" class="pc-link">
-                            <span class="pc-micon"><i data-feather="file-text"></i></span>
-                            <span class="pc-mtext">Trabajos</span>
                         </a>
                     </li>
                     <li class="pc-item">

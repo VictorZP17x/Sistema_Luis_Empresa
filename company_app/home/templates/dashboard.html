@@ -4,47 +4,61 @@
 
 <div class="pc-container">
     <div class="pc-content">
-        <div class="row">
-            <div class="col-md-6 col-xl-4">
-                <div class="card">
+        <div class="row g-3 mb-4">
+            <div class="col">
+                <div class="card h-100">
                     <div class="card-body">
                         <h6 class="mb-4">Empresas</h6>
-                        <div class="row d-flex align-items-center">
-                            <div class="col-9">
-                                <h3 class="f-w-300 d-flex align-items-center m-b-0">
-                                    <i class="feather icon-briefcase text-primary f-30 m-r-10"></i>
-                                    {{ companies_count }}
-                                </h3>
-                            </div>
-                        </div>
+                        <h3 class="f-w-300 d-flex align-items-center m-b-0">
+                            <i class="feather icon-briefcase text-primary f-30 m-r-10"></i>
+                            {{ companies_count }}
+                        </h3>
                     </div>
                 </div>
             </div>
             {% if not is_cliente and not is_empleado %}
-            <div class="col-md-6 col-xl-4">
-                <div class="card">
+            <div class="col">
+                <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="mb-4">Usuarios</h6>
-                        <div class="row d-flex align-items-center">
-                            <div class="col-9">
-                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
-                                        class="feather icon-users text-info f-30 m-r-10"></i>0</h3>
-                            </div>
-                        </div>
+                        <h6 class="mb-4">Empleados</h6>
+                        <h3 class="f-w-300 d-flex align-items-center m-b-0">
+                            <i class="feather icon-user text-success f-30 m-r-10"></i>
+                            {{ employees_count }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="mb-4">Administradores</h6>
+                        <h3 class="f-w-300 d-flex align-items-center m-b-0">
+                            <i class="feather icon-shield text-info f-30 m-r-10"></i>
+                            {{ admins_count }}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h6 class="mb-4">Clientes</h6>
+                        <h3 class="f-w-300 d-flex align-items-center m-b-0">
+                            <i class="feather icon-users text-warning f-30 m-r-10"></i>
+                            {{ clients_count }}
+                        </h3>
                     </div>
                 </div>
             </div>
             {% endif %}
-            <div class="col-md-12 col-xl-4">
-                <div class="card">
+            <div class="col">
+                <div class="card h-100">
                     <div class="card-body">
-                        <h6 class="mb-4">Solicitudes</h6>
-                        <div class="row d-flex align-items-center">
-                            <div class="col-9">
-                                <h3 class="f-w-300 d-flex align-items-center  m-b-0"><i
-                                        class="feather icon-file-text text-warning f-30 m-r-10"></i>0</h3>
-                            </div>
-                        </div>
+                        <h6 class="mb-4">Trabajos</h6>
+                        <h3 class="f-w-300 d-flex align-items-center m-b-0">
+                            <i class="feather icon-file-text text-danger f-30 m-r-10"></i>
+                            {{ works_count }}
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -65,8 +79,8 @@
             </div>
         </div>
         <div class="row mt-4 justify-content-center" id="cards-empresas">
-            {% if companies %}
-            {% for company in companies %}
+            {% if page_obj.object_list %}
+            {% for company in page_obj.object_list %}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch mb-4">
                 <div class="card shadow-sm company-card w-100">
                     <div class="card-header text-center">
@@ -117,6 +131,38 @@
             {% endif %}
         </div>
 
+        <!-- Paginación -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Paginación de empresas">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Anterior</span>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Siguiente</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
         {% for company in companies %}
         <div class="modal fade" id="empresaModal{{ company.id }}" tabindex="-1"
             aria-labelledby="empresaModalLabel{{ company.id }}" aria-hidden="true">
