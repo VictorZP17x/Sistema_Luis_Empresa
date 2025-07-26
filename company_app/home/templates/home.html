@@ -1,11 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Ícono del Sistema -->
+    <link rel="icon" href="{% static 'assets/images/logo_white.png' %}" type="image/x-icon">
     <!-- jQuery -->
     <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'assets/js/slide_bar.js' %}"></script>
@@ -20,12 +21,6 @@
     <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
     <!-- Template CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
-    <style>
-        /* Oculta los módulos solo para clientes */
-        body.cliente .pc-navbar .pc-item:not(:nth-child(1)):not(:nth-child(2)) {
-            display: none !important;
-        }
-    </style>
 </head>
 
 <body class="{% if show_header_search %}dashboard-page {% endif %}{% if is_cliente %}cliente{% endif %}">
@@ -177,7 +172,6 @@
             </div>
         </div>
     </footer>
-
     <!-- Bootstrap JS -->
     <script src="{% static 'assets/bootstrap-5.3.6/js/bootstrap.bundle.min.js' %}"></script>
     <!-- DataTables JS -->
@@ -186,21 +180,14 @@
     <script src="{% static 'assets/js/sweetalert2@11.js' %}"></script>
     <!-- Select2 JS -->
     <script src="{% static 'assets/select2/js/select2.min.js' %}"></script>
-    <!-- Bootstrap JS -->
-    <!-- Íconos - Feather Icons JS -->
+    <!-- Manejo de Toggle y Clases para el Contenido -->
     <script src="{% static 'assets/js/pcoded.js' %}"></script>
+    <!-- Íconos - Feather Icons JS -->
     <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
     <!-- Plugin para Customizar Scrollbars -->
     <script src="{% static 'assets/js/plugins/simplebar.min.js' %}"></script>
     {% if show_welcome %}
-    <script>
-        Swal.fire({
-            icon: "success",
-            title: "¡Bienvenido!",
-            text: "Has ingresado correctamente al sistema.",
-            confirmButtonText: "Aceptar"
-        });
-    </script>
+    <script src="{% static 'assets/js/home_js/welcome-alert.js' %}"></script>
     {% endif %}
 
     {% block extra_css %}
@@ -208,7 +195,7 @@
     {% endblock %}
 
     {% block extra_js %}
-    <script src="{% static 'assets/js/home_js/home.js' %}"></script>
+
     {% endblock %}
 </body>
 

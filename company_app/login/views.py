@@ -6,12 +6,16 @@ from django.contrib.auth.models import User, Group
 from .forms import RegisterForm
 from django.urls import reverse
 from user.models import UserProfile
+import re
 
 # @login_required
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
+            error = "La contraseña debe tener al menos 8 caracteres, una letra y un número."
+            return render(request, 'login.html', {'error': error})
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
@@ -19,7 +23,7 @@ def login(request):
             request.session['show_welcome'] = True
             return redirect('home:dashboard')
         else:
-            error = "Usuario o contraseña incorrectos"
+            error = "Usuario o contraseña incorrectos."
             return render(request, 'login.html', {'error': error})
     return render(request, 'login.html', {
     })
@@ -29,6 +33,10 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
+            password = form.cleaned_data['password']
+            if len(password) < 8 or not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
+                error_msg = "La contraseña debe tener al menos 8 caracteres, una letra y un número."
+                return render(request, 'register.html', {'form': form, 'register_error': error_msg})
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             telefono = form.cleaned_data['telefono']

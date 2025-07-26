@@ -117,7 +117,7 @@ def generate_pdf_all(request):
     # Cabecera
     header_table = Table(
         [[img, title]],
-        colWidths=[60, doc.width - 60],
+        colWidths=[0, doc.width - 0],
         hAlign='LEFT'
     )
     header_table.setStyle(TableStyle([

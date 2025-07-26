@@ -1,39 +1,20 @@
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="es">
 
-<body>
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description"
-    content="Datta able is trending dashboard template made using Bootstrap 5 design framework and Flask, a leading backend framework written in Python.">
-  <meta name="keywords" content="datta able, flask datta able, flask theme UI, flask admin theme">
-  <meta name="author" content="App-Generator">
-
-  <!-- [Favicon] icon -->
-  <link rel="icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon">
-  <!-- [Font] Family -->
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <!-- [Tabler Icons] https://tablericons.com -->
-  <link rel="stylesheet" href="{% static 'assets/fonts/tabler-icons.min.css' %}">
-  <!-- [Feather Icons] https://feathericons.com -->
+  <!-- Ícono del Sistema -->
+  <link rel="icon" href="{% static 'assets/images/logo_white.png' %}" type="image/x-icon">
+  <!-- Íconos - Feather Icons CSS -->
   <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
-  <!-- [Font Awesome Icons] https://fontawesome.com/icons -->
-  <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome.css' %}">
-  <!-- [Material Icons] https://fonts.google.com/icons -->
-  <link rel="stylesheet" href="{% static 'assets/fonts/material.css' %}">
-  <!-- [Template CSS Files] -->
+  <!-- Template CSS -->
   <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
-  <link rel="stylesheet" href="{% static 'assets/css/style-preset.css' %}">
-  <link rel="stylesheet" href="{% static 'assets/css/dashboard_css/dashboard.css' %}">
-  <!--Iconos y Js del login-register -->
-  <script src="https://unpkg.com/feather-icons"></script>
-  <script src="{% static 'assets/js/login_js/login-register.js' %}"></script>
-  <script src="{% static 'assets/js/login_js/sweet_alerts.js' %}"></script>
+</head>
 
-  <!-- Your Custom CSS -->
-  <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}">
-
+<body>
   <div class="auth-main">
     <div class="auth-wrapper v1">
       <div class="auth-form">
@@ -53,13 +34,13 @@
               <div class="text-center">
                 <a href="">
                   <div>
-                    <img src="" alt="img">
+                    <img src="{% static 'assets/images/logo_pdf.png' %}" alt="img" width="90">
                   </div>
                 </a>
               </div>
 
 
-              <h4 class="text-center f-w-500 mt-4 mb-3">Register</h4>
+              <h4 class="text-center f-w-500 mt-4 mb-3">Registrarse</h4>
               <p class="text-center">
                 Registre sus datos
               </p>
@@ -120,8 +101,7 @@
                 <div class="d-flex mt-1 justify-content-between">
                 </div>
                 <div class="text-center mt-4">
-                  <button type="submit" id="register-btn" name="register" class="btn btn-primary shadow px-sm-4"
-                    {% if register_error %}data-error="1"{% endif %}>Registrarse</button>
+                  <button type="submit" id="register-btn" name="register" class="btn btn-primary shadow px-sm-4" {% if register_error %}data-error="1"{% endif %}>Registrarse</button>
                 </div>
                 <div class="d-flex justify-content-center align-items-end mt-4">
                   <a href="{% url 'login:login' %}" class="link-primary">Iniciar Sesión</a>
@@ -132,14 +112,19 @@
       </div>
     </div>
   </div>
-  <!-- Sweet alert -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  <!-- SweetAlert -->
+  <script src="{% static 'assets/js/sweetalert2@11.js' %}"></script>
+  <!-- Íconos - Feather Icons JS -->
+  <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
+  <!-- CUSTOM JS -->
+  <script src="{% static 'assets/js/login_js/verify-password.js' %}"></script>
+  <script src="{% static 'assets/js/login_js/login-register.js' %}"></script>
   {% if register_error %}
   <script>
     window.registerError = "{{ register_error|escapejs }}";
   </script>
   {% endif %}
+  <script src="{% static 'assets/js/login_js/register-error-alert.js' %}"></script>
 </body>
 
 
