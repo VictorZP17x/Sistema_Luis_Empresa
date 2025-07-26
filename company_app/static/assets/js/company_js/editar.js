@@ -50,6 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
         Array.from(workTypesSelect.options).forEach(opt => {
           opt.selected = selectedWorkTypes.includes(opt.value);
         });
+        // Guardar los servicios originales en data-original
+        workTypesSelect.setAttribute("data-original", selectedWorkTypes.join(","));
       }
     });
   });
@@ -138,7 +140,18 @@ document.addEventListener("DOMContentLoaded", function () {
       const photoInput = document.getElementById("edit-photo");
       const photoChanged = photoInput.files.length > 0;
 
-      if (!(nameChanged || addressChanged || phoneChanged || rifChanged || descChanged || photoChanged)) {
+      // Detectar cambios en servicios
+      const workTypesSelect = document.getElementById("edit-work-types");
+      const originalWorkTypes = (workTypesSelect.getAttribute("data-original") || "").split(",").filter(Boolean);
+      // Usa Select2 para obtener los valores seleccionados
+      const currentWorkTypes = $('#edit-work-types').val() || [];
+      function arraysEqual(a, b) {
+        if (a.length !== b.length) return false;
+        return a.slice().sort().join(",") === b.slice().sort().join(",");
+      }
+      const workTypesChanged = !arraysEqual(originalWorkTypes, currentWorkTypes);
+
+      if (!(nameChanged || addressChanged || phoneChanged || rifChanged || descChanged || photoChanged || workTypesChanged)) {
         e.preventDefault();
         Swal.fire({
           icon: "info",
@@ -198,12 +211,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 $(document).ready(function () {
 
-    $('#edit-modal').on('shown.bs.modal', function () {
-        $('#edit-work-types').select2({
-            placeholder: "Seleccionar servicios",
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#edit-modal')
-        });
+  $('#edit-modal').on('shown.bs.modal', function () {
+    $('#edit-work-types').select2({
+      placeholder: "Seleccionar servicios",
+      allowClear: true,
+      width: '100%',
+      dropdownParent: $('#edit-modal')
     });
+  });
 });

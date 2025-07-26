@@ -70,19 +70,15 @@
                                     style="max-height: calc(100vh - 225px)">
                                     <a href="#" class="dropdown-item">
                                         <span>
-                                            <svg class="pc-icon text-muted me-2">
-                                                <use xlink:href="#custom-lock-outline"></use>
-                                            </svg>
-                                            <span>Cambiar datos Personales</span>
+                                            <i data-feather="settings" class="text-muted me-2"></i>
+                                            <span>Cambiar Datos Personales</span>
                                         </span>
                                     </a>
                                     <div class="d-grid my-2">
                                         <form action="{% url 'home:logout' %}" method="post" style="display:inline;">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-primary">
-                                                <svg class="pc-icon me-2">
-                                                    <use xlink:href="#custom-logout-1-outline"></use>
-                                                </svg>
+                                                <i data-feather="log-out" class="me-2"></i>
                                                 Cerrar Sesión
                                             </button>
                                         </form>
