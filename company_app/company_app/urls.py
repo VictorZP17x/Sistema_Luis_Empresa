@@ -17,6 +17,7 @@ urlpatterns = [
     path("work_type/", include("work_type.urls")),
     path("works_to_do/", include("works_to_do.urls")),
     path("index/", include("index.urls")), 
+    path("personal_data/", include("personal_data.urls")), 
 
 ]
 

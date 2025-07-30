@@ -59,7 +59,8 @@
                                             class="user-avtar wid-35" />
                                     </div>
                                     <div class="ms-2">
-                                        <span class="fw-bold text-white">{{ request.user.first_name }} {{request.user.last_name }}</span>
+                                        <span class="fw-bold text-white">{{ request.user.first_name }}
+                                            {{request.user.last_name }}</span>
                                         <br>
                                         <small class="text-white-50">{{ request.user.username }}</small>
                                     </div>
@@ -69,10 +70,12 @@
                                 <div class="profile-notification-scroll position-relative"
                                     style="max-height: calc(100vh - 225px)">
                                     <a href="#" class="dropdown-item">
-                                        <span>
-                                            <i data-feather="settings" class="text-muted me-2"></i>
-                                            <span>Cambiar Datos Personales</span>
-                                        </span>
+                                        <a href="{% url 'personal_data:personal_data' %}" class="dropdown-item">
+                                            <span>
+                                                <i data-feather="settings" class="text-muted me-2"></i>
+                                                <span>Cambiar Datos Personales</span>
+                                            </span>
+                                        </a>
                                     </a>
                                     <div class="d-grid my-2">
                                         <form action="{% url 'home:logout' %}" method="post" style="display:inline;">

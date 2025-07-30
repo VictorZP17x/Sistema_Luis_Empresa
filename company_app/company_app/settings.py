@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'work_type',
     'works_to_do',
     'index',
+    'personal_data',
 ]
 
 MIDDLEWARE = [
