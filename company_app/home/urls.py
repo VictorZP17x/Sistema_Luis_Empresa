@@ -23,4 +23,6 @@ urlpatterns = [
     path("works_to_do/", works_to_do_views.works_to_do, name="works_to_do"),
     path('logout/', log_out, name='logout'),
     path('admin/', admin.site.urls),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('personal_data/', include('personal_data.urls')),
 ]

@@ -3,9 +3,16 @@ from django.contrib.auth.models import User
 from user.models import UserProfile
 
 class PersonalDataForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(), required=False, label="Contraseña")
-    phone = forms.CharField(required=False, label="Teléfono")
-
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'contraseña oculta'}),
+        required=False,
+        label="Contraseña"
+    )
+    phone = forms.CharField(
+        required=False,
+        label="Teléfono",
+        widget=forms.TextInput(attrs={'id': 'id_phone'})
+    )
     class Meta:
         model = User
         fields = ['username', 'password', 'first_name', 'last_name', 'email']

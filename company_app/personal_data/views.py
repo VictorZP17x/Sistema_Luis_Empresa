@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import PersonalDataForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def personal_data(request):
     user = request.user
     if request.method == 'POST':
@@ -11,6 +14,7 @@ def personal_data(request):
             if password:
                 user.set_password(password)
             user.save()
+            messages.success(request, "¡Tus datos personales se han actualizado correctamente!")
             return redirect('personal_data:personal_data')
     else:
         form = PersonalDataForm(instance=user)
