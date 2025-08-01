@@ -60,18 +60,18 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   const toggleBtn = document.getElementById("toggle-password");
   const passwordInput = document.getElementById("id_password");
-  const iconEye = document.getElementById("icon-eye");
-  if (toggleBtn && passwordInput && iconEye) {
+  if (toggleBtn && passwordInput) {
     toggleBtn.addEventListener("click", function () {
+      let iconEye = document.getElementById("icon-eye");
+      if (!iconEye) return;
       if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        iconEye.classList.remove("bi-eye");
-        iconEye.classList.add("bi-eye-slash");
+        iconEye.setAttribute("data-feather", "eye-off");
       } else {
         passwordInput.type = "password";
-        iconEye.classList.remove("bi-eye-slash");
-        iconEye.classList.add("bi-eye");
+        iconEye.setAttribute("data-feather", "eye");
       }
+      if (window.feather) feather.replace();
     });
   }
 });

@@ -107,7 +107,7 @@
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
                                 id="toggle-password" tabindex="-1" style="z-index:2;">
-                                <i class="bi bi-eye" id="icon-eye"></i>
+                                <i data-feather="eye" id="icon-eye"></i>
                             </button>
                         </div>
                         {% else %}
@@ -161,7 +161,7 @@
                             <button type="button"
                                 class="btn btn-outline-secondary btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
                                 id="toggle-edit-password" tabindex="-1" style="z-index:2;">
-                                <i class="bi bi-eye" id="icon-edit-eye"></i>
+                                <i data-feather="eye" id="icon-edit-eye"></i>
                             </button>
                         </div>
                     </div>
@@ -204,4 +204,5 @@
 <script src="{% static 'assets/js/user_js/editar.js' %}"></script>
 <script src="{% static 'assets/js/user_js/borrar.js' %}"></script>
 <script src="{% static 'assets/js/user_js/rol.js' %}"></script>
+<script src="{% static 'assets/js/user_js/verify-password.js' %}"></script>
 {% endblock %}

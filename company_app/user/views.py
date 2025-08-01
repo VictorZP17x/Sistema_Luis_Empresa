@@ -18,7 +18,9 @@ from django.conf import settings
 
 # @login_required
 def user(request):
-    user_profiles = UserProfile.objects.filter(role__in=[0, 1])  # Solo admins y usuarios
+    user_profiles = UserProfile.objects.filter(role__in=[0, 1])
+    if request.user.is_authenticated:
+        user_profiles = user_profiles.exclude(user=request.user)
     users = [profile.user for profile in user_profiles]
 
     form = UserForm(request.POST or None)
