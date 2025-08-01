@@ -134,6 +134,11 @@
                     <div class="mb-3">
                         <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field|add_class:"form-control" }}
+                        {% if field.name == "description" %}
+                        <small id="company-description-help" class="form-text text-muted">
+                            Máximo 255 caracteres. Te quedan <span id="company-description-left">255</span>.
+                        </small>
+                        {% endif %}
                         {% if field.name == "photo" %}
                         <div class="mt-2">
                             <img id="register-photo-preview" src="{% static 'assets/img/default-company.png' %}"
@@ -187,8 +192,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="edit-description">Descripción</label>
-                        <textarea class="form-control" id="edit-description" name="description" rows="3"
+                        <textarea class="form-control" id="edit-description" name="description" rows="3" maxlength="255"
                             required></textarea>
+                        <small id="company-description-help-edit" class="form-text text-muted">
+                            Máximo 255 caracteres. Te quedan <span id="company-description-left-edit">255</span>.
+                        </small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="edit-photo">Foto actual</label>
