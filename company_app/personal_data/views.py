@@ -57,3 +57,26 @@ def personal_data(request):
     else:
         form = PersonalDataForm(instance=user)
         return render(request, 'personal_data.html', {'form': form})
+    
+@csrf_exempt
+@login_required
+def validar_datos_personales(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        email = data.get('email')
+        phone = data.get('phone')
+        user_id = request.user.id  # El usuario autenticado
+
+        errores = []
+        if User.objects.filter(username=username).exclude(pk=user_id).exists():
+            errores.append("usuario")
+        if User.objects.filter(email=email).exclude(pk=user_id).exists():
+            errores.append("email")
+        if UserProfile.objects.filter(phone=phone).exclude(user__pk=user_id).exists():
+            errores.append("teléfono")
+        if errores:
+            error_msg = "El " + ", ".join(errores) + " ya existe. Por favor intente con otro."
+            return JsonResponse({'error': error_msg})
+        return JsonResponse({'ok': True})
+    return JsonResponse({'error': 'Petición inválida'})
