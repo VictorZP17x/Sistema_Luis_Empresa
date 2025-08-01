@@ -21,6 +21,12 @@ $(document).ready(function () {
         $('#edit-fk_company').val($(this).data('fk_company_id')).trigger('change');
         $('#edit-fk_user').val($(this).data('fk_user_id')).trigger('change');
 
+        // Guarda valores originales
+        $('#edit-name').attr('data-original', $(this).data('name'));
+        $('#edit-description').attr('data-original', $(this).data('description'));
+        $('#edit-fk_company').attr('data-original', $(this).data('fk_company_id'));
+        $('#edit-fk_user').attr('data-original', $(this).data('fk_user_id'));
+
         // Filtra los servicios según la empresa del registro
         var companyId = $(this).data('fk_company_id').toString();
         filterWorkTypes(companyId, '#edit-fk_work_type');
@@ -32,6 +38,7 @@ $(document).ready(function () {
             workTypeIds = workTypeIds.split(',').map(function (id) { return id.trim(); });
         }
         $('#edit-fk_work_type').val(workTypeIds).trigger('change');
+        $('#edit-fk_work_type').attr('data-original', workTypeIds.join(','));
 
         $('#edit-works_to_do-modal').modal('show');
     });
@@ -45,6 +52,25 @@ $(document).ready(function () {
     });
 
     $('#edit-works_to_do-form').off('submit').on('submit', function (e) {
+        // Detección de cambios
+        const nameChanged = $('#edit-name').val() !== $('#edit-name').attr('data-original');
+        const descChanged = $('#edit-description').val() !== $('#edit-description').attr('data-original');
+        const companyChanged = $('#edit-fk_company').val() !== $('#edit-fk_company').attr('data-original');
+        const userChanged = $('#edit-fk_user').val() !== $('#edit-fk_user').attr('data-original');
+        const originalWorkTypes = ($('#edit-fk_work_type').attr('data-original') || '').split(',').filter(Boolean);
+        const currentWorkTypes = $('#edit-fk_work_type').val() || [];
+        const workTypesChanged = originalWorkTypes.sort().join(',') !== currentWorkTypes.sort().join(',');
+
+        if (!(nameChanged || descChanged || companyChanged || userChanged || workTypesChanged)) {
+            e.preventDefault();
+            Swal.fire({
+                icon: "info",
+                title: "Sin cambios",
+                text: "No se detectaron cambios para guardar.",
+            });
+            return false;
+        }
+
         e.preventDefault();
         $('#edit-works_to_do-modal').modal('hide');
         setTimeout(function () {

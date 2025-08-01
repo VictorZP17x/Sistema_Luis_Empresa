@@ -26057,3 +26057,6 @@ body.cliente .pc-navbar .pc-item:not(:nth-child(1)):not(:nth-child(2)) {
   background: #778085 !important; /* Gris */
   opacity: 0.8 !important;
 }
+.swal2-container {
+  z-index: 20000 !important;
+}

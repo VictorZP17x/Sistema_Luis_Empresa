@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("edit-service-id").value = id;
       document.getElementById("edit-name").value = name;
       document.getElementById("edit-description").value = description;
+      // Guarda valores originales
+      document.getElementById("edit-name").setAttribute("data-original", name);
+      document.getElementById("edit-description").setAttribute("data-original", description);
       const modal = new bootstrap.Modal(document.getElementById("edit-modal"));
       modal.show();
     });
@@ -15,6 +18,22 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("edit-service-form")
     .addEventListener("submit", function (e) {
+      // Detección de cambios
+      const nameInput = document.getElementById("edit-name");
+      const descInput = document.getElementById("edit-description");
+      const nameChanged = nameInput.value !== nameInput.getAttribute("data-original");
+      const descChanged = descInput.value !== descInput.getAttribute("data-original");
+
+      if (!(nameChanged || descChanged)) {
+        e.preventDefault();
+        Swal.fire({
+          icon: "info",
+          title: "Sin cambios",
+          text: "No se detectaron cambios para guardar.",
+        });
+        return false;
+      }
+
       e.preventDefault();
       Swal.fire({
         title: "¿Estás seguro?",
