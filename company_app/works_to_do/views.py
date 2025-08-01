@@ -1,5 +1,4 @@
 from django.shortcuts import render
-# from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import WorksToDo, Company, User, WorkType
@@ -14,8 +13,9 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
-# @login_required
+@login_required
 def works_to_do(request):
     works_to_do = WorksToDo.objects.all()
     companies = Company.objects.all()
@@ -35,6 +35,7 @@ def works_to_do(request):
         'company_services': company_services,
     })
 
+@login_required
 @csrf_exempt
 def add_works_to_do(request):
     if request.method == 'POST':
@@ -48,6 +49,7 @@ def add_works_to_do(request):
         work.fk_work_type.set(request.POST.getlist('fk_work_type'))
         return JsonResponse({'success': True, 'id': work.id})
 
+@login_required
 @csrf_exempt
 def edit_works_to_do(request):
     if request.method == 'POST':
@@ -61,6 +63,7 @@ def edit_works_to_do(request):
         work.fk_work_type.set(request.POST.getlist('fk_work_type'))
         return JsonResponse({'success': True})
 
+@login_required
 @csrf_exempt
 def delete_works_to_do(request):
     if request.method == 'POST':
@@ -68,6 +71,7 @@ def delete_works_to_do(request):
         work.delete()
         return JsonResponse({'success': True})
 
+@login_required
 @csrf_exempt
 @require_POST
 def change_status_works_to_do(request):
@@ -78,6 +82,7 @@ def change_status_works_to_do(request):
         return JsonResponse({'success': True, 'new_status': work.status})
     return JsonResponse({'success': False, 'msg': 'El trabajo ya está terminado.'})
 
+@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
@@ -87,6 +92,7 @@ def footer(canvas, doc):
     canvas.drawRightString(width - 20, 15, footer_text)
     canvas.restoreState()
 
+@login_required
 def generate_pdf_all(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Reporte_Trabajos.pdf"'
@@ -189,6 +195,7 @@ def generate_pdf_all(request):
     doc.build(elements, onFirstPage=footer, onLaterPages=footer)
     return response
 
+@login_required
 def generate_pdf_individual(request, pk):
     from .models import WorksToDo
     trabajo = WorksToDo.objects.get(pk=pk)

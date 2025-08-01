@@ -14,7 +14,9 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
 import json
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def client(request):
     client_profiles = UserProfile.objects.filter(role=2)
     clients = [profile.user for profile in client_profiles]
@@ -49,7 +51,8 @@ def client(request):
         "clients": clients,
         "form": form,
     })
-    
+
+@login_required    
 @csrf_exempt
 def edit_client(request):
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -78,6 +81,7 @@ def edit_client(request):
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
 
+@login_required
 @csrf_exempt
 def delete_client(request, client_id):
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -89,6 +93,7 @@ def delete_client(request, client_id):
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
 
+@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
@@ -98,6 +103,7 @@ def footer(canvas, doc):
     canvas.drawRightString(width - 20, 15, footer_text)
     canvas.restoreState()
 
+@login_required
 def generate_pdf_clients(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Reporte_Clientes.pdf"'
@@ -198,6 +204,7 @@ def generate_pdf_clients(request):
     doc.build(elements, onFirstPage=footer, onLaterPages=footer)
     return response
 
+@login_required
 @csrf_exempt
 def validar_datos_cliente(request):
     if request.method == 'POST':

@@ -13,7 +13,9 @@ from django.urls import reverse
 import os
 from django.conf import settings
 import datetime
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def company(request):
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
@@ -30,6 +32,7 @@ def company(request):
         'work_types': work_types,
     })
     
+@login_required
 def delete_company(request, pk):
     if request.method == "POST":
         try:
@@ -44,8 +47,7 @@ def delete_company(request, pk):
             return JsonResponse({'success': False, 'error': 'Empresa no encontrada'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
-
-
+@login_required
 @csrf_exempt
 def edit_company(request, pk):
     if request.method == "POST":
@@ -67,6 +69,7 @@ def edit_company(request, pk):
             return JsonResponse({'success': False, 'error': 'Empresa no encontrada'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
+@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
@@ -76,6 +79,7 @@ def footer(canvas, doc):
     canvas.drawRightString(width - 20, 15, footer_text)
     canvas.restoreState()
 
+@login_required
 def generate_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Reporte_Empresas.pdf"'

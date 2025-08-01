@@ -12,7 +12,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 import os
 import datetime
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def work_type(request):
     services = WorkType.objects.all()
     form = WorkTypeForm(request.POST or None)
@@ -30,6 +32,7 @@ def work_type(request):
         'form': form,
     })
     
+@login_required
 @csrf_exempt
 def delete_service(request, pk):
     if request.method == "POST":
@@ -41,6 +44,7 @@ def delete_service(request, pk):
             return JsonResponse({'success': False, 'error': 'Servicio no encontrado'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
+@login_required
 @csrf_exempt
 def edit_service(request):
     if request.method == "POST":
@@ -57,11 +61,7 @@ def edit_service(request):
             return JsonResponse({'success': False, 'error': 'Servicio no encontrado'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
-import os
-import datetime
-from django.conf import settings
-from reportlab.platypus import Image
-
+@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
@@ -71,6 +71,7 @@ def footer(canvas, doc):
     canvas.drawRightString(width - 20, 15, footer_text)
     canvas.restoreState()
 
+@login_required
 def generate_pdf(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Reporte_Servicios.pdf"'

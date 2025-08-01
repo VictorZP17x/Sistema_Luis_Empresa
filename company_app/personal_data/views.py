@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from .forms import PersonalDataForm
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from user.models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.contrib.auth.decorators import login_required
 
 @login_required
 @csrf_exempt

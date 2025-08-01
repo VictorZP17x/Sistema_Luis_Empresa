@@ -15,9 +15,9 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
 import json
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 
-# @login_required
+@login_required
 def user(request):
     user_profiles = UserProfile.objects.filter(role__in=[0, 1])
     if request.user.is_authenticated:
@@ -55,6 +55,7 @@ def user(request):
         "form": form,
     })
 
+@login_required
 @csrf_exempt
 def edit_user(request):
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -83,6 +84,7 @@ def edit_user(request):
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
 
+@login_required
 @csrf_exempt
 def delete_user(request, user_id):
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -94,6 +96,7 @@ def delete_user(request, user_id):
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
 
+@login_required
 @csrf_exempt
 def toggle_role(request, user_id):
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
@@ -110,6 +113,7 @@ def toggle_role(request, user_id):
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
 
+@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
@@ -119,6 +123,7 @@ def footer(canvas, doc):
     canvas.drawRightString(width - 20, 15, footer_text)
     canvas.restoreState()
 
+@login_required
 def generate_pdf_users(request):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Reporte_Usuarios.pdf"'
@@ -222,6 +227,7 @@ def generate_pdf_users(request):
     doc.build(elements, onFirstPage=footer, onLaterPages=footer)
     return response
 
+@login_required
 @csrf_exempt
 def validar_datos_usuario(request):
     if request.method == 'POST':

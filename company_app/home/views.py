@@ -3,15 +3,16 @@ from company.models import Company
 from works_to_do.models import WorksToDo
 from user.models import UserProfile
 from django.core.paginator import Paginator
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 
-# @login_required
+@login_required
 def home(request):
     is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
     return render(request, 'home.html', {
         'is_cliente': is_cliente,
     })
 
+@login_required
 def dashboard(request):
     companies = Company.objects.all().order_by('name')
     paginator = Paginator(companies, 4)
