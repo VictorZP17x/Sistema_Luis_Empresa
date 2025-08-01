@@ -1,8 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("add-client-form");
   if (form) {
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", async function (e) {
       e.preventDefault();
+      const username = form.querySelector('[name="username"]').value;
+      const email = form.querySelector('[name="email"]').value;
+      const phone = form.querySelector('[name="phone"]').value;
+
+      const resultado = await validarDatosCliente(username, email, phone);
+      if (resultado.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Datos ya registrados",
+          html: resultado.error,
+          confirmButtonText: "Aceptar",
+        });
+        return false;
+      }
+
       Swal.fire({
         title: "¿Estás seguro?",
         text: "¿Deseas registrar este cliente?",
@@ -147,3 +162,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+async function validarDatosCliente(username, email, phone) {
+  const response = await fetch('/client/validar_datos_cliente/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({ username, email, phone })
+  });
+  return await response.json();
+}

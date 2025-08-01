@@ -87,8 +87,35 @@ document.addEventListener("DOMContentLoaded", function () {
         };
       });
 
-    editForm.addEventListener("submit", function (e) {
+    async function validarDatosClienteEditar(username, email, phone, client_id) {
+      const response = await fetch('/client/validar_datos_cliente/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ username, email, phone, client_id })
+      });
+      return await response.json();
+    }
+
+    editForm.addEventListener("submit", async function (e) {
       e.preventDefault();
+      const username = editForm.querySelector('[name="username"]').value;
+      const email = editForm.querySelector('[name="email"]').value;
+      const phone = editForm.querySelector('[name="phone"]').value;
+      const client_id = editForm.querySelector('[name="client_id"]').value;
+
+      const resultado = await validarDatosClienteEditar(username, email, phone, client_id);
+      if (resultado.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Datos ya registrados",
+          html: resultado.error,
+          confirmButtonText: "Aceptar",
+        });
+        return false;
+      }
 
       // Comprobar si hubo cambios
       let changed = false;

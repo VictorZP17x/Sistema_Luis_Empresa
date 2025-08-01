@@ -7,4 +7,5 @@ urlpatterns = [
     path("edit_client/", views.edit_client, name="edit_client"),
     path("delete_client/<int:client_id>/", views.delete_client, name="delete_client"),  
     path('generate-pdf/', views.generate_pdf_clients, name='generate_pdf_clients'),
+    path('validar_datos_cliente/', views.validar_datos_cliente, name='validar_datos_cliente'),
 ]
