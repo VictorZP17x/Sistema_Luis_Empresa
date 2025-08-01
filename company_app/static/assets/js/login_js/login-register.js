@@ -90,8 +90,11 @@ document.addEventListener("DOMContentLoaded", function () {
       const username = form.querySelector('[name="username"]').value;
       const email = form.querySelector('[name="email"]').value;
       const telefono = telefonoInput.value;
+      const password = form.querySelector('[name="password"]').value;
+      const first_name = form.querySelector('[name="first_name"]').value;
+      const last_name = form.querySelector('[name="last_name"]').value;
+
       const resultado = await validarDatosRepetidos(username, email, telefono);
-      console.log("Resultado AJAX:", resultado); // <-- Agrega esto
 
       if (resultado.error) {
         Swal.fire({
@@ -111,9 +114,39 @@ document.addEventListener("DOMContentLoaded", function () {
         showCancelButton: true,
         confirmButtonText: "Sí, registrar",
         cancelButtonText: "Cancelar",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          form.submit();
+          // Enviar datos por AJAX
+          const datos = {
+            username,
+            email,
+            telefono,
+            password,
+            first_name,
+            last_name,
+            csrfmiddlewaretoken: form.querySelector('[name="csrfmiddlewaretoken"]').value
+          };
+          const response = await fetch("/login/register/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(datos).toString(),
+          });
+          if (response.redirected) {
+            // Registro exitoso, mostrar alerta de éxito y redirigir
+            Swal.fire({
+              icon: "success",
+              title: "¡Registrado!",
+              text: "Se han guardado los datos correctamente. Ahora puedes iniciar sesión.",
+              confirmButtonText: "Aceptar",
+            }).then(() => {
+              window.location.href = "/login/";
+            });
+          } else {
+            // Si hay error, recarga para mostrar el error del backend
+            window.location.reload();
+          }
         }
       });
     });
