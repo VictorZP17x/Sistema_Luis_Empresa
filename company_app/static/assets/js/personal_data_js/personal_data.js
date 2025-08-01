@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Swal.fire({
                   icon: "success",
                   title: "¡Éxito!",
-                  text: "¡Tus datos personales se han actualizado correctamente!",
+                  text: "¡Tus datos personales se han actualizado correctamente! Ahora, debe iniciar sesión nuevamente.",
                   confirmButtonText: "Aceptar",
                   allowOutsideClick: false,
                   allowEscapeKey: false,

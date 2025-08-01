@@ -4,7 +4,7 @@ from user.models import UserProfile
 
 class PersonalDataForm(forms.ModelForm):
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'placeholder': 'contraseña oculta'}),
+        widget=forms.PasswordInput(attrs={'placeholder': 'Contraseña'}),
         required=False,
         label="Contraseña"
     )
