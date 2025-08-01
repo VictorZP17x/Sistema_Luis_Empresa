@@ -14,6 +14,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
+import json
 # from django.contrib.auth.decorators import login_required
 
 # @login_required
@@ -220,3 +221,25 @@ def generate_pdf_users(request):
     elements.append(table)
     doc.build(elements, onFirstPage=footer, onLaterPages=footer)
     return response
+
+@csrf_exempt
+def validar_datos_usuario(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        email = data.get('email')
+        phone = data.get('phone')
+        user_id = data.get('user_id')  # Para edición
+
+        errores = []
+        # Excluir el propio usuario en edición
+        if User.objects.filter(username=username).exclude(pk=user_id).exists():
+            errores.append("usuario")
+        if User.objects.filter(email=email).exclude(pk=user_id).exists():
+            errores.append("email")
+        if UserProfile.objects.filter(phone=phone).exclude(user__pk=user_id).exists():
+            errores.append("teléfono")
+        if errores:
+            error_msg = "El " + ", ".join(errores) + " ya existe. Por favor intente con otro."
+            return JsonResponse({'error': error_msg})
+        return JsonResponse({'ok': True})

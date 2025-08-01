@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-
   // Abrir modal y rellenar datos
   document.querySelectorAll(".edit-user-button").forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -175,4 +174,64 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+});
+
+async function validarDatosUsuarioEditar(username, email, phone, user_id) {
+  const response = await fetch("/user/validar_datos_usuario/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+    },
+    body: JSON.stringify({ username, email, phone, user_id }),
+  });
+  return await response.json();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // ...existing code...
+  const editForm = document.getElementById("edit-user-form");
+  if (editForm) {
+    let originalData = {};
+    document
+      .getElementById("edit-user-modal")
+      .addEventListener("show.bs.modal", function () {
+        originalData = {
+          username: editForm.username.value,
+          first_name: editForm.first_name.value,
+          last_name: editForm.last_name.value,
+          email: editForm.email.value,
+          phone: editForm.phone.value,
+          password: "",
+        };
+      });
+
+    editForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const username = editForm.querySelector('[name="username"]').value;
+      const email = editForm.querySelector('[name="email"]').value;
+      const phone = editForm.querySelector('[name="phone"]').value;
+      const user_id = editForm.querySelector('[name="user_id"]').value;
+
+      const resultado = await validarDatosUsuarioEditar(
+        username,
+        email,
+        phone,
+        user_id
+      );
+      if (resultado.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Datos ya registrados",
+          html: resultado.error,
+          confirmButtonText: "Aceptar",
+        });
+        return false;
+      }
+
+      // ...lógica de cambios y SweetAlert "Sin cambios"...
+      // ...resto del código...
+    });
+  }
+  // ...existing code...
 });

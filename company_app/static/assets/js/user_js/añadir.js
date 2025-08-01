@@ -149,3 +149,88 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+async function validarDatosUsuario(username, email, phone) {
+  const response = await fetch('/user/validar_datos_usuario/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({ username, email, phone })
+  });
+  return await response.json();
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("add-user-form");
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const username = form.querySelector('[name="username"]').value;
+      const email = form.querySelector('[name="email"]').value;
+      const phone = form.querySelector('[name="phone"]').value;
+
+      const resultado = await validarDatosUsuario(username, email, phone);
+      if (resultado.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Datos ya registrados",
+          html: resultado.error,
+          confirmButtonText: "Aceptar",
+        });
+        return false;
+      }
+
+      Swal.fire({
+        title: "¿Estás seguro?",
+        text: "¿Deseas registrar este usuario?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, registrar",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const formData = new FormData(form);
+          fetch("", {
+            method: "POST",
+            body: formData,
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                Swal.fire({
+                  title: "¡Registrado!",
+                  text: "El usuario ha sido registrado correctamente.",
+                  icon: "success",
+                  confirmButtonText: "OK",
+                  showConfirmButton: true,
+                }).then(() => {
+                  window.location.reload();
+                });
+                const modal = bootstrap.Modal.getInstance(
+                  document.getElementById("register-user-modal")
+                );
+                modal.hide();
+              } else {
+                let errorMsg = "No se pudo registrar el usuario.";
+                if (data.errors && data.errors.email) {
+                  errorMsg = data.errors.email.join(" ");
+                }
+                Swal.fire({
+                  title: "Error",
+                  text: errorMsg,
+                  icon: "error",
+                  confirmButtonText: "OK",
+                  showConfirmButton: true,
+                });
+              }
+            });
+        }
+      });
+    });
+  }
+});

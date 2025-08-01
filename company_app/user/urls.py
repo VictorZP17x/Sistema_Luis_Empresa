@@ -8,4 +8,5 @@ urlpatterns = [
     path("delete_user/<int:user_id>/", views.delete_user, name="delete_user"),
     path("toggle_role/<int:user_id>/", views.toggle_role, name="toggle_role"),
     path("generate-pdf/", views.generate_pdf_users, name="generate_pdf_users"),
+    path('validar_datos_usuario/', views.validar_datos_usuario, name='validar_datos_usuario'),
 ]
