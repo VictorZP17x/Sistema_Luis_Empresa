@@ -129,8 +129,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Siempre ocultar la contraseña, restaurar el icono y limpiar el campo
         passwordInput.type = "password";
         passwordInput.value = ""; // Asegura que el campo esté vacío
-        iconEye.classList.remove("bi-eye-slash");
-        iconEye.classList.add("bi-eye");
+        let iconEye = document.getElementById("icon-edit-eye"); // <-- Asegura que esté definido
+        if (iconEye) {
+          iconEye.classList.remove("bi-eye-slash");
+          iconEye.classList.add("bi-eye");
+        }
         // Opcional: fuerza el placeholder
         passwordInput.placeholder = "Solo puedes cambiar la contraseña mas no verla.";
         Swal.fire({
