@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (window.feather) feather.replace();
     });
   }
+
   // Abrir modal y rellenar datos
   document.querySelectorAll(".edit-client-button").forEach(function (btn) {
     btn.addEventListener("click", function () {

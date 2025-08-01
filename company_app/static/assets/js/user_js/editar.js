@@ -12,23 +12,27 @@ function formatVenezuelanPhone(raw) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  // Mostrar/Ocultar contraseña
+  // Toggle de mostrar/ocultar contraseña en modal editar usuario
   const toggleBtn = document.getElementById("toggle-edit-password");
   const passwordInput = document.getElementById("edit-password");
-  const iconEye = document.getElementById("icon-edit-eye");
-  if (toggleBtn && passwordInput && iconEye) {
+  if (toggleBtn && passwordInput) {
     toggleBtn.addEventListener("click", function () {
+      // Siempre busca el ícono actual después de feather.replace()
+      let iconEye = document.getElementById("icon-edit-eye");
+      if (!iconEye) return;
       if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        iconEye.classList.remove("bi-eye");
-        iconEye.classList.add("bi-eye-slash");
+        iconEye.setAttribute("data-feather", "eye-off");
       } else {
         passwordInput.type = "password";
-        iconEye.classList.remove("bi-eye-slash");
-        iconEye.classList.add("bi-eye");
+        iconEye.setAttribute("data-feather", "eye");
       }
+      if (window.feather) feather.replace();
+      // Vuelve a buscar el ícono después de reemplazar
+      // para asegurar que el evento siga funcionando
     });
   }
+
 
   // Abrir modal y rellenar datos
   document.querySelectorAll(".edit-user-button").forEach(function (btn) {
@@ -78,11 +82,14 @@ document.addEventListener("DOMContentLoaded", function () {
           break;
         }
       }
+      // Reinicia el estado del campo y el ícono si no hay cambios
+      const passwordInput = document.getElementById("edit-password");
+      const iconEye = document.getElementById("icon-edit-eye");
       if (!changed) {
         passwordInput.type = "password";
         passwordInput.value = "";
-        iconEye.classList.remove("bi-eye-slash");
-        iconEye.classList.add("bi-eye");
+        iconEye.setAttribute("data-feather", "eye");
+        if (window.feather) feather.replace();
         passwordInput.placeholder =
           "Solo puedes cambiar la contraseña mas no verla.";
         Swal.fire({
