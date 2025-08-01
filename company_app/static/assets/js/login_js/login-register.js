@@ -70,13 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("register-form");
   const btn = document.getElementById("register-btn");
   if (form && btn && telefonoInput) {
-    form.addEventListener("submit", function (e) {
-      // Si hay error del backend, NO mostrar el SweetAlert de confirmación
-      if (btn.getAttribute("data-error") === "1") {
-        e.preventDefault();
-        return false;
-      }
-
+    form.addEventListener("submit", async function (e) {
       // Validación de teléfono venezolano
       const phoneValue = telefonoInput.value.replace(/\s|-/g, "");
       const phoneRegex = /^\+58(412|414|416|424|426|212)\d{7}$/;
@@ -91,8 +85,25 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
       }
 
-      // Si todo está bien, mostrar confirmación
+      // Validación AJAX de datos repetidos
       e.preventDefault();
+      const username = form.querySelector('[name="username"]').value;
+      const email = form.querySelector('[name="email"]').value;
+      const telefono = telefonoInput.value;
+      const resultado = await validarDatosRepetidos(username, email, telefono);
+      console.log("Resultado AJAX:", resultado); // <-- Agrega esto
+
+      if (resultado.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Datos ya registrados",
+          html: resultado.error,
+          confirmButtonText: "Aceptar",
+        });
+        return false;
+      }
+
+      // Si todo está bien, mostrar confirmación
       Swal.fire({
         title: "¿Confirmar registro?",
         text: "¿Estás seguro de que los datos ingresados son correctos?",
@@ -115,9 +126,22 @@ if (urlParams.get("registered") === "1") {
   Swal.fire({
     icon: "success",
     title: "¡Registrado!",
-    text: "Se han guardado los datos correctamente.",
+    text: "Se han guardado los datos correctamente. Ahora puedes iniciar sesión.",
     confirmButtonText: "Aceptar",
   }).then(() => {
-    window.location.href = "/";
+    window.location.href = "/login/";
   });
+}
+
+async function validarDatosRepetidos(username, email, telefono) {
+  // Ajusta la URL a tu endpoint real
+  const response = await fetch('/login/validar_datos/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({ username, email, telefono })
+  });
+  return await response.json();
 }

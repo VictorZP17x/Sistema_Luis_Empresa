@@ -7,6 +7,8 @@ from .forms import RegisterForm
 from django.urls import reverse
 from user.models import UserProfile
 import re
+from django.http import JsonResponse
+import json
 
 # @login_required
 def login(request):
@@ -89,3 +91,22 @@ def log_out(request):
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
     return response
+
+def validar_datos(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        email = data.get('email')
+        telefono = data.get('telefono')
+
+        errores = []
+        if User.objects.filter(username=username).exists():
+            errores.append("usuario")
+        if User.objects.filter(email=email).exists():
+            errores.append("email")
+        if UserProfile.objects.filter(phone=telefono).exists():
+            errores.append("teléfono")
+        if errores:
+            error_msg = "El " + ", ".join(errores) + " ya existe. Por favor intente con otro."
+            return JsonResponse({'error': error_msg})
+        return JsonResponse({'ok': True})
