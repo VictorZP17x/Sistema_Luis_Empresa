@@ -1,0 +1,247 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="row mb-4 justify-content-center align-items-center">
+            <div class="col-12 col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text"><i data-feather="search"></i></span>
+                    <input type="text" id="buscador-trabajadores" class="form-control"
+                        placeholder="Buscar trabajador por nombre, empresa, servicio...">
+                </div>
+            </div>
+            <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-md-start justify-content-center">
+                <button class="btn btn-primary w-90 w-md-auto" data-bs-toggle="modal"
+                    data-bs-target="#add-worker-modal">
+                    <i data-feather="plus-circle"></i> Añadir Trabajador
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div id="no-coincidencias-trabajadores" style="display:none;">
+                    <div class="alert alert-warning text-center my-5">
+                        No se encontraron trabajadores que coincidan con la búsqueda.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 justify-content-center" id="cards-trabajadores">
+            {% if workers %}
+            {% for worker in workers %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch mb-4">
+                <div class="card shadow-sm w-100">
+                    <div class="card-header text-center">
+                        <h6 class="mb-0">{{ worker.user.first_name }} {{ worker.user.last_name }}</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-2">
+                            <small class="text-muted">Empresa</small><br>
+                            <span>{{ worker.company.name }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Teléfono</small><br>
+                            <span>{{ worker.phone }}</span>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal"
+                            data-bs-target="#workerModal{{ worker.user.id }}">
+                            Ver más
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal detalle trabajador -->
+            <div class="modal fade" id="workerModal{{ worker.user.id }}" tabindex="-1"
+                aria-labelledby="workerModalLabel{{ worker.user.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="workerModalLabel{{ worker.user.id }}">
+                                {{ worker.user.first_name }} {{ worker.user.last_name }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div><strong>Empresa:</strong> {{ worker.company.name }}</div>
+                            <div><strong>Servicios:</strong>
+                                {% for service in worker.work_types.all %}
+                                <span class="badge bg-info me-1">{{ service.name }}</span>
+                                {% empty %}
+                                <span class="text-muted">Sin servicios</span>
+                                {% endfor %}
+                            </div>
+                            <div><strong>Teléfono:</strong> {{ worker.phone }}</div>
+                            <div><strong>Email:</strong> {{ worker.user.email }}</div>
+                            <!-- Puedes agregar más datos aquí -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal detalle trabajador -->
+            <div class="modal fade" id="workerModal{{ worker.user.id }}" tabindex="-1"
+                aria-labelledby="workerModalLabel{{ worker.user.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="workerModalLabel{{ worker.user.id }}">
+                                {{ worker.user.first_name }} {{ worker.user.last_name }}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div><strong>Empresa:</strong> {{ worker.company.name }}</div>
+                            <div><strong>Servicios:</strong>
+                                {% for service in worker.work_types.all %}
+                                <span class="badge bg-info me-1">{{ service.name }}</span>
+                                {% empty %}
+                                <span class="text-muted">Sin servicios</span>
+                                {% endfor %}
+                            </div>
+                            <div><strong>Teléfono:</strong> {{ worker.phone }}</div>
+                            <div><strong>Email:</strong> {{ worker.user.email }}</div>
+                            <!-- Puedes agregar más datos aquí -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-12">
+                <div class="alert alert-info text-center my-5">
+                    No hay Trabajadores registrados en el sistema.
+                </div>
+            </div>
+            {% endif %}
+        </div> <!-- <- Este es el cierre de #cards-trabajadores -->
+
+        {% if page_obj.paginator.num_pages > 1 %}
+        <nav aria-label="Paginación de trabajadores">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Anterior</span>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Siguiente</span>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal añadir trabajador -->
+<div class="modal fade" id="add-worker-modal" tabindex="-1" aria-labelledby="addWorkerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-worker-form" method="post" autocomplete="off">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addWorkerModalLabel">Registrar Trabajador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-username">Usuario</label>
+                        <input type="text" class="form-control" id="worker-username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-password">Contraseña</label>
+                        <input type="password" class="form-control" id="worker-password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-first-name">Nombre</label>
+                        <input type="text" class="form-control" id="worker-first-name" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-last-name">Apellido</label>
+                        <input type="text" class="form-control" id="worker-last-name" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-email">Email</label>
+                        <input type="email" class="form-control" id="worker-email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-phone">Teléfono</label>
+                        <input type="text" class="form-control" id="worker-phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-company">Empresa</label>
+                        <select class="form-select select2" id="worker-company" name="company" required>
+                            <option value="">Seleccione una empresa</option>
+                            {% for company in companies %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-services">Servicios</label>
+                        <select class="form-select select2" id="worker-services" name="services" multiple="multiple"
+                            required>
+                            {% for service in services %}
+                            <option value="{{ service.id }}">{{ service.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="worker-photo">Foto</label>
+                        <input type="file" class="form-control" id="worker-photo" name="photo" accept="image/*">
+                        <div class="mt-2">
+                            <img id="worker-photo-preview" src="{% static 'assets/img/default-user.png' %}"
+                                alt="Vista previa" class="img-fluid rounded"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    var companyServices = {{ company_services| safe }};
+    const addWorkerUrl = "{% url 'workers:add_worker' %}";
+</script>
+<script src="{% static 'assets/js/workers_js/add-workers.js' %}"></script>
+<script src="{% static 'assets/js/workers_js/filter-workers.js' %}"></script>
+<script src="{% static 'assets/js/workers_js/toggle-password-workers.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/filter-work-types.js' %}"></script>
+{% endblock %}

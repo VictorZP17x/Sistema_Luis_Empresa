@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'user',
     'work_type',
     'works_to_do',
+    'workers',
     'index',
     'personal_data',
 ]
