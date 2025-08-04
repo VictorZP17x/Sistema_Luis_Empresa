@@ -56,10 +56,24 @@
                             <small class="text-muted">Teléfono</small><br>
                             <span>{{ worker.phone }}</span>
                         </div>
-                        <button class="btn btn-primary btn-sm mt-2" data-bs-toggle="modal"
-                            data-bs-target="#workerModal{{ worker.user.id }}">
-                            Ver más
-                        </button>
+                        <div class="d-flex justify-content-center gap-2 mt-2">
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#workerModal{{ worker.user.id }}">
+                                Ver más
+                            </button>
+                            <button class="btn btn-warning btn-sm edit-worker-button" data-id="{{ worker.user.id }}"
+                                data-username="{{ worker.user.username }}"
+                                data-first-name="{{ worker.user.first_name }}"
+                                data-last-name="{{ worker.user.last_name }}" data-email="{{ worker.user.email }}"
+                                data-phone="{{ worker.phone }}" data-company="{{ worker.company.id }}"
+                                data-services="{% for s in worker.work_types.all %}{{ s.id }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                                data-photo-url="{% if worker.photo %}{{ worker.photo.url }}{% endif %}">
+                                <i data-feather="edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm delete-worker-button" data-id="{{ worker.user.id }}">
+                                <i data-feather="trash-2"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -240,6 +254,73 @@
         </div>
     </div>
 </div>
+
+<!-- Modal editar trabajador -->
+<div class="modal fade" id="edit-worker-modal" tabindex="-1" aria-labelledby="editWorkerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="edit-worker-form" method="post" autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" id="edit-worker-id" name="user_id">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editWorkerModalLabel">Editar Trabajador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-username">Usuario</label>
+                        <input type="text" class="form-control" id="edit-worker-username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-first-name">Nombre</label>
+                        <input type="text" class="form-control" id="edit-worker-first-name" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-last-name">Apellido</label>
+                        <input type="text" class="form-control" id="edit-worker-last-name" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-email">Email</label>
+                        <input type="email" class="form-control" id="edit-worker-email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-phone">Teléfono</label>
+                        <input type="text" class="form-control" id="edit-worker-phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-company">Empresa</label>
+                        <select class="form-select select2" id="edit-worker-company" name="company" required>
+                            {% for company in companies %}
+                            <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-services">Servicios</label>
+                        <select class="form-select select2" id="edit-worker-services" name="services" multiple="multiple" required>
+                            {% for service in services %}
+                            <option value="{{ service.id }}">{{ service.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-worker-photo">Foto</label>
+                        <input type="file" class="form-control" id="edit-worker-photo" name="photo" accept="image/*">
+                        <div class="mt-2">
+                            <img id="edit-worker-photo-preview" src="{% static 'assets/img/default-user.png' %}"
+                                alt="Vista previa" class="img-fluid rounded"
+                                style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc;">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
@@ -256,4 +337,6 @@
 <script src="{% static 'assets/js/workers_js/filter-workers.js' %}"></script>
 <script src="{% static 'assets/js/workers_js/toggle-password-workers.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/filter-work-types.js' %}"></script>
+<script src="{% static 'assets/js/workers_js/edit-workers.js' %}"></script>
+<script src="{% static 'assets/js/workers_js/delete-workers.js' %}"></script>
 {% endblock %}
