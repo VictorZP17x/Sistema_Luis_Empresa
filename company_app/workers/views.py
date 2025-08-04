@@ -69,3 +69,42 @@ def add_worker(request):
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+@login_required
+@csrf_exempt
+def edit_worker(request):
+    if request.method == "POST":
+        user_id = request.POST.get('user_id')
+        try:
+            profile = UserProfile.objects.get(user_id=user_id)
+            user = profile.user
+            user.username = request.POST.get('username')
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.email = request.POST.get('email')
+            user.save()
+            profile.phone = request.POST.get('phone')
+            profile.company_id = request.POST.get('company')
+            services = request.POST.getlist('services')
+            profile.work_types.set(services)
+            if request.FILES.get('photo'):
+                profile.photo = request.FILES['photo']
+            profile.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+@login_required
+@csrf_exempt
+def delete_worker(request, user_id):
+    if request.method == "POST":
+        try:
+            profile = UserProfile.objects.get(user_id=user_id)
+            user = profile.user
+            profile.delete()
+            user.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Método no permitido'})

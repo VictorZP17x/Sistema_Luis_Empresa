@@ -44,9 +44,6 @@
                         {% endif %}
                         <h6 class="mb-0">{{ worker.user.first_name }} {{ worker.user.last_name }}</h6>
                     </div>
-                    <div class="card-header text-center">
-                        <h6 class="mb-0">{{ worker.user.first_name }} {{ worker.user.last_name }}</h6>
-                    </div>
                     <div class="card-body text-center">
                         <div class="mb-2">
                             <small class="text-muted">Empresa</small><br>
@@ -259,7 +256,7 @@
 <div class="modal fade" id="edit-worker-modal" tabindex="-1" aria-labelledby="editWorkerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="edit-worker-form" method="post" autocomplete="off">
+            <form id="edit-worker-form" method="post" autocomplete="off" action="{% url 'workers:edit_worker' %}">
                 {% csrf_token %}
                 <input type="hidden" id="edit-worker-id" name="user_id">
                 <div class="modal-header">
@@ -297,7 +294,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="edit-worker-services">Servicios</label>
-                        <select class="form-select select2" id="edit-worker-services" name="services" multiple="multiple" required>
+                        <select class="form-select select2" id="edit-worker-services" name="services"
+                            multiple="multiple" required>
                             {% for service in services %}
                             <option value="{{ service.id }}">{{ service.name }}</option>
                             {% endfor %}
