@@ -34,7 +34,7 @@ def workers(request):
 @csrf_exempt
 def add_worker(request):
     if request.method == "POST":
-        form = WorkerForm(request.POST)
+        form = WorkerForm(request.POST, request.FILES)
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
@@ -59,7 +59,12 @@ def add_worker(request):
                 company=form.cleaned_data['company'],
             )
             profile.work_types.set(form.cleaned_data['services'])
-            profile.save()
+            # Guardar la foto si se subió
+            if request.FILES.get('photo'):
+                profile.photo = request.FILES['photo']
+                profile.save()
+            else:
+                profile.save()
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'success': False, 'errors': form.errors})

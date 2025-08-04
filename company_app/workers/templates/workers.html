@@ -32,6 +32,18 @@
             {% for worker in workers %}
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch mb-4">
                 <div class="card shadow-sm w-100">
+                    <div class="card-header text-center p-2">
+                        {% if worker.photo %}
+                        <img src="{{ worker.photo.url }}" alt="Foto de {{ worker.user.first_name }}"
+                            class="img-fluid rounded-circle mb-2"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;">
+                        {% else %}
+                        <img src="{% static 'assets/img/default-user.png' %}" alt="Sin foto"
+                            class="img-fluid rounded-circle mb-2"
+                            style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;">
+                        {% endif %}
+                        <h6 class="mb-0">{{ worker.user.first_name }} {{ worker.user.last_name }}</h6>
+                    </div>
                     <div class="card-header text-center">
                         <h6 class="mb-0">{{ worker.user.first_name }} {{ worker.user.last_name }}</h6>
                     </div>

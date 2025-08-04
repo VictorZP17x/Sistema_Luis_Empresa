@@ -69,10 +69,15 @@ $(document).ready(function () {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
+                // Cambia a FormData para enviar archivos
+                var formData = new FormData(this);
+
                 $.ajax({
                     url: addWorkerUrl,
                     method: "POST",
-                    data: $(this).serialize(),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                     success: function (response) {
                         if (response.success) {
