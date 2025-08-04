@@ -113,3 +113,56 @@ $(document).ready(function () {
         });
     });
 });
+
+// --- FORMATO AUTOMÁTICO Y PREFIJO FIJO PARA TELÉFONO EN MODAL DE TRABAJADOR ---
+$(document).ready(function () {
+    const workerPhoneInput = document.getElementById('worker-phone');
+    if (workerPhoneInput) {
+        // Al abrir el modal, si está vacío, coloca el prefijo
+        $('#add-worker-modal').on('shown.bs.modal', function () {
+            if (workerPhoneInput.value.trim() === "") {
+                workerPhoneInput.value = "+58 ";
+            }
+        });
+
+        // Formato automático para teléfono al escribir
+        workerPhoneInput.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, "");
+
+            // Siempre inicia con 58
+            if (!value.startsWith("58")) {
+                value = "58" + value.replace(/^0+/, "");
+            }
+
+            // Elimina el cero si lo ponen después del prefijo
+            if (value.length > 2 && value[2] === "0") {
+                value = value.slice(0, 2) + value.slice(3);
+            }
+
+            value = value.slice(0, 12); // +58 y 10 números
+
+            // Formatea como +58 412-123-4567
+            let formatted = "+58 ";
+            if (value.length > 2) {
+                formatted += value.slice(2, 5);
+            }
+            if (value.length > 5) {
+                formatted += "-" + value.slice(5, 8);
+            }
+            if (value.length > 8) {
+                formatted += "-" + value.slice(8, 12);
+            }
+            e.target.value = formatted;
+        });
+
+        // Evita borrar el prefijo +58
+        workerPhoneInput.addEventListener("keydown", function (e) {
+            if (
+                workerPhoneInput.selectionStart <= 4 &&
+                (e.key === "Backspace" || e.key === "Delete")
+            ) {
+                e.preventDefault();
+            }
+        });
+    }
+});
