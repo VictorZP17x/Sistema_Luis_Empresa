@@ -11,4 +11,6 @@ urlpatterns = [
     path("tasks_by_work_plan/<int:plan_id>/", views.tasks_by_work_plan, name="tasks_by_work_plan"),
     path("task_update/<int:pk>/", views.task_update, name="task_update"),
     path("task_delete/<int:pk>/", views.task_delete, name="task_delete"),
+    path('task_finish/<int:pk>/', views.task_finish, name='task_finish'),
+    path('get_observation/<int:pk>/', views.get_observation, name='get_observation'),
 ]

@@ -16,6 +16,7 @@ class Task(models.Model):
     start_date = models.DateTimeField(null=False, verbose_name='Fecha de inicio')
     end_date = models.DateTimeField(null=False, verbose_name='Fecha de finalización')
     finished = models.BooleanField(default=False, verbose_name='Terminada')
+    observation = models.TextField(null=True, blank=True, verbose_name='Observación')
     fk_work_plan = models.ForeignKey(WorkPlan, on_delete=models.CASCADE, verbose_name='Plan de Trabajo')
 
     class Meta:

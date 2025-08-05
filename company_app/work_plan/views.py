@@ -22,6 +22,12 @@ def work_plan(request):
 def work_plan_create(request):
     if request.method == 'POST':
         form = WorkPlanForm(request.POST)
+        plan_name = request.POST.get('plan_name', '').strip()
+        fk_works_to_do = request.POST.get('fk_works_to_do')
+        if WorkPlan.objects.filter(fk_works_to_do_id=fk_works_to_do, status=False).exists():
+            return JsonResponse({'status': 'error', 'message': 'Ya existe un plan de trabajo abierto para esta solicitud.'})
+        if WorkPlan.objects.filter(plan_name__iexact=plan_name).exists():
+            return JsonResponse({'status': 'error', 'message': 'Ya existe un plan de trabajo con ese nombre.'})
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'success', 'message': 'Plan de trabajo creado correctamente.'})
@@ -36,6 +42,9 @@ def work_plan_update(request, pk):
         return JsonResponse({'status': 'error', 'message': 'El plan está cerrado y no puede editarse.'})
     if request.method == 'POST':
         form = WorkPlanForm(request.POST, instance=plan)
+        plan_name = request.POST.get('plan_name', '').strip()
+        if WorkPlan.objects.filter(plan_name__iexact=plan_name).exclude(pk=pk).exists():
+            return JsonResponse({'status': 'error', 'message': 'Ya existe un plan de trabajo con ese nombre.'})
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'success', 'message': 'Plan de trabajo actualizado.'})
@@ -47,6 +56,8 @@ def work_plan_delete(request, pk):
     plan = get_object_or_404(WorkPlan, pk=pk)
     if plan.status:
         return JsonResponse({'status': 'error', 'message': 'El plan está cerrado y no puede eliminarse.'})
+    if plan.task_set.filter(finished=False).exists():
+        return JsonResponse({'status': 'error', 'message': 'No puede eliminar el plan mientras existan tareas sin terminar. Elimine o termine todas las tareas abiertas primero.'})
     if request.method == 'POST':
         plan.delete()
         return JsonResponse({'status': 'success', 'message': 'Plan de trabajo eliminado.'})
@@ -57,6 +68,11 @@ def work_plan_delete(request, pk):
 def task_create(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
+        task_name = request.POST.get('task', '').strip()
+        fk_work_plan = request.POST.get('fk_work_plan')
+        # Verifica si ya existe una tarea con ese nombre en el mismo plan (ignorando mayúsculas/minúsculas)
+        if Task.objects.filter(task__iexact=task_name, fk_work_plan_id=fk_work_plan).exists():
+            return JsonResponse({'status': 'error', 'message': 'Ya existe una tarea con ese nombre en este plan.'})
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'success', 'message': 'Tarea creada correctamente.'})
@@ -68,7 +84,10 @@ def task_create(request):
 def tasks_by_work_plan(request, plan_id):
     tasks = Task.objects.filter(fk_work_plan_id=plan_id)
     data = []
+    all_finished = True
     for task in tasks:
+        if not task.finished:
+            all_finished = False
         reqs = [req.requirement for req in task.requirements.all()]
         data.append({
             'id': task.id,
@@ -78,7 +97,8 @@ def tasks_by_work_plan(request, plan_id):
             'end_date': task.end_date.strftime("%Y-%m-%d %H:%M") if task.end_date else "",
             'finished': task.finished,
         })
-    return JsonResponse({'tasks': data, 'plan_status': Task.objects.get(pk=plan_id).fk_work_plan.status})
+    plan = get_object_or_404(WorkPlan, pk=plan_id)
+    return JsonResponse({'tasks': data, 'plan_status': plan.status, 'all_finished': all_finished})
 
 @csrf_exempt
 @login_required
@@ -86,6 +106,11 @@ def task_update(request, pk):
     task = get_object_or_404(Task, pk=pk)
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
+        task_name = request.POST.get('task', '').strip()
+        fk_work_plan = request.POST.get('fk_work_plan')
+        # Excluye la tarea actual
+        if Task.objects.filter(task__iexact=task_name, fk_work_plan_id=fk_work_plan).exclude(pk=pk).exists():
+            return JsonResponse({'status': 'error', 'message': 'Ya existe una tarea con ese nombre en este plan.'})
         if form.is_valid():
             form.save()
             return JsonResponse({'status': 'success', 'message': 'Tarea actualizada correctamente.'})
@@ -97,7 +122,34 @@ def task_update(request, pk):
 @login_required
 def task_delete(request, pk):
     task = get_object_or_404(Task, pk=pk)
+    plan = task.fk_work_plan
     if request.method == 'POST':
         task.delete()
+        if not plan.task_set.filter(finished=False).exists() and plan.task_set.exists():
+            plan.status = True
+            plan.save()
         return JsonResponse({'status': 'success', 'message': 'Tarea eliminada.'})
     return JsonResponse({'status': 'error', 'message': 'Método no permitido.'})
+
+@csrf_exempt
+@login_required
+def task_finish(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    if request.method == 'POST':
+        observation = request.POST.get('observation', '').strip()
+        task.finished = True
+        task.observation = observation
+        task.save()
+        plan = task.fk_work_plan
+        if not plan.status:
+            if not plan.task_set.filter(finished=False).exists():
+                plan.status = True
+                plan.save()
+        return JsonResponse({'status': 'success', 'message': 'Tarea marcada como terminada.'})
+    return JsonResponse({'status': 'error', 'message': 'Método no permitido.'})
+
+@csrf_exempt
+@login_required
+def get_observation(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    return JsonResponse({'observation': task.observation or ""})
