@@ -20,7 +20,7 @@ urlpatterns = [
     path("index/", include("index.urls")), 
     path("personal_data/", include("personal_data.urls")), 
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

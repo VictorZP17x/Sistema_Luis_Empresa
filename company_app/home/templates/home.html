@@ -55,8 +55,9 @@
                             <div class="dropdown-header d-flex align-items-center justify-content-between bg-primary">
                                 <div class="d-flex my-2">
                                     <div class="flex-shrink-0">
-                                        <img src="{% static 'assets/images/user/avatar-2.jpg' %}" alt="user-image"
-                                            class="user-avtar wid-35" />
+                                        <img src="{% if request.user.userprofile.photo %}{{ request.user.userprofile.photo.url }}{% else %}{% static 'assets/images/user/avatar-2.jpg' %}{% endif %}"
+                                            alt="user-image" class="user-avtar wid-40 rounded-circle"
+                                            style="object-fit: cover;" />
                                     </div>
                                     <div class="ms-2">
                                         <span class="fw-bold text-white">{{ request.user.first_name }}

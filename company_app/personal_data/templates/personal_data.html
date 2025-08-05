@@ -44,6 +44,16 @@
                             <label for="phone" class="form-label">{{ form.phone.label }}</label>
                             {{ form.phone|add_class:"form-control" }}
                         </div>
+                        <div class="mb-3 text-center">
+                            <label for="photo" class="form-label">{{ form.photo.label }}</label>
+                            <div>
+                                <img id="profile-preview"
+                                    src="{% if profile and profile.photo %}{{ profile.photo.url }}{% else %}{% static 'assets/images/user/avatar-2.jpg' %}{% endif %}"
+                                    alt="Foto de perfil" class="rounded-circle"
+                                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ddd;">
+                            </div>
+                            {{ form.photo|add_class:"form-control mt-2" }}
+                        </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                         </div>

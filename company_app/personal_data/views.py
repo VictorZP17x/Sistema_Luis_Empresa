@@ -24,6 +24,7 @@ def personal_data(request):
         last_name = request.POST.get("last_name")
         email = request.POST.get("email")
         phone = request.POST.get("phone")
+        photo = request.FILES.get("photo")
 
         # Validación de duplicados (excluyendo el propio usuario)
         errores = []
@@ -49,14 +50,15 @@ def personal_data(request):
             user.save()
             if profile:
                 profile.phone = phone
+                if photo:
+                    profile.photo = photo
                 profile.save()
-            return JsonResponse({"success": True})
+            return JsonResponse({"success": True, "photo_url": profile.photo.url if profile.photo else ""})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
-
     else:
         form = PersonalDataForm(instance=user)
-        return render(request, 'personal_data.html', {'form': form})
+        return render(request, 'personal_data.html', {'form': form, 'profile': profile})
     
 @csrf_exempt
 @login_required
