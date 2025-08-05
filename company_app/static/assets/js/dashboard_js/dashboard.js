@@ -26,4 +26,28 @@ $(document).ready(function () {
     // Mostrar/ocultar mensaje según resultado
     $('#no-coincidencias-empresas').toggle(visibles === 0);
   });
+
+  // Inicializar DataTables en cada tabla de servicios de empresa SOLO UNA VEZ
+  $('[id^="datatable-servicios-"]').each(function () {
+    if (!$.fn.DataTable.isDataTable(this)) {
+      $(this).DataTable({
+        paging: true,
+        pageLength: 4,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        info: false,
+        language: {
+          search: "Buscar servicio:",
+          paginate: {
+            previous: "Anterior",
+            next: "Siguiente"
+          },
+          zeroRecords: "No se encontraron servicios"
+        }
+      });
+    }
+  });
+  
 });
+

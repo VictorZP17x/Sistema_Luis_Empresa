@@ -35,6 +35,30 @@ def dashboard(request):
     # Elimina el flag después de mostrarlo
     show_welcome = request.session.pop('show_welcome', False)
 
+    # Diccionario: empresa_id -> { servicio_id: cantidad }
+    workers_by_service = {}
+    for company in companies:
+        workers_by_service[company.id] = {}
+        for wt in company.work_types.all():
+            count = UserProfile.objects.filter(role=3, company=company, work_types=wt).count()
+            workers_by_service[company.id][wt.id] = count
+
+    workers_detail = {}
+    for company in companies:
+        workers_detail[company.id] = {}
+        for wt in company.work_types.all():
+            workers = UserProfile.objects.filter(role=3, company=company, work_types=wt)
+            workers_detail[company.id][wt.id] = [
+                {
+                    'id': w.user.id,
+                    'name': f"{w.user.first_name} {w.user.last_name}",
+                    'email': w.user.email,
+                    'phone': w.phone,
+                    'photo': w.photo.url if w.photo else None
+                }
+                for w in workers
+            ]
+            
     return render(request, 'dashboard.html', {
         'page_obj': page_obj,
         'companies': companies,
@@ -47,4 +71,6 @@ def dashboard(request):
         'show_header_search': True,
         'is_cliente': is_cliente,
         'show_welcome': show_welcome,
+        'workers_by_service': workers_by_service,
+        'workers_detail': workers_detail,
     })

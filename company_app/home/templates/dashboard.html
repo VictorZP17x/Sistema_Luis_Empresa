@@ -1,6 +1,7 @@
 {% extends 'home.html' %}
 {% block content %}
 {% load static %}
+{% load dict_get %}
 
 <div class="pc-container">
     <div class="pc-content">
@@ -176,9 +177,39 @@
                         <div>
                             <strong>Servicios:</strong>
                             {% if company.work_types.all %}
-                            {% for wt in company.work_types.all %}
-                            <span class="badge bg-info me-1">{{ wt.name }}</span>
-                            {% endfor %}
+                            <div class="card shadow-sm border-primary mt-2">
+                                <div class="card-body p-2">
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-bordered table-hover table-sm datatable-servicios mb-0"
+                                            id="datatable-servicios-{{ company.id }}">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="text-start">Servicio</th>
+                                                    <th class="text-end">Trabajadores</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for wt in company.work_types.all %}
+                                                <tr>
+                                                    <td class="text-start">{{ wt.name }}</td>
+                                                    <td class="text-end">
+                                                        <button type="button"
+                                                            class="badge rounded-pill bg-primary text-white border btn-ver-trabajadores"
+                                                            style="font-size: 13px; min-width: 38px; border:none; cursor:pointer;"
+                                                            data-company="{{ company.id }}"
+                                                            data-service="{{ wt.id }}"
+                                                            data-bs-toggle="modal" data-bs-target="#trabajadoresModal">
+                                                            {{ workers_by_service|dict_get:company.id|dict_get:wt.id|default_if_none:"0" }}
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                             {% else %}
                             <span class="text-muted">Sin servicios</span>
                             {% endif %}
@@ -222,6 +253,46 @@
     </div>
 </div>
 
+<!-- Modal para mostrar trabajadores por servicio -->
+<div class="modal fade" id="trabajadoresModal" tabindex="-1" aria-labelledby="trabajadoresModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="trabajadoresModalLabel">Trabajadores asociados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow rounded mb-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-sm mb-0" id="tabla-trabajadores-modal">
+                                <thead>
+                                    <tr>
+                                        <th>Foto</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Teléfono</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Aquí se cargan los trabajadores dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary" id="volver-ver-mas">
+                        <i data-feather="arrow-left"></i> Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
 
 {% block extra_css %}
@@ -230,4 +301,76 @@
 
 {% block extra_js %}
 <script src="{% static 'assets/js/dashboard_js/dashboard.js' %}"></script>
+<script>
+$(document).ready(function () {
+  var workersDetail = {{ workers_detail|safe }};
+  var empresaModalId = null;
+
+  $('.btn-ver-trabajadores').on('click', function () {
+    var companyId = $(this).data('company');
+    var serviceId = $(this).data('service');
+    empresaModalId = "#empresaModal" + companyId;
+    var trabajadores = workersDetail[companyId][serviceId];
+
+    var $tbody = $('#tabla-trabajadores-modal tbody');
+    $tbody.empty();
+
+    if (!trabajadores || trabajadores.length === 0) {
+      $tbody.append('<tr><td colspan="4" class="text-center">No hay trabajadores asociados a este servicio.</td></tr>');
+    } else {
+      trabajadores.forEach(function (w) {
+        $tbody.append(
+          `<tr>
+            <td>
+              <img src="${w.photo ? w.photo : '/static/assets/img/default-user.png'}"
+                   class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
+            </td>
+            <td><strong>${w.name}</strong></td>
+            <td>${w.email}</td>
+            <td>${w.phone}</td>
+          </tr>`
+        );
+      });
+    }
+
+    // Destruir DataTable anterior si existe
+    if ($.fn.DataTable.isDataTable('#tabla-trabajadores-modal')) {
+      $('#tabla-trabajadores-modal').DataTable().destroy();
+    }
+
+    // Inicializar DataTable con búsqueda y paginación de 6
+    $('#tabla-trabajadores-modal').DataTable({
+      paging: true,
+      pageLength: 6,
+      lengthChange: false,
+      searching: true,
+      ordering: false,
+      info: false,
+      language: {
+        search: "Buscar trabajador:",
+        paginate: {
+          previous: "Anterior",
+          next: "Siguiente"
+        },
+        zeroRecords: "No hay trabajadores asociados a este servicio."
+      }
+    });
+
+    // Sincronizar el input con el DataTable search
+    $('#buscador-trabajadores-modal').val('');
+    $('#buscador-trabajadores-modal').off('input').on('input', function () {
+      $('#tabla-trabajadores-modal').DataTable().search($(this).val()).draw();
+    });
+  });
+
+  $('#volver-ver-mas').on('click', function () {
+    $('#trabajadoresModal').modal('hide');
+    if (empresaModalId) {
+      setTimeout(function () {
+        $(empresaModalId).modal('show');
+      }, 500);
+    }
+  });
+});
+</script>
 {% endblock %}
