@@ -1,0 +1,243 @@
+{% extends 'home.html' %}
+{% block content %}
+{% load static %}
+
+<div class="pc-container">
+    <div class="pc-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card custom-card-height mb-3 mt-3 me-3 ms-3">
+                    <div class="card-header">
+                        <h5 class="card-title">Planes de Trabajo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <button class="btn btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                                <span class="pc-micon">
+                                    <i data-feather="plus-circle"></i>
+                                </span><strong>Añadir Plan de Trabajo</strong>
+                            </button>
+                        </div>
+                        <table id="datatable-workplan" class="table responsive">
+                            <thead>
+                                <tr>
+                                    <th class="centered">#</th>
+                                    <th class="centered">Nombre</th>
+                                    <th class="centered">Solicitud</th>
+                                    <th class="centered">Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for plan in work_plans %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ plan.plan_name }}</td>
+                                    <td>{{ plan.fk_works_to_do }}</td>
+                                    <td>
+                                        {% if not plan.status %}
+                                        <button class="btn btn-sm btn-success add-task-btn" data-plan-id="{{ plan.id }}">
+                                            <span class="pc-micon"><i data-feather="plus"></i></span>
+                                        </button>
+                                        <button class="btn btn-sm btn-primary edit-btn"
+                                            data-id="{{ plan.id }}"
+                                            data-name="{{ plan.plan_name }}"
+                                            data-works-to-do="{{ plan.fk_works_to_do_id }}"
+                                            data-bs-toggle="modal" data-bs-target="#editModal">
+                                            <span class="pc-micon"><i data-feather="edit"></i></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm btn-delete-workplan" data-id="{{ plan.id }}">
+                                            <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                        </button>
+                                        {% endif %}
+                                        <button class="btn btn-sm btn-info show-tasks-btn" data-plan-id="{{ plan.id }}">
+                                            <span class="pc-micon"><i data-feather="list"></i></span>
+                                        </button>
+                                        {% if plan.status %}
+                                        <span class="badge bg-secondary ms-2">Cerrado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Añadir Plan de Trabajo -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="add-form" method="post" action="{% url 'work_plan:work_plan_create' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Añadir Plan de Trabajo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form.as_p }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Editar Plan de Trabajo -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="edit-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="id" id="edit-id">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Plan de Trabajo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-name">Nombre</label>
+                        <input type="text" class="form-control" id="edit-name" name="plan_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edit-works-to-do">Solicitud</label>
+                        <select class="form-select" id="edit-works-to-do" name="fk_works_to_do" required>
+                            {% for w in works_to_do %}
+                            <option value="{{ w.id }}">{{ w }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Añadir Tarea -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="add-task-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="fk_work_plan" id="task-plan-id">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Añadir Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Nombre de la Tarea</label>
+                    <input type="text" name="task" class="form-control mb-2" placeholder="Nombre de la tarea" required>
+                    <label>Requerimientos</label>
+                    <textarea name="requirements" class="form-control mb-2" rows="3" placeholder="Ingrese los requerimientos, uno por línea" required></textarea>
+                    <label>Fecha de Inicio</label>
+                    <input type="datetime-local" name="start_date" class="form-control mb-2" required>
+                    <label>Fecha de Finalización</label>
+                    <input type="datetime-local" name="end_date" class="form-control mb-2" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Editar Tarea -->
+<div class="modal fade" id="editTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="edit-task-form" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" id="edit-task-id">
+            <input type="hidden" name="fk_work_plan" id="edit-task-plan-id">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Nombre de la Tarea</label>
+                    <input type="text" name="task" id="edit-task-name" class="form-control mb-2" required>
+                    <label>Requerimientos</label>
+                    <textarea name="requirements" id="edit-task-requirements" class="form-control mb-2" rows="3" required></textarea>
+                    <label>Fecha de Inicio</label>
+                    <input type="datetime-local" name="start_date" id="edit-task-start" class="form-control mb-2" required>
+                    <label>Fecha de Finalización</label>
+                    <input type="datetime-local" name="end_date" id="edit-task-end" class="form-control mb-2" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Terminar Tarea -->
+<div class="modal fade" id="finishTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="finish-task-form">
+            {% csrf_token %}
+            <input type="hidden" name="task_id" id="finish-task-id">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Terminar Tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="finish-observation">Observación</label>
+                    <textarea id="finish-observation" name="observation" class="form-control mb-3" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Ver Observación -->
+<div class="modal fade" id="viewObservationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Observación de la Tarea</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="view-observation-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script src="{% static 'assets/js/work_plan_js/alerts-work_plan.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/csrf-token-work_plan.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/datatable-work_plan.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/show-data-edit-modal-work_plan.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/show-hide-task.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/add-task.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/alerts-task.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/validate-task-dates.js' %}"></script>
+<script src="{% static 'assets/js/work_plan_js/end-task.js' %}"></script>
+{% endblock %}

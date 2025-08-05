@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'work_type',
     'works_to_do',
     'workers',
+    'work_plan',
     'index',
     'personal_data',
 ]

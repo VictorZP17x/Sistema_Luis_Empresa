@@ -7,6 +7,7 @@ from user import views as user_views
 from work_type import views as work_type_views
 from works_to_do import views as works_to_do_views
 from workers import views as workers_views
+from work_plan import views as work_plan_views
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from django.urls import reverse_lazy
@@ -23,6 +24,7 @@ urlpatterns = [
     path("work_type/", work_type_views.work_type, name="work_type"),
     path("works_to_do/", works_to_do_views.works_to_do, name="works_to_do"),
     path("workers/", workers_views.workers, name="workers"),
+    path("work_plan/", work_plan_views.work_plan, name="work_plan"),
     path('logout/', log_out, name='logout'),
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(), name='login'),
