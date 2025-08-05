@@ -103,6 +103,10 @@
                             {% endif %}
                         </div>
                         <div class="mb-2">
+                            <small class="text-muted">Descripción</small><br>
+                            <span class="empresa-descripcion">{{ company.description }}</span>
+                        </div>
+                        <div class="mb-2">
                             <small class="text-muted">Dirección</small><br>
                             <span class="empresa-direccion">{{ company.address }}</span>
                         </div>
@@ -114,7 +118,6 @@
                             <small class="text-muted">RIF</small><br>
                             <span class="empresa-rif">{{ company.rif }}</span>
                         </div>
-                        <div class="company-description d-none">{{ company.description }}</div>
                         <button class="btn btn-primary btn-sm mt-2 btn-ver-mas" data-bs-toggle="modal"
                             data-bs-target="#empresaModal{{ company.id }}">
                             Ver más
@@ -167,7 +170,7 @@
         {% for company in companies %}
         <div class="modal fade" id="empresaModal{{ company.id }}" tabindex="-1"
             aria-labelledby="empresaModalLabel{{ company.id }}" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="empresaModalLabel{{ company.id }}">{{ company.name }}</h5>
@@ -175,7 +178,6 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            <strong>Servicios:</strong>
                             {% if company.work_types.all %}
                             <div class="card shadow-sm border-primary mt-2">
                                 <div class="card-body p-2">
@@ -214,10 +216,6 @@
                             <span class="text-muted">Sin servicios</span>
                             {% endif %}
                         </div>
-                        <div><strong>Descripción:</strong> {{ company.description }}</div>
-                        <div><strong>Dirección:</strong> {{ company.address }}</div>
-                        <div><strong>Teléfono:</strong> {{ company.phone_number }}</div>
-                        <div><strong>RIF:</strong> {{ company.rif }}</div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -256,7 +254,7 @@
 <!-- Modal para mostrar trabajadores por servicio -->
 <div class="modal fade" id="trabajadoresModal" tabindex="-1" aria-labelledby="trabajadoresModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="trabajadoresModalLabel">Trabajadores asociados</h5>
@@ -310,13 +308,25 @@ $(document).ready(function () {
     var companyId = $(this).data('company');
     var serviceId = $(this).data('service');
     empresaModalId = "#empresaModal" + companyId;
-    var trabajadores = workersDetail[companyId][serviceId];
+    var trabajadores = (workersDetail[companyId] && workersDetail[companyId][serviceId]) ? workersDetail[companyId][serviceId] : [];
+
+    // Destruir DataTable anterior si existe
+    if ($.fn.DataTable.isDataTable('#tabla-trabajadores-modal')) {
+      $('#tabla-trabajadores-modal').DataTable().clear().destroy();
+    }
 
     var $tbody = $('#tabla-trabajadores-modal tbody');
     $tbody.empty();
 
     if (!trabajadores || trabajadores.length === 0) {
-      $tbody.append('<tr><td colspan="4" class="text-center">No hay trabajadores asociados a este servicio.</td></tr>');
+      $tbody.append(
+        `<tr>
+          <td class="text-center" colspan="4">No hay trabajadores asociados a este servicio.</td>
+          <td style="display:none"></td>
+          <td style="display:none"></td>
+          <td style="display:none"></td>
+        </tr>`
+      );
     } else {
       trabajadores.forEach(function (w) {
         $tbody.append(
@@ -331,11 +341,6 @@ $(document).ready(function () {
           </tr>`
         );
       });
-    }
-
-    // Destruir DataTable anterior si existe
-    if ($.fn.DataTable.isDataTable('#tabla-trabajadores-modal')) {
-      $('#tabla-trabajadores-modal').DataTable().destroy();
     }
 
     // Inicializar DataTable con búsqueda y paginación de 6

@@ -1,0 +1,148 @@
+{% load static %}
+<div class="row mt-4 justify-content-center" id="cards-trabajadores">
+    {% if workers %}
+    {% for worker in workers %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex align-items-stretch mb-4">
+        <div class="card shadow-sm w-100">
+            <div class="card-header text-center p-2">
+                {% if worker.photo %}
+                <img src="{{ worker.photo.url }}" alt="Foto de {{ worker.user.first_name }}"
+                    class="img-fluid rounded-circle mb-2"
+                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;">
+                {% else %}
+                <img src="{% static 'assets/img/default-user.png' %}" alt="Sin foto"
+                    class="img-fluid rounded-circle mb-2"
+                    style="width: 80px; height: 80px; object-fit: cover; border: 2px solid #ccc;">
+                {% endif %}
+                <h6 class="mb-0">{{ worker.user.first_name }} {{ worker.user.last_name }}</h6>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-2">
+                    <small class="text-muted">Empresa</small><br>
+                    <span>{{ worker.company.name }}</span>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">Teléfono</small><br>
+                    <span>{{ worker.phone }}</span>
+                </div>
+                <div class="d-flex justify-content-center gap-2 mt-2">
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#workerModal{{ worker.user.id }}">
+                        Ver más
+                    </button>
+                    <button class="btn btn-warning btn-sm edit-worker-button" data-id="{{ worker.user.id }}"
+                        data-username="{{ worker.user.username }}" data-first-name="{{ worker.user.first_name }}"
+                        data-last-name="{{ worker.user.last_name }}" data-email="{{ worker.user.email }}"
+                        data-phone="{{ worker.phone }}" data-company="{{ worker.company.id }}"
+                        data-services="{% for s in worker.work_types.all %}{{ s.id }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                        data-photo-url="{% if worker.photo %}{{ worker.photo.url }}{% endif %}">
+                        <i data-feather="edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm delete-worker-button" data-id="{{ worker.user.id }}">
+                        <i data-feather="trash-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal detalle trabajador -->
+    <div class="modal fade" id="workerModal{{ worker.user.id }}" tabindex="-1"
+        aria-labelledby="workerModalLabel{{ worker.user.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="workerModalLabel{{ worker.user.id }}">
+                        {{ worker.user.first_name }} {{ worker.user.last_name }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div><strong>Empresa:</strong> {{ worker.company.name }}</div>
+                    <div><strong>Servicios:</strong>
+                        {% for service in worker.work_types.all %}
+                        <span class="badge bg-info me-1">{{ service.name }}</span>
+                        {% empty %}
+                        <span class="text-muted">Sin servicios</span>
+                        {% endfor %}
+                    </div>
+                    <div><strong>Teléfono:</strong> {{ worker.phone }}</div>
+                    <div><strong>Email:</strong> {{ worker.user.email }}</div>
+                    <!-- Puedes agregar más datos aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal detalle trabajador -->
+    <div class="modal fade" id="workerModal{{ worker.user.id }}" tabindex="-1"
+        aria-labelledby="workerModalLabel{{ worker.user.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="workerModalLabel{{ worker.user.id }}">
+                        {{ worker.user.first_name }} {{ worker.user.last_name }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div><strong>Empresa:</strong> {{ worker.company.name }}</div>
+                    <div><strong>Servicios:</strong>
+                        {% for service in worker.work_types.all %}
+                        <span class="badge bg-info me-1">{{ service.name }}</span>
+                        {% empty %}
+                        <span class="text-muted">Sin servicios</span>
+                        {% endfor %}
+                    </div>
+                    <div><strong>Teléfono:</strong> {{ worker.phone }}</div>
+                    <div><strong>Email:</strong> {{ worker.user.email }}</div>
+                    <!-- Puedes agregar más datos aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="col-12">
+        <div class="alert alert-info text-center my-5">
+            No hay Trabajadores registrados en el sistema.
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Paginación de trabajadores">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Anterior</span>
+        </li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Siguiente</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
