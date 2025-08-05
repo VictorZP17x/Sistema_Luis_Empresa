@@ -25,7 +25,7 @@ $(document).ready(function () {
   });
 
   // Confirmación y envío AJAX con validaciones
-  $("#add-worker-form").on("submit", function (e) {
+  $("#add-worker-form").on("submit", async function (e) {
     e.preventDefault();
 
     // --- VALIDACIÓN DE CONTRASEÑA ---
@@ -58,6 +58,21 @@ $(document).ready(function () {
         phoneInput.focus();
         return false;
       }
+    }
+
+    const username = this.username.value;
+    const email = this.email.value;
+    const phone = this.phone.value;
+
+    const resultado = await validarDatosTrabajador(username, email, phone);
+    if (resultado.error) {
+      Swal.fire({
+        icon: "error",
+        title: "Datos ya registrados",
+        html: resultado.error,
+        confirmButtonText: "Aceptar",
+      });
+      return false;
     }
 
     Swal.fire({
@@ -187,3 +202,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+async function validarDatosTrabajador(username, email, phone) {
+  const response = await fetch('/workers/validar_datos_trabajador/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({ username, email, phone })
+  });
+  return await response.json();
+}
+

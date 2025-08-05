@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import make_password
 from company.models import Company
 from work_type.models import WorkType
 from django.core.paginator import Paginator
+import json
 
 @login_required
 def workers(request):
@@ -108,3 +109,25 @@ def delete_worker(request, user_id):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
+
+@login_required
+@csrf_exempt
+def validar_datos_trabajador(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        email = data.get('email')
+        phone = data.get('phone')
+        user_id = data.get('user_id')  # Para edición
+
+        errores = []
+        if User.objects.filter(username=username).exclude(pk=user_id).exists():
+            errores.append("usuario")
+        if User.objects.filter(email=email).exclude(pk=user_id).exists():
+            errores.append("email")
+        if UserProfile.objects.filter(phone=phone).exclude(user__pk=user_id).exists():
+            errores.append("teléfono")
+        if errores:
+            error_msg = "El " + ", ".join(errores) + " ya existe. Por favor intente con otro."
+            return JsonResponse({'error': error_msg})
+        return JsonResponse({'ok': True})

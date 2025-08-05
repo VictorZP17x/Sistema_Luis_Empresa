@@ -67,8 +67,36 @@ $(document).ready(function () {
   }
 
   // Envío del formulario con validaciones y SweetAlert
-  $("#edit-worker-form").on("submit", function (e) {
+  async function validarDatosTrabajador(username, email, phone, user_id) {
+    const response = await fetch("/workers/validar_datos_trabajador/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+      },
+      body: JSON.stringify({ username, email, phone, user_id }),
+    });
+    return await response.json();
+  }
+
+  $("#edit-worker-form").on("submit", async function (e) {
     e.preventDefault();
+
+    const username = this.username.value;
+    const email = this.email.value;
+    const phone = this.phone.value;
+    const user_id = this.user_id.value;
+
+    const resultado = await validarDatosTrabajador(username, email, phone, user_id);
+    if (resultado.error) {
+      Swal.fire({
+        icon: "error",
+        title: "Datos ya registrados",
+        html: resultado.error,
+        confirmButtonText: "Aceptar",
+      });
+      return false;
+    }
 
     // --- VALIDACIÓN DE TELÉFONO ---
     const phoneInput = document.getElementById("edit-worker-phone");
