@@ -33,7 +33,8 @@
                                             <tr>
                                                 <th class="centered" scope="col">#</th>
                                                 <th class="centered" scope="col">Nombre</th>
-                                                <th class="centered" scope="col">Encargado</th>
+                                                <th class="centered" scope="col">Empresa</th>
+                                                <th class="centered" scope="col">Trabajador</th>
                                                 <th class="centered" scope="col">Cliente</th>
                                                 <th class="centered" scope="col">Servicio(s)</th>
                                                 <th class="centered" scope="col">Descripción</th>
@@ -47,7 +48,20 @@
                                                 <td>{{ forloop.counter }}</td>
                                                 <td>{{ works_to_do.name }}</td>
                                                 <td>{{ works_to_do.fk_company }}</td>
-                                                <td>{{ works_to_do.fk_user }}</td>
+                                                <td>
+                                                    {% if works_to_do.fk_worker %}
+                                                    {{ works_to_do.fk_worker.get_full_name|default:works_to_do.fk_worker.username }}
+                                                    {% else %}
+                                                    -
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if works_to_do.fk_user %}
+                                                    {{ works_to_do.fk_user.get_full_name|default:works_to_do.fk_user.username }}
+                                                    {% else %}
+                                                    -
+                                                    {% endif %}
+                                                </td>
                                                 <td>
                                                     {% for wt in works_to_do.fk_work_type.all %}
                                                     {{ wt.name }}{% if not forloop.last %}, {% endif %}
@@ -75,32 +89,35 @@
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    {% if works_to_do.status != 3 %}
-                                                    <button class="btn btn-sm btn-primary edit-works_to_do-button"
-                                                        data-id="{{ works_to_do.id }}"
-                                                        data-name="{{ works_to_do.name|escapejs }}"
-                                                        data-description="{{ works_to_do.description|escapejs }}"
-                                                        data-fk_company_id="{{ works_to_do.fk_company_id|escapejs }}"
-                                                        data-fk_user_id="{{ works_to_do.fk_user_id|escapejs }}"
-                                                        data-fk_work_type_id='{{ works_to_do.fk_work_type_ids_json }}'>
-                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm delete-works_to_do-button"
-                                                        data-id="{{ works_to_do.id }}">
-                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
-                                                    </button>
-                                                    {% endif %}
-                                                    <button class="btn btn-success btn-sm"
-                                                        onclick="window.location.href='{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}'"
-                                                        title="Descargar PDF individual">
-                                                        <i data-feather="download"></i>
-                                                    </button>
-                                                    {% if works_to_do.status == 2 or works_to_do.status == 3 %}
-                                                    <button class="btn btn-sm btn-info show-progress-btn"
-                                                        data-id="{{ works_to_do.id }}">
-                                                        <i data-feather="bar-chart-2"></i>
-                                                    </button>
-                                                    {% endif %}
+                                                    <div class="btn-group-flex">
+                                                        {% if works_to_do.status != 3 %}
+                                                        <button class="btn btn-sm btn-primary edit-works_to_do-button"
+                                                            data-id="{{ works_to_do.id }}"
+                                                            data-name="{{ works_to_do.name|escapejs }}"
+                                                            data-description="{{ works_to_do.description|escapejs }}"
+                                                            data-fk_company_id="{{ works_to_do.fk_company_id|escapejs }}"
+                                                            data-fk_user_id="{{ works_to_do.fk_user_id|escapejs }}"
+                                                            data-fk_worker_id="{{ works_to_do.fk_worker_id|escapejs }}"
+                                                            data-fk_work_type_id='{{ works_to_do.fk_work_type_ids_json }}'>
+                                                            <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                        </button>
+                                                        <button class="btn btn-danger btn-sm delete-works_to_do-button"
+                                                            data-id="{{ works_to_do.id }}">
+                                                            <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                        </button>
+                                                        {% endif %}
+                                                        {% if works_to_do.status == 2 or works_to_do.status == 3 %}
+                                                        <button class="btn btn-sm btn-info show-progress-btn"
+                                                            data-id="{{ works_to_do.id }}">
+                                                            <i data-feather="bar-chart-2"></i>
+                                                        </button>
+                                                        {% endif %}
+                                                        <button class="btn btn-sm btn-secondary"
+                                                            onclick="window.location.href='{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}'"
+                                                            title="Descargar PDF individual">
+                                                            <i data-feather="file-text"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -153,11 +170,32 @@
                         <input type="text" class="form-control" id="add-name" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="add-fk_company" class="form-label">Encargado</label>
+                        <label for="add-fk_company" class="form-label">Empresa</label>
                         <select class="form-select select2" id="add-fk_company" name="fk_company" required>
                             <option value="" selected>Seleccione la empresa</option>
                             {% for company in companies %}
                             <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-fk_work_type" class="form-label">Servicio</label>
+                        <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" multiple required>
+                            {% for work_type in work_types %}
+                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-worker" class="form-label">Trabajador</label>
+                        <select class="form-select select2" id="add-worker" name="worker" required>
+                            <option value="" selected>Seleccione el trabajador</option>
+                            {% for worker in workers %}
+                            <option value="{{ worker.user.id }}"
+                                data-company="{% if worker.company %}{{ worker.company.id }}{% endif %}"
+                                data-work-types="{% for wt in worker.work_types.all %}{{ wt.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                                {{ worker.user.get_full_name|default:worker.user.username }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -167,14 +205,6 @@
                             <option value="" selected>Seleccione el cliente</option>
                             {% for user in users %}
                             <option value="{{ user.id }}">{{ user.username }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="add-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" multiple required>
-                            {% for work_type in work_types %}
-                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -213,11 +243,33 @@
                         <input type="text" class="form-control" id="edit-name" name="name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="edit-fk_company" class="form-label">Encargado</label>
+                        <label for="edit-fk_company" class="form-label">Empresa</label>
                         <select class="form-select select2" id="edit-fk_company" name="fk_company" required>
                             <option value="" selected>Seleccione la empresa</option>
                             {% for company in companies %}
                             <option value="{{ company.id }}">{{ company.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-fk_work_type" class="form-label">Servicio</label>
+                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" multiple
+                            required>
+                            {% for work_type in work_types %}
+                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-worker" class="form-label">Trabajador</label>
+                        <select class="form-select select2" id="edit-worker" name="worker" required>
+                            <option value="" selected>Seleccione el trabajador</option>
+                            {% for worker in workers %}
+                            <option value="{{ worker.user.id }}"
+                                data-company="{% if worker.company %}{{ worker.company.id }}{% endif %}"
+                                data-work-types="{% for wt in worker.work_types.all %}{{ wt.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                                {{ worker.user.get_full_name|default:worker.user.username }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -228,15 +280,6 @@
                             <option value="" selected>Seleccione el cliente</option>
                             {% for user in users %}
                             <option value="{{ user.id }}">{{ user.username }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" multiple
-                            required>
-                            {% for work_type in work_types %}
-                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -278,17 +321,23 @@
 {% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/works_to_do_css/work-progress-bar.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/index_css/flex-buttons.css' %}">
 <link rel="stylesheet" href="{% static 'assets/css/works_to_do_css/works_to_do.css' %}">
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    var companyServices = {{ company_services| safe }};
+</script>
+<script>
+    var workersData = {{ workers_data| safe }};
+</script>
 <script src="{% static 'assets/js/works_to_do_js/datatable-works_to_do.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/añadir.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/editar.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/borrar.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/show-work-progress.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/filter-work-types.js' %}"></script>
-<script>
-    var companyServices = {{ company_services| safe }};
-</script>
+<script src="{% static 'assets/js/works_to_do_js/filter-workers.js' %}"></script>
 {% endblock %}
