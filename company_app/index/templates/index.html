@@ -185,7 +185,7 @@
         <!-- CUSTOM JS -->
         <script src="{% static 'assets/js/index_js/index.js' %}"></script>
         <script>
-            window.inicializarDataTablesServicios = function() {
+            window.inicializarDataTablesServicios = function () {
                 $('[id^="datatable-servicios-"]').each(function () {
                     if (!$.fn.DataTable.isDataTable(this)) {
                         $(this).DataTable({
@@ -211,6 +211,21 @@
                 window.inicializarDataTablesServicios();
             });
         </script>
+        // ...existing code...
+        <script>
+            // Espera a que la modal se muestre
+            document.addEventListener('shown.bs.modal', function () {
+                const backdrop = document.querySelector('.modal-backdrop');
+                const modal = document.querySelector('.modal.show');
+                if (backdrop && modal) {
+                    console.log('Backdrop:', backdrop, getComputedStyle(backdrop));
+                    console.log('Modal:', modal, getComputedStyle(modal));
+                } else {
+                    console.log('No se encontró backdrop o modal.');
+                }
+            });
+        </script>
+        // ...existing code...
         {% block extra_js %}{% endblock %}
 
 </body>

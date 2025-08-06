@@ -42,7 +42,6 @@ body {
 .main-content,
 nav {
   position: relative;
-  z-index: 2;
 }
 .bg-white {
   background: #fff !important;
@@ -55,7 +54,6 @@ nav {
   max-width: 1200px;
   min-height: 200px;
   position: relative;
-  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -78,15 +76,4 @@ footer.bg-primary {
 }
 .modal-dialog {
   margin-top: 80px !important;
-}
-
-/* Asegura que el modal y el backdrop estén por encima del fondo difuminado */
-.modal-backdrop {
-  z-index: 9998 !important;
-}
-.modal {
-  z-index: 9999 !important;
-}
-.modal-content {
-  z-index: 10000 !important;
 }
