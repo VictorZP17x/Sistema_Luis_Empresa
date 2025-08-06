@@ -1,0 +1,29 @@
+/* Aumenta la altura del modal y permite scroll interno */
+.modal-dialog {
+  max-width: 600px;
+}
+
+.modal-content {
+  max-height: 90vh;
+  overflow: visible;
+}
+
+.modal-body {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: visible;
+}
+
+/* Barra de progreso personalizada */
+.progress {
+  height: 2rem;
+  /* Más ancha */
+  background-color: #e9ecef;
+}
+
+.progress-bar.custom-progress-bar {
+  background-color: #003366 !important;
+  /* Azul oscuro */
+  font-weight: bold;
+  font-size: 1.1rem;
+}

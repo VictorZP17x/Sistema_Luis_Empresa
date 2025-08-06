@@ -1,0 +1,15 @@
+/* Aumenta la altura del modal y permite scroll interno */
+.modal-dialog {
+    max-width: 600px;
+}
+
+.modal-content {
+    max-height: 90vh;
+    overflow: visible;
+}
+
+.modal-body {
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: visible;
+}
