@@ -65,15 +65,17 @@
                                                 </td>
                                                 <td>
                                                     {% if works_to_do.status == 0 %}
-                                                    <span class="badge bg-secondary">Programado</span>
+                                                    <span class="badge bg-secondary">Pendiente</span>
                                                     {% elif works_to_do.status == 1 %}
-                                                    <span class="badge bg-warning text-dark">En Proceso</span>
+                                                    <span class="badge bg-warning text-dark">Programado</span>
                                                     {% elif works_to_do.status == 2 %}
+                                                    <span class="badge bg-warning text-dark">En Proceso</span>
+                                                    {% elif works_to_do.status == 3 %}
                                                     <span class="badge bg-success">Terminado</span>
                                                     {% endif %}
                                                 </td>
                                                 <td>
-                                                    {% if works_to_do.status != 2 %}
+                                                    {% if works_to_do.status != 3 %}
                                                     <button class="btn btn-sm btn-primary edit-works_to_do-button"
                                                         data-id="{{ works_to_do.id }}"
                                                         data-name="{{ works_to_do.name|escapejs }}"
@@ -87,17 +89,18 @@
                                                         data-id="{{ works_to_do.id }}">
                                                         <span class="pc-micon"><i data-feather="trash-2"></i></span>
                                                     </button>
-                                                    <button class="btn btn-info btn-sm change-status-works_to_do-button"
-                                                        data-id="{{ works_to_do.id }}"
-                                                        data-status="{{ works_to_do.status }}">
-                                                        <i data-feather="chevrons-right"></i>
-                                                    </button>
                                                     {% endif %}
                                                     <button class="btn btn-success btn-sm"
                                                         onclick="window.location.href='{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}'"
                                                         title="Descargar PDF individual">
                                                         <i data-feather="download"></i>
                                                     </button>
+                                                    {% if works_to_do.status == 2 or works_to_do.status == 3 %}
+                                                    <button class="btn btn-sm btn-info show-progress-btn"
+                                                        data-id="{{ works_to_do.id }}">
+                                                        <i data-feather="bar-chart-2"></i>
+                                                    </button>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -255,10 +258,41 @@
     </div>
 </div>
 
+<!-- Modal de Progreso del Trabajo -->
+<div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="progressModalLabel">Progreso del Trabajo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="progress-bar-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_css %}
+<style>
+    /* Barra de progreso personalizada */
+    .progress {
+        height: 2rem;
+        /* Más ancha */
+        background-color: #e9ecef;
+    }
 
+    .progress-bar.custom-progress-bar {
+        background-color: #003366 !important;
+        /* Azul oscuro */
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
@@ -266,8 +300,8 @@
 <script src="{% static 'assets/js/works_to_do_js/añadir.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/editar.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/borrar.js' %}"></script>
+<script src="{% static 'assets/js/works_to_do_js/show-work-progress.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/filter-work-types.js' %}"></script>
-<script src="{% static 'assets/js/works_to_do_js/change-work-status.js' %}"></script>
 <script>
     var companyServices = {{ company_services| safe }};
 </script>

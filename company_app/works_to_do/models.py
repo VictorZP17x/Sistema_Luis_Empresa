@@ -4,9 +4,10 @@ from company.models import Company
 from work_type.models import WorkType
 
 STATUS_CHOICES = [
-        (0, 'Programado'),
-        (1, 'En Proceso'),
-        (2, 'Terminado'),
+        (0, 'Pendiente'),
+        (1, 'Programado'),
+        (2, 'En Proceso'),
+        (3, 'Terminado'),
     ]
 
 class WorksToDo(models.Model):
