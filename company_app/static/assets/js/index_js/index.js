@@ -43,9 +43,12 @@ $(function () {
       // Scroll para mostrar el título y las cards/paginación juntas
       var $serviciosSection = $("#servicios-section");
       if ($serviciosSection.length) {
-        // Ajusta el margen superior (ejemplo: 120px)
-        var scrollTo = $serviciosSection.offset().top - 40; // Menor margen para mostrar el título
+        var scrollTo = $serviciosSection.offset().top - 40;
         $("html, body").animate({ scrollTop: scrollTo }, 300);
+      }
+      // Re-inicializar DataTables en las nuevas tablas
+      if (window.inicializarDataTablesServicios) {
+        window.inicializarDataTablesServicios();
       }
     });
     return false;

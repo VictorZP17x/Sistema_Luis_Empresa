@@ -1,4 +1,5 @@
 {% load static %}
+{% load dict_get %}
 <h3 class="text-center mb-4">Empresas y sus Servicios</h3>
 <div class="row justify-content-center mb-3">
     <div class="col-12 col-md-6">
@@ -45,9 +46,9 @@
                     <div class="mb-2">
                         <small class="text-muted">Servicios</small><br>
                         {% if company.work_types.all %}
-                        {% for servicio in company.work_types.all %}
-                        <span class="badge bg-primary me-1 mb-1">{{ servicio.name }}</span>
-                        {% endfor %}
+                        <button class="btn btn-outline-primary btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#modalServicios{{ company.id }}">
+                            Ver servicios
+                        </button>
                         {% else %}
                         <span class="text-muted">Sin servicios asociados</span>
                         {% endif %}
@@ -55,7 +56,6 @@
                 </div>
             </div>
         </div>
-
         {% empty %}
         <div class="col-12">
             <div class="alert alert-info text-center my-5">
@@ -97,3 +97,55 @@
     </nav>
     {% endif %}
 </div>
+
+<!-- Modal de servicios por empresa -->
+{% for company in page_obj.object_list %}
+<div class="modal fade" id="modalServicios{{ company.id }}" tabindex="-1" aria-labelledby="modalServiciosLabel{{ company.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-custom">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalServiciosLabel{{ company.id }}">Servicios de {{ company.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-sm">
+                    <div class="card-body p-2">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm datatable-servicios mb-0"
+                                id="datatable-servicios-{{ company.id }}">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-start">Servicio</th>
+                                        <th class="text-end">Trabajadores</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for servicio in company.work_types.all %}
+                                    <tr>
+                                        <td class="text-start">{{ servicio.name }}</td>
+                                        <td class="text-end">
+                                            <span class="badge bg-primary">
+                                                {{ workers_by_service|dict_get:company.id|dict_get:servicio.id|default_if_none:"0" }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-dialog {
+    margin-top: 100px !important;
+}
+</style>
+{% endfor %}

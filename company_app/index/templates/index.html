@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Bienvenido | OLTEC</title>
@@ -12,11 +13,15 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'assets/bootstrap-5.3.6/css/bootstrap.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/bootstrap-5.3.6/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/datatables/css/jquery.dataTables.min.css' %}" />
     <!-- Íconos - Feather Icons CSS -->
     <link rel="stylesheet" href="{% static 'assets/fonts/feather.css' %}">
     <!-- CUSTOM CSS -->
     <link rel="stylesheet" href="{% static 'assets/css/index_css/index.css' %}">
+
+
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container-fluid">
@@ -170,13 +175,44 @@
         </footer>
         <!-- Bootstrap JS -->
         <script src="{% static 'assets/bootstrap-5.3.6/js/bootstrap.bundle.min.js' %}"></script>
-        <!-- Íconos - Feather Icons JS -->
+        <!-- DataTables JS -->
+        <script src="{% static 'assets/datatables/js/jquery.dataTables.min.js' %}"></script>
+        <!-- Feather Icons JS -->
         <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
         <script>
             feather.replace();
         </script>
         <!-- CUSTOM JS -->
         <script src="{% static 'assets/js/index_js/index.js' %}"></script>
+        <script>
+            window.inicializarDataTablesServicios = function() {
+                $('[id^="datatable-servicios-"]').each(function () {
+                    if (!$.fn.DataTable.isDataTable(this)) {
+                        $(this).DataTable({
+                            paging: true,
+                            pageLength: 3,
+                            lengthChange: false,
+                            searching: true,
+                            ordering: false,
+                            info: false,
+                            language: {
+                                search: "Buscar servicio:",
+                                paginate: {
+                                    previous: "Anterior",
+                                    next: "Siguiente"
+                                },
+                                zeroRecords: "No hay servicios"
+                            }
+                        });
+                    }
+                });
+            };
+            $(function () {
+                window.inicializarDataTablesServicios();
+            });
+        </script>
         {% block extra_js %}{% endblock %}
+
 </body>
+
 </html>
