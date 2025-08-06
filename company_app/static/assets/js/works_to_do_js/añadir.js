@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // Inicializa select2
-    $('#add-fk_company, #add-fk_user').select2({
+    $('#add-fk_company, #add-fk_user, #add-worker').select2({
         placeholder: "Seleccionar",
         allowClear: true,
         width: '100%',

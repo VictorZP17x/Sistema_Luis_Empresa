@@ -5,6 +5,13 @@ from .models import WorkPlan, Task, TaskRequirement
 from .forms import WorkPlanForm, TaskForm
 from works_to_do.models import WorksToDo
 from django.views.decorators.csrf import csrf_exempt
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+import os
+from django.conf import settings
+from django.http import HttpResponse
 
 @login_required
 def work_plan(request):
@@ -181,3 +188,109 @@ def progress_by_works_to_do(request, works_to_do_id):
     total = plan.task_set.count()
     finished = plan.task_set.filter(finished=True).count()
     return JsonResponse({'success': True, 'finished_tasks': finished, 'total_tasks': total})
+
+@login_required
+def generate_pdf_work_plan(request, pk):
+    plan = get_object_or_404(WorkPlan, pk=pk)
+    solicitud = plan.fk_works_to_do
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Plan_Trabajo_{plan.id}.pdf"'
+
+    doc = SimpleDocTemplate(
+        response,
+        pagesize=letter,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=30
+    )
+    elements = []
+    styles = getSampleStyleSheet()
+    styleN = styles['Normal']
+    styleB = styles['Heading4']
+
+    # Logo y título
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'assets', 'images', 'logo_pdf.png')
+    if os.path.exists(logo_path):
+        img = Image(logo_path, width=60, height=60)
+    else:
+        img = Spacer(1, 40)
+    title = Paragraph(f"<b>Plan de Trabajo N° {plan.id}</b>", styles['Title'])
+    header_table = Table(
+        [[img, title]],
+        colWidths=[0, doc.width - 0],
+        hAlign='LEFT'
+    )
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (1, 0), (1, 0), 'CENTER'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
+        ('TOPPADDING', (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+    ]))
+    elements.append(header_table)
+    elements.append(Spacer(1, 18))
+
+    # Datos del plan
+    estado_plan = "Terminado" if plan.status else "Abierto"
+    elements.append(Paragraph(f"<b>Nombre del Plan:</b> {plan.plan_name}", styleN))
+    elements.append(Paragraph(f"<b>Estado:</b> {estado_plan}", styleN))
+    elements.append(Spacer(1, 8))
+
+    # Datos de la solicitud asociada
+    elements.append(Paragraph(f"<b>Solicitud Asociada:</b> {solicitud}", styleN))
+    elements.append(Spacer(1, 8))
+
+    # Tareas del plan
+    tasks = plan.task_set.all()
+    if tasks.exists():
+        task_data = [
+            [Paragraph("<b>#</b>", styleN),
+             Paragraph("<b>Tarea</b>", styleN),
+             Paragraph("<b>Requerimientos</b>", styleN),
+             Paragraph("<b>Inicio</b>", styleN),
+             Paragraph("<b>Fin</b>", styleN),
+             Paragraph("<b>Estado</b>", styleN)]
+        ]
+        for idx, t in enumerate(tasks, 1):
+            reqs = ", ".join([r.requirement for r in t.requirements.all()])
+            estado_tarea = "Terminada" if t.finished else "Pendiente"
+            task_data.append([
+                Paragraph(str(idx), styleN),
+                Paragraph(t.task, styleN),
+                Paragraph(reqs, styleN),
+                Paragraph(t.start_date.strftime("%d/%m/%Y %H:%M") if t.start_date else "", styleN),
+                Paragraph(t.end_date.strftime("%d/%m/%Y %H:%M") if t.end_date else "", styleN),
+                Paragraph(estado_tarea, styleN)
+            ])
+        task_table = Table(task_data, repeatRows=1, hAlign='LEFT')
+        task_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f0f0f0")),
+            ('GRID', (0, 0), (-1, -1), 0.8, colors.black),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('FONTSIZE', (0, 1), (-1, -1), 9),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+        ]))
+        elements.append(task_table)
+    else:
+        elements.append(Paragraph("No hay tareas registradas para este plan.", styleN))
+    elements.append(Spacer(1, 12))
+
+    # Pie de página
+    def footer(canvas, doc):
+        import datetime
+        fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+        footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
+        canvas.saveState()
+        canvas.setFont('Helvetica', 8)
+        width, height = letter
+        canvas.drawRightString(width - 20, 15, footer_text)
+        canvas.restoreState()
+
+    doc.build(elements, onFirstPage=footer, onLaterPages=footer)
+    return response

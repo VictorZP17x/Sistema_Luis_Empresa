@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#edit-fk_company, #edit-fk_user').select2({
+    $('#edit-fk_company, #edit-fk_user, #edit-worker').select2({
         placeholder: "Seleccionar",
         allowClear: true,
         width: '100%',
@@ -33,12 +33,17 @@ $(document).ready(function () {
 
         // Preselecciona los servicios del registro
         var workTypeIds = $(this).data('fk_work_type_id');
-        // Si viene como string tipo "1,2,3", conviértelo a array
         if (typeof workTypeIds === 'string') {
             workTypeIds = workTypeIds.split(',').map(function (id) { return id.trim(); });
         }
         $('#edit-fk_work_type').val(workTypeIds).trigger('change');
         $('#edit-fk_work_type').attr('data-original', workTypeIds.join(','));
+
+        // Preselecciona el trabajador actual
+        var workerId = $(this).data('fk_worker_id');
+        setTimeout(function () {
+            $('#edit-worker').val(workerId).trigger('change');
+        }, 200);
 
         $('#edit-works_to_do-modal').modal('show');
     });

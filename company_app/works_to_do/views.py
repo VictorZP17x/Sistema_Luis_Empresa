@@ -15,6 +15,7 @@ from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from work_plan.models import WorkPlan
+from user.models import UserProfile
 
 @login_required
 def works_to_do(request):
@@ -22,6 +23,18 @@ def works_to_do(request):
     companies = Company.objects.all()
     users = User.objects.filter(userprofile__role=2)
     work_types = WorkType.objects.all()
+    # Trabajadores con su empresa y servicios
+    from user.models import UserProfile
+    workers = UserProfile.objects.filter(role=3).select_related('user', 'company').prefetch_related('work_types')
+    workers_data = [
+        {
+            'id': w.user.id,
+            'name': w.user.get_full_name() or w.user.username,
+            'company_id': w.company.id if w.company else None,
+            'work_types': [wt.id for wt in w.work_types.all()]
+        }
+        for w in workers
+    ]
     company_services = {
         company.id: list(company.work_types.values_list('id', flat=True))
         for company in companies
@@ -34,6 +47,8 @@ def works_to_do(request):
         'users': users,
         'work_types': work_types,
         'company_services': company_services,
+        'workers': workers,
+        'workers_data': workers_data,  # Para JS
     })
 
 @login_required
@@ -45,7 +60,8 @@ def add_works_to_do(request):
             name=data['name'],
             fk_company_id=data['fk_company'],
             fk_user_id=data['fk_user'],
-            description=data['description']
+            fk_worker_id=data['worker'],
+            description=data['description'],
         )
         work.fk_work_type.set(request.POST.getlist('fk_work_type'))
         return JsonResponse({'success': True, 'id': work.id})
@@ -59,6 +75,7 @@ def edit_works_to_do(request):
         work.name = data['name']
         work.fk_company_id = data['fk_company']
         work.fk_user_id = data['fk_user']
+        work.fk_worker_id = data['worker']
         work.description = data['description']
         work.save()
         work.fk_work_type.set(request.POST.getlist('fk_work_type'))
@@ -75,7 +92,6 @@ def delete_works_to_do(request):
         work.delete()
         return JsonResponse({'success': True})
 
-@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"
@@ -130,12 +146,13 @@ def generate_pdf_all(request):
     elements.append(header_table)
     elements.append(Spacer(1, 12))
 
-    # Encabezados de la tabla
+    # Encabezados de la tabla (ajustados)
     data = [
         [
             Paragraph("<b>#</b>", styleN),
             Paragraph("<b>Nombre</b>", styleN),
-            Paragraph("<b>Encargado</b>", styleN),
+            Paragraph("<b>Empresa</b>", styleN),
+            Paragraph("<b>Trabajador</b>", styleN),
             Paragraph("<b>Cliente</b>", styleN),
             Paragraph("<b>Servicio(s)</b>", styleN),
             Paragraph("<b>Descripción</b>", styleN),
@@ -143,32 +160,35 @@ def generate_pdf_all(request):
         ]
     ]
 
-    # Datos de la tabla
+    # Datos de la tabla (ajustados)
     trabajos = WorksToDo.objects.all()
-    ESTADOS = {0: "Programado", 1: "En Proceso", 2: "Terminado"}
+    ESTADOS = {0: "Pendiente", 1: "Programado", 2: "En Proceso", 3: "Terminado"}
     for idx, trabajo in enumerate(trabajos, 1):
         servicios = ", ".join([wt.name for wt in trabajo.fk_work_type.all()])
         estado = ESTADOS.get(trabajo.status, "Desconocido")
+        trabajador = trabajo.fk_worker
+        cliente = trabajo.fk_user
         data.append([
             Paragraph(str(idx), styleN),
             Paragraph(trabajo.name or "", styleN),
-            Paragraph(str(trabajo.fk_company) if trabajo.fk_company else "", styleN),
-            Paragraph(str(trabajo.fk_user) if trabajo.fk_user else "", styleN),
+            Paragraph(str(trabajo.fk_company) if trabajo.fk_company else "-", styleN),
+            Paragraph(trabajador.get_full_name() if trabajador else "-", styleN),
+            Paragraph(cliente.get_full_name() if cliente else "-", styleN),
             Paragraph(servicios, styleN),
             Paragraph(trabajo.description or "", styleN),
             Paragraph(estado, styleN),
         ])
 
-    # Anchos de columna
+    # Anchos de columna (ajustados)
     page_width = letter[0] - doc.leftMargin - doc.rightMargin
-    proportions = [0.05, 0.16, 0.16, 0.16, 0.16, 0.18, 0.12]
+    proportions = [0.04, 0.13, 0.13, 0.14, 0.14, 0.14, 0.16, 0.12]
     col_widths = [page_width * p for p in proportions]
 
     # Tabla
     table = Table(data, repeatRows=1, colWidths=col_widths, hAlign='CENTER')
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f0f0f0")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 11),
@@ -191,6 +211,7 @@ def generate_pdf_all(request):
 @login_required
 def generate_pdf_individual(request, pk):
     from .models import WorksToDo
+    from work_plan.models import WorkPlan
     trabajo = WorksToDo.objects.get(pk=pk)
 
     response = HttpResponse(content_type='application/pdf')
@@ -261,7 +282,7 @@ def generate_pdf_individual(request, pk):
             telefono = cliente.userprofile.phone or ""
         except Exception:
             telefono = ""
-        datos_cliente = [
+    datos_cliente = [
         [Paragraph("<b>Datos del Cliente</b>", styleB)],
         [Paragraph(f"<b>Nombre:</b> {cliente.get_full_name() if cliente else ''}", styleN)],
         [Paragraph(f"<b>Email:</b> {cliente.email if cliente else ''}", styleN)],
@@ -277,6 +298,32 @@ def generate_pdf_individual(request, pk):
         ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
     ]))
     elements.append(cliente_table)
+    elements.append(Spacer(1, 12))
+    
+    # Datos del trabajador encargado
+    trabajador = trabajo.fk_worker
+    telefono_trabajador = ""
+    if trabajador:
+        try:
+            telefono_trabajador = trabajador.userprofile.phone or ""
+        except Exception:
+            telefono_trabajador = ""
+    datos_trabajador = [
+        [Paragraph("<b>Trabajador Encargado</b>", styleB)],
+        [Paragraph(f"<b>Nombre:</b> {trabajador.get_full_name() if trabajador else ''}", styleN)],
+        [Paragraph(f"<b>Email:</b> {trabajador.email if trabajador else ''}", styleN)],
+        [Paragraph(f"<b>Teléfono:</b> {telefono_trabajador}", styleN)],
+    ]
+    trabajador_table = Table(datos_trabajador, colWidths=[doc.width])
+    trabajador_table.setStyle(TableStyle([
+        ('BOX', (0, 0), (-1, -1), 0.8, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f0f0f0")),
+        ('LEFTPADDING', (0, 0), (-1, -1), 6),
+        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 4),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+    ]))
+    elements.append(trabajador_table)
     elements.append(Spacer(1, 12))
 
     # Servicios solicitados
@@ -311,11 +358,10 @@ def generate_pdf_individual(request, pk):
     ]))
     elements.append(descripcion_table)
     elements.append(Spacer(1, 18))
-    
-    ESTADOS = {0: "Programado", 1: "En Proceso", 2: "Terminado"}
-    estado = ESTADOS.get(trabajo.status, "Desconocido")
 
-    # Puedes agregarlo en la tabla de descripción del trabajo o como una tabla aparte:
+    # Estado del trabajo (corregido)
+    ESTADOS = {0: "Pendiente", 1: "Programado", 2: "En Proceso", 3: "Terminado"}
+    estado = ESTADOS.get(trabajo.status, "Desconocido")
     estado_table = Table([
         [Paragraph("<b>Estado del Trabajo</b>", styleB)],
         [Paragraph(estado, styleN)]
@@ -330,6 +376,56 @@ def generate_pdf_individual(request, pk):
     ]))
     elements.append(estado_table)
     elements.append(Spacer(1, 12))
+
+    # --- Plan de trabajo asociado ---
+    plan = WorkPlan.objects.filter(fk_works_to_do=trabajo).order_by('-id').first()
+    if plan:
+        plan_estado = "Terminado" if plan.status else "Abierto"
+        elements.append(Paragraph(f"<b>Plan de Trabajo Asociado</b>", styleB))
+        elements.append(Paragraph(f"<b>Nombre:</b> {plan.plan_name}", styleN))
+        elements.append(Paragraph(f"<b>Estado:</b> {plan_estado}", styleN))
+        elements.append(Spacer(1, 6))
+
+        # Tareas del plan
+        tasks = plan.task_set.all()
+        if tasks.exists():
+            task_data = [
+                [Paragraph("<b>#</b>", styleN),
+                 Paragraph("<b>Tarea</b>", styleN),
+                 Paragraph("<b>Requerimientos</b>", styleN),
+                 Paragraph("<b>Inicio</b>", styleN),
+                 Paragraph("<b>Fin</b>", styleN),
+                 Paragraph("<b>Estado</b>", styleN)]
+            ]
+            for idx, t in enumerate(tasks, 1):
+                reqs = ", ".join([r.requirement for r in t.requirements.all()])
+                estado_tarea = "Terminada" if t.finished else "Pendiente"
+                task_data.append([
+                    Paragraph(str(idx), styleN),
+                    Paragraph(t.task, styleN),
+                    Paragraph(reqs, styleN),
+                    Paragraph(t.start_date.strftime("%d/%m/%Y %H:%M") if t.start_date else "", styleN),
+                    Paragraph(t.end_date.strftime("%d/%m/%Y %H:%M") if t.end_date else "", styleN),
+                    Paragraph(estado_tarea, styleN)
+                ])
+            task_table = Table(task_data, repeatRows=1, hAlign='LEFT')
+            task_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f0f0f0")),
+                ('GRID', (0, 0), (-1, -1), 0.8, colors.black),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('FONTSIZE', (0, 1), (-1, -1), 9),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+                ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+            ]))
+            elements.append(task_table)
+        else:
+            elements.append(Paragraph("No hay tareas registradas para este plan.", styleN))
+        elements.append(Spacer(1, 12))
+    else:
+        elements.append(Paragraph("No hay plan de trabajo registrado para esta solicitud.", styleN))
+        elements.append(Spacer(1, 12))
 
     # Pie de página
     def footer(canvas, doc):

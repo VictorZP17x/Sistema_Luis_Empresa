@@ -17,6 +17,7 @@ class WorksToDo(models.Model):
     fk_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
     fk_company = models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name='Empresa')
     fk_work_type = models.ManyToManyField(WorkType, verbose_name='Servicio')
+    fk_worker = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trabajos_asignados', verbose_name='Trabajador')
     
     class Meta:
         db_table = 'works_to_do'

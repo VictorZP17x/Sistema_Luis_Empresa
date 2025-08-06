@@ -24,6 +24,7 @@
                                     <th class="centered">#</th>
                                     <th class="centered">Nombre</th>
                                     <th class="centered">Solicitud</th>
+                                    <th class="centered">Estado</th>
                                     <th class="centered">Opciones</th>
                                 </tr>
                             </thead>
@@ -33,6 +34,13 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{ plan.plan_name }}</td>
                                     <td>{{ plan.fk_works_to_do }}</td>
+                                    <td>
+                                        {% if plan.status %}
+                                            <span class="badge bg-secondary ms-2">Terminado</span>
+                                        {% else %}
+                                            <span class="badge bg-success ms-2">Abierto</span>
+                                        {% endif %}
+                                    </td>
                                     <td>
                                         {% if not plan.status %}
                                         <button class="btn btn-sm btn-success add-task-btn"
@@ -53,9 +61,11 @@
                                         <button class="btn btn-sm btn-info show-tasks-btn" data-plan-id="{{ plan.id }}">
                                             <span class="pc-micon"><i data-feather="list"></i></span>
                                         </button>
-                                        {% if plan.status %}
-                                        <span class="badge bg-secondary ms-2">Terminado</span>
-                                        {% endif %}
+                                        <button class="btn btn-sm btn-secondary"
+                                            onclick="window.open('{% url 'work_plan:generate_pdf_work_plan' plan.id %}', '_blank')"
+                                            title="Descargar PDF">
+                                            <span class="pc-micon"><i data-feather="file-text"></i></span>
+                                        </button>
                                     </td>
                                 </tr>
                                 {% endfor %}

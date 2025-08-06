@@ -1,0 +1,13 @@
+/* Puedes poner esto en tu bloque extra_css o en tu archivo CSS global */
+.btn-group-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    justify-content: center;
+    align-items: center;
+}
+.btn-group-flex .btn {
+    flex: 1 1 30%; /* Ocupa casi la mitad del ancho, ajusta según tu preferencia */
+    min-width: 20px;
+    margin-bottom: 0.2rem;
+}
