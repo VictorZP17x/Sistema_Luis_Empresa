@@ -50,14 +50,18 @@
                                                 <td>{{ works_to_do.fk_company }}</td>
                                                 <td>
                                                     {% if works_to_do.fk_worker %}
-                                                    {{ works_to_do.fk_worker.get_full_name|default:works_to_do.fk_worker.username }}
+                                                    {{
+                                                    works_to_do.fk_worker.get_full_name|default:works_to_do.fk_worker.username
+                                                    }}
                                                     {% else %}
                                                     -
                                                     {% endif %}
                                                 </td>
                                                 <td>
                                                     {% if works_to_do.fk_user %}
-                                                    {{ works_to_do.fk_user.get_full_name|default:works_to_do.fk_user.username }}
+                                                    {{
+                                                    works_to_do.fk_user.get_full_name|default:works_to_do.fk_user.username
+                                                    }}
                                                     {% else %}
                                                     -
                                                     {% endif %}
@@ -171,23 +175,28 @@
                     </div>
                     <div class="mb-3">
                         <label for="add-fk_company" class="form-label">Empresa</label>
+                        {% if is_trabajador %}
+                        <input type="hidden" id="add-fk_company" name="fk_company"
+                            value="{{ request.user.userprofile.company.id }}">
+                        <input type="text" class="form-control" value="{{ request.user.userprofile.company.name }}"
+                            disabled>
+                        {% else %}
                         <select class="form-select select2" id="add-fk_company" name="fk_company" required>
                             <option value="" selected>Seleccione la empresa</option>
                             {% for company in companies %}
                             <option value="{{ company.id }}">{{ company.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="add-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" multiple required>
-                            {% for work_type in work_types %}
-                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
-                            {% endfor %}
-                        </select>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="add-worker" class="form-label">Trabajador</label>
+                        {% if is_trabajador %}
+                        <input type="hidden" id="add-worker" name="worker"
+                            value="{{ request.user.userprofile.user.id }}">
+                        <input type="text" class="form-control"
+                            value="{{ request.user.get_full_name|default:request.user.username }}" disabled>
+                        {% else %}
                         <select class="form-select select2" id="add-worker" name="worker" required>
                             <option value="" selected>Seleccione el trabajador</option>
                             {% for worker in workers %}
@@ -198,6 +207,7 @@
                             </option>
                             {% endfor %}
                         </select>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="add-fk_user" class="form-label">Cliente</label>
@@ -244,24 +254,28 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit-fk_company" class="form-label">Empresa</label>
+                        {% if is_trabajador %}
+                        <input type="hidden" id="edit-fk_company" name="fk_company"
+                            value="{{ request.user.userprofile.company.id }}">
+                        <input type="text" class="form-control" value="{{ request.user.userprofile.company.name }}"
+                            disabled>
+                        {% else %}
                         <select class="form-select select2" id="edit-fk_company" name="fk_company" required>
                             <option value="" selected>Seleccione la empresa</option>
                             {% for company in companies %}
                             <option value="{{ company.id }}">{{ company.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" multiple
-                            required>
-                            {% for work_type in work_types %}
-                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
-                            {% endfor %}
-                        </select>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="edit-worker" class="form-label">Trabajador</label>
+                        {% if is_trabajador %}
+                        <input type="hidden" id="edit-worker" name="worker"
+                            value="{{ request.user.userprofile.user.id }}">
+                        <input type="text" class="form-control"
+                            value="{{ request.user.get_full_name|default:request.user.username }}" disabled>
+                        {% else %}
                         <select class="form-select select2" id="edit-worker" name="worker" required>
                             <option value="" selected>Seleccione el trabajador</option>
                             {% for worker in workers %}
@@ -272,6 +286,7 @@
                             </option>
                             {% endfor %}
                         </select>
+                        {% endif %}
                     </div>
                     <div class="mb-3">
                         <label for="edit-fk_user" class="form-label">Cliente</label>
@@ -340,4 +355,7 @@
 <script src="{% static 'assets/js/works_to_do_js/show-work-progress.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/filter-work-types.js' %}"></script>
 <script src="{% static 'assets/js/works_to_do_js/filter-workers.js' %}"></script>
+{% if show_welcome and is_trabajador %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endif %}
 {% endblock %}

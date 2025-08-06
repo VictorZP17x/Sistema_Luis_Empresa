@@ -23,7 +23,7 @@ def login(request):
             auth_login(request, user)
             # Flag de bienvenida
             request.session['show_welcome'] = True
-            return redirect('home:dashboard')
+            return redirect('home:role_redirect')  # <-- Redirige según el rol
         else:
             error = "Usuario o contraseña incorrectos."
             return render(request, 'login.html', {'error': error})

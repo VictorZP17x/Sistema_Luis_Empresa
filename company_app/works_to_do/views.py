@@ -19,11 +19,13 @@ from user.models import UserProfile
 
 @login_required
 def works_to_do(request):
+    is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
+    is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
+
     works_to_do = WorksToDo.objects.all()
     companies = Company.objects.all()
     users = User.objects.filter(userprofile__role=2)
     work_types = WorkType.objects.all()
-    # Trabajadores con su empresa y servicios
     from user.models import UserProfile
     workers = UserProfile.objects.filter(role=3).select_related('user', 'company').prefetch_related('work_types')
     workers_data = [
@@ -41,6 +43,10 @@ def works_to_do(request):
     }
     for w in works_to_do:
         w.fk_work_type_ids_json = mark_safe(json.dumps(list(w.fk_work_type.values_list('id', flat=True))))
+    
+    # --- NUEVO: Elimina el flag después de mostrarlo ---
+    show_welcome = request.session.pop('show_welcome', False)
+
     return render(request, 'works_to_do.html', {
         'works_to_do': works_to_do,
         'companies': companies,
@@ -48,7 +54,10 @@ def works_to_do(request):
         'work_types': work_types,
         'company_services': company_services,
         'workers': workers,
-        'workers_data': workers_data,  # Para JS
+        'workers_data': workers_data,
+        'is_trabajador': is_trabajador,
+        'is_cliente': is_cliente,
+        'show_welcome': show_welcome,  # <-- Agrega esto
     })
 
 @login_required

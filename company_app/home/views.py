@@ -1,15 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from company.models import Company
 from works_to_do.models import WorksToDo
 from user.models import UserProfile
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 @login_required
 def home(request):
     is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
+    is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
+    if is_trabajador:
+        return redirect('works_to_do:works_to_do')  # <--- Cambia 'home:works_to_do' por 'works_to_do:works_to_do'
     return render(request, 'home.html', {
         'is_cliente': is_cliente,
+        'is_trabajador': is_trabajador,
     })
 
 @login_required
@@ -23,6 +28,7 @@ def dashboard(request):
     clients_count = UserProfile.objects.filter(role=2).count()
     companies_count = companies.count()
     is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
+    is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
 
     # Filtrar trabajos según el tipo de usuario
     if is_cliente:
@@ -75,4 +81,17 @@ def dashboard(request):
         'show_welcome': show_welcome,
         'workers_by_service': workers_by_service,
         'workers_detail': workers_detail,
+        'is_trabajador': is_trabajador,
     })
+
+from django.shortcuts import redirect
+
+@login_required
+def role_redirect(request):
+    userprofile = getattr(request.user, 'userprofile', None)
+    if userprofile:
+        if userprofile.role == 3:  # Trabajador
+            return redirect('works_to_do:works_to_do')
+        else:
+            return redirect('home:dashboard')
+    return redirect('home:dashboard')

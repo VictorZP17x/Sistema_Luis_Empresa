@@ -18,10 +18,14 @@ def work_plan(request):
     work_plans = WorkPlan.objects.select_related('fk_works_to_do').all()
     works_to_do = WorksToDo.objects.all()
     form = WorkPlanForm()
+    is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
+    is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
     return render(request, 'work_plan.html', {
         'work_plans': work_plans,
         'works_to_do': works_to_do,
         'form': form,
+        'is_trabajador': is_trabajador,
+        'is_cliente': is_cliente,
     })
 
 @csrf_exempt
@@ -158,7 +162,7 @@ def task_finish(request, pk):
         task.observation = observation
         task.save()
         plan = task.fk_work_plan
-        # Si el plan está abierto y la solicitud está Programada, pásala a En Proceso
+        # Si el plan está abierto y la solicitud está Programado, pásala a En Proceso
         works_to_do = plan.fk_works_to_do
         if works_to_do.status == 1:
             works_to_do.status = 2

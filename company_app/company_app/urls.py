@@ -20,6 +20,7 @@ urlpatterns = [
     path("work_plan/", include("work_plan.urls")),
     path("index/", include("index.urls")), 
     path("personal_data/", include("personal_data.urls")), 
+    
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
