@@ -13,6 +13,9 @@ import os
 import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from user.models import UserProfile
+from works_to_do.models import WorksToDo
+from company.models import Company
 
 @login_required
 def work_type(request):
@@ -38,6 +41,15 @@ def delete_service(request, pk):
     if request.method == "POST":
         try:
             service = WorkType.objects.get(pk=pk)
+            # Verificar si está asociado a alguna empresa
+            if Company.objects.filter(work_types=service).exists():
+                return JsonResponse({'success': False, 'error': 'No se puede eliminar: el servicio está asociado a una empresa.'})
+            # Verificar si está asociado a algún trabajador
+            if UserProfile.objects.filter(work_types=service).exists():
+                return JsonResponse({'success': False, 'error': 'No se puede eliminar: el servicio está asociado a un trabajador.'})
+            # Verificar si está asociado a alguna solicitud de trabajo
+            if WorksToDo.objects.filter(work_type=service).exists():
+                return JsonResponse({'success': False, 'error': 'No se puede eliminar: el servicio está asociado a una solicitud de trabajo.'})
             service.delete()
             return JsonResponse({'success': True})
         except WorkType.DoesNotExist:

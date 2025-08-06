@@ -11,6 +11,7 @@ from work_type.models import WorkType
 from django.core.paginator import Paginator
 import json
 from django.template.loader import render_to_string
+from works_to_do.models import WorksToDo
 
 @login_required
 def workers(request):
@@ -116,6 +117,9 @@ def delete_worker(request, user_id):
         try:
             profile = UserProfile.objects.get(user_id=user_id)
             user = profile.user
+            # Verificar si está asociado a alguna solicitud de trabajo
+            if WorksToDo.objects.filter(fk_worker=profile.user).exists():
+                return JsonResponse({'success': False, 'error': 'No se puede eliminar: el trabajador está asociado a una solicitud de trabajo.'})
             profile.delete()
             user.delete()
             return JsonResponse({'success': True})

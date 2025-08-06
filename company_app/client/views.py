@@ -15,6 +15,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
 import json
 from django.contrib.auth.decorators import login_required
+from works_to_do.models import WorksToDo
 
 @login_required
 def client(request):
@@ -87,6 +88,9 @@ def delete_client(request, client_id):
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
         try:
             user = User.objects.get(pk=client_id)
+            # Verificar si está asociado a alguna solicitud de trabajo
+            if WorksToDo.objects.filter(fk_user=user).exists():
+                return JsonResponse({"success": False, "error": "No se puede eliminar: el cliente está asociado a una solicitud de trabajo."})
             user.delete()
             return JsonResponse({"success": True})
         except Exception as e:
