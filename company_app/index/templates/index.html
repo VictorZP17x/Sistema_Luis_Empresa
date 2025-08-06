@@ -182,51 +182,9 @@
         <script>
             feather.replace();
         </script>
-        <!-- CUSTOM JS -->
+        {% block extra_js %}
         <script src="{% static 'assets/js/index_js/index.js' %}"></script>
-        <script>
-            window.inicializarDataTablesServicios = function () {
-                $('[id^="datatable-servicios-"]').each(function () {
-                    if (!$.fn.DataTable.isDataTable(this)) {
-                        $(this).DataTable({
-                            paging: true,
-                            pageLength: 3,
-                            lengthChange: false,
-                            searching: true,
-                            ordering: false,
-                            info: false,
-                            language: {
-                                search: "Buscar servicio:",
-                                paginate: {
-                                    previous: "Anterior",
-                                    next: "Siguiente"
-                                },
-                                zeroRecords: "No hay servicios"
-                            }
-                        });
-                    }
-                });
-            };
-            $(function () {
-                window.inicializarDataTablesServicios();
-            });
-        </script>
-        // ...existing code...
-        <script>
-            // Espera a que la modal se muestre
-            document.addEventListener('shown.bs.modal', function () {
-                const backdrop = document.querySelector('.modal-backdrop');
-                const modal = document.querySelector('.modal.show');
-                if (backdrop && modal) {
-                    console.log('Backdrop:', backdrop, getComputedStyle(backdrop));
-                    console.log('Modal:', modal, getComputedStyle(modal));
-                } else {
-                    console.log('No se encontró backdrop o modal.');
-                }
-            });
-        </script>
-        // ...existing code...
-        {% block extra_js %}{% endblock %}
+        {% endblock %}
 
 </body>
 

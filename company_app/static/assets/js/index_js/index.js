@@ -92,13 +92,46 @@ $(function () {
     $("#modalEmpresaNombre").text(nombre);
 
     if (servicios && servicios.trim() !== "") {
-      const badges = servicios.split(",").map(s => `<span class="badge bg-info me-1">${s.trim()}</span>`).join(" ");
+      const badges = servicios
+        .split(",")
+        .map((s) => `<span class="badge bg-info me-1">${s.trim()}</span>`)
+        .join(" ");
       $("#modalEmpresaServicios").html(`<strong>Servicios:</strong> ${badges}`);
     } else {
-      $("#modalEmpresaServicios").html('<span class="text-muted">Sin servicios</span>');
+      $("#modalEmpresaServicios").html(
+        '<span class="text-muted">Sin servicios</span>'
+      );
     }
 
-    const modal = new bootstrap.Modal(document.getElementById("modalServiciosEmpresa"));
+    const modal = new bootstrap.Modal(
+      document.getElementById("modalServiciosEmpresa")
+    );
     modal.show();
   });
+});
+
+window.inicializarDataTablesServicios = function () {
+  $('[id^="datatable-servicios-"]').each(function () {
+    if (!$.fn.DataTable.isDataTable(this)) {
+      $(this).DataTable({
+        paging: true,
+        pageLength: 3,
+        lengthChange: false,
+        searching: true,
+        ordering: false,
+        info: false,
+        language: {
+          search: "Buscar servicio:",
+          paginate: {
+            previous: "Anterior",
+            next: "Siguiente",
+          },
+          zeroRecords: "No hay servicios",
+        },
+      });
+    }
+  });
+};
+$(function () {
+  window.inicializarDataTablesServicios();
 });
