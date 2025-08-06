@@ -357,5 +357,15 @@
 <script src="{% static 'assets/js/works_to_do_js/filter-workers.js' %}"></script>
 {% if show_welcome and is_trabajador %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: '¡Bienvenido!',
+            text: 'Has iniciado sesión exitosamente como trabajador.',
+            confirmButtonText: 'Aceptar'
+        });
+    });
+</script>
 {% endif %}
 {% endblock %}
