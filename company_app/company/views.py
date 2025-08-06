@@ -14,6 +14,8 @@ import os
 from django.conf import settings
 import datetime
 from django.contrib.auth.decorators import login_required
+from user.models import UserProfile
+from works_to_do.models import WorksToDo
 
 @login_required
 def company(request):
@@ -37,6 +39,12 @@ def delete_company(request, pk):
     if request.method == "POST":
         try:
             company = Company.objects.get(pk=pk)
+            # Verificar si está asociada a algún trabajador
+            if UserProfile.objects.filter(company=company).exists():
+                return JsonResponse({'success': False, 'error': 'No se puede eliminar: la empresa está asociada a un trabajador.'})
+            # Verificar si está asociada a alguna solicitud de trabajo
+            if WorksToDo.objects.filter(company=company).exists():
+                return JsonResponse({'success': False, 'error': 'No se puede eliminar: la empresa está asociada a una solicitud de trabajo.'})
             if company.photo and company.photo.name:
                 photo_path = company.photo.path
                 if os.path.isfile(photo_path):
