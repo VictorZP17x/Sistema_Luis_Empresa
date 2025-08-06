@@ -14,6 +14,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from work_plan.models import WorkPlan
 
 @login_required
 def works_to_do(request):
@@ -68,19 +69,11 @@ def edit_works_to_do(request):
 def delete_works_to_do(request):
     if request.method == 'POST':
         work = WorksToDo.objects.get(id=request.POST['id'])
+        # Validación: no permitir borrar si tiene un plan de trabajo asociado
+        if WorkPlan.objects.filter(fk_works_to_do=work).exists():
+            return JsonResponse({'success': False, 'error': 'No se puede eliminar la solicitud porque tiene un plan de trabajo registrado.'})
         work.delete()
         return JsonResponse({'success': True})
-
-@login_required
-@csrf_exempt
-@require_POST
-def change_status_works_to_do(request):
-    work = WorksToDo.objects.get(id=request.POST['id'])
-    if work.status < 2:
-        work.status += 1
-        work.save()
-        return JsonResponse({'success': True, 'new_status': work.status})
-    return JsonResponse({'success': False, 'msg': 'El trabajo ya está terminado.'})
 
 @login_required
 def footer(canvas, doc):
