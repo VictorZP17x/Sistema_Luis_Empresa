@@ -21,8 +21,8 @@ def workers(request):
         company.id: list(company.work_types.values_list('id', flat=True))
         for company in companies
     }
-    workers_list = UserProfile.objects.filter(role=3).select_related('user', 'company').prefetch_related('work_types')
-    paginator = Paginator(workers_list, 4)  # Cambia 8 por el número de trabajadores por página que desees
+    workers_list = UserProfile.objects.filter(role=3).select_related('user', 'company').prefetch_related('work_types').order_by('id')
+    paginator = Paginator(workers_list, 4)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'workers.html', {
