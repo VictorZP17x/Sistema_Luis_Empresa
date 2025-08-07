@@ -165,11 +165,18 @@
 
     <nav class="pc-sidebar">
         <div class="navbar-wrapper">
-            <div class="m-header d-flex align-items-center justify-content-center my-4">
-                <a class="navbar-brand d-flex align-items-center" href="{% url 'works_to_do:works_to_do' %}">
+            <div class="m-header my-4 text-center">
+                {% if is_trabajador %}
+                <a class="navbar-brand" href="{% url 'works_to_do:works_to_do' %}">
                     <img src="{% static 'assets/images/logo.png' %}" alt="Logo"
                         style="width: 60px; height: 60px; object-fit: contain; border-radius: 12px; box-shadow: 0 2px 8px #0002;">
                 </a>
+                {% else %}
+                <a href="{% url 'home:dashboard' %}">
+                    <img src="{% static 'assets/images/logo.png' %}" alt="Logo"
+                        style="width: 200px; height: 200px; object-fit: contain;">
+                </a>
+                {% endif %}
             </div>
             <div class="navbar-content">
                 <ul class="pc-navbar" style="align-items: flex-start;">
