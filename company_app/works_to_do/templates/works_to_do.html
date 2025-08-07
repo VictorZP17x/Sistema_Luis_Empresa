@@ -169,26 +169,41 @@
                         <label for="add-name" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="add-name" name="name" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="add-fk_company" class="form-label">Empresa</label>
-                        <select class="form-select select2" id="add-fk_company" name="fk_company" required>
-                            <option value="" selected>Seleccione la empresa</option>
-                            {% for company in companies %}
-                            <option value="{{ company.id }}">{{ company.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+
+                        <div class="mb-3" {% if is_trabajador %}style="display:none"{% endif %}>
+                            <label for="add-fk_company" class="form-label">Empresa</label>
+                            <select class="form-select select2" id="add-fk_company" name="fk_company" required {% if empresa_trabajador %}disabled{% endif %}>
+                                <option value="" {% if not empresa_trabajador %}selected{% endif %}>Seleccione la empresa</option>
+                                {% for company in companies %}
+                                <option value="{{ company.id }}" {% if empresa_trabajador == company.id %}selected{% endif %}>
+                                    {{ company.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if is_trabajador %}
+                        <input type="hidden" name="fk_company" value="{{ empresa_trabajador }}">
+                        {% endif %}
                     <div class="mb-3">
                         <label for="add-fk_work_type" class="form-label">Servicio</label>
                         <select class="form-select select2" id="add-fk_work_type" name="fk_work_type" multiple required>
-                            {% for work_type in work_types %}
-                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
-                            {% endfor %}
+                            {% if is_trabajador %}
+                                {% for work_type in work_types %}
+                                    {% if work_type.id in servicios_trabajador %}
+                                        <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% for work_type in work_types %}
+                                    <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                                {% endfor %}
+                            {% endif %}
                         </select>
                     </div>
-                    <div class="mb-3">
+
+                    <div class="mb-3" {% if is_trabajador %}style="display:none"{% endif %}>
                         <label for="add-worker" class="form-label">Trabajador</label>
-                        <select class="form-select select2" id="add-worker" name="worker" required>
+                        <select class="form-select select2" id="add-worker" name="worker" {% if not is_trabajador %}required{% endif %}>
                             <option value="" selected>Seleccione el trabajador</option>
                             {% for worker in workers %}
                             <option value="{{ worker.user.id }}"
@@ -199,6 +214,10 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% if is_trabajador %}
+                    <input type="hidden" name="worker" value="{{ user.id }}">
+                    {% endif %}
+
                     <div class="mb-3">
                         <label for="add-fk_user" class="form-label">Cliente</label>
                         <select class="form-select select2" id="add-fk_user" name="fk_user" required>
@@ -242,7 +261,8 @@
                         <label for="edit-name" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="edit-name" name="name" required>
                     </div>
-                    <div class="mb-3">
+                    <!-- Empresa solo visible si NO es trabajador -->
+                    <div class="mb-3" {% if is_trabajador %}style="display:none"{% endif %}>
                         <label for="edit-fk_company" class="form-label">Empresa</label>
                         <select class="form-select select2" id="edit-fk_company" name="fk_company" required>
                             <option value="" selected>Seleccione la empresa</option>
@@ -251,18 +271,29 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% if is_trabajador %}
+                    <input type="hidden" id="edit-fk_company-hidden" name="fk_company" value="{{ empresa_trabajador }}">
+                    {% endif %}
                     <div class="mb-3">
                         <label for="edit-fk_work_type" class="form-label">Servicio</label>
-                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" multiple
-                            required>
-                            {% for work_type in work_types %}
-                            <option value="{{ work_type.id }}">{{ work_type.name }}</option>
-                            {% endfor %}
+                        <select class="form-select select2" id="edit-fk_work_type" name="fk_work_type" multiple required>
+                            {% if is_trabajador %}
+                                {% for work_type in work_types %}
+                                    {% if work_type.id in servicios_trabajador %}
+                                        <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% for work_type in work_types %}
+                                    <option value="{{ work_type.id }}">{{ work_type.name }}</option>
+                                {% endfor %}
+                            {% endif %}
                         </select>
                     </div>
-                    <div class="mb-3">
+                    <!-- Trabajador solo visible si NO es trabajador -->
+                    <div class="mb-3" {% if is_trabajador %}style="display:none"{% endif %}>
                         <label for="edit-worker" class="form-label">Trabajador</label>
-                        <select class="form-select select2" id="edit-worker" name="worker" required>
+                        <select class="form-select select2" id="edit-worker" name="worker" {% if not is_trabajador %}required{% endif %}>
                             <option value="" selected>Seleccione el trabajador</option>
                             {% for worker in workers %}
                             <option value="{{ worker.user.id }}"
@@ -273,9 +304,11 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% if is_trabajador %}
+                    <input type="hidden" id="edit-worker-hidden" name="worker" value="{{ user.id }}">
+                    {% endif %}         
                     <div class="mb-3">
                         <label for="edit-fk_user" class="form-label">Cliente</label>
-                        </select>
                         <select class="form-select select2" id="edit-fk_user" name="fk_user" required>
                             <option value="" selected>Seleccione el cliente</option>
                             {% for user in users %}
