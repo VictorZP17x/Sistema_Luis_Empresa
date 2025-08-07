@@ -9,15 +9,15 @@ document.addEventListener("DOMContentLoaded", function () {
       if (currentRole === 1) {
         // Botón verde: usuario → admin
         title = "¿Estás seguro?";
-        text = "¿Deseas convertir este usuario en administrador?";
-        confirmButtonText = "Sí, convertir en administrador";
-        successText = "¡El usuario ahora es administrador!";
+        text = "¿Deseas convertir este usuario en Administrador?";
+        confirmButtonText = "Sí, Convertir en Administrador";
+        successText = "¡El Usuario ahora es Administrador!";
       } else {
         // Botón gris: admin → usuario
         title = "¿Estás seguro?";
-        text = "¿Deseas convertir este administrador en usuario?";
-        confirmButtonText = "Sí, convertir en usuario";
-        successText = "¡El administrador ahora es usuario!";
+        text = "¿Deseas convertir este Administrador en Usuario?";
+        confirmButtonText = "Sí, Convertir en Usuario";
+        successText = "¡El Administrador ahora es Usuario!";
       }
 
       Swal.fire({
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showCancelButton: true,
         confirmButtonText: confirmButtonText,
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           fetch(`/user/toggle_role/${userId}/`, {

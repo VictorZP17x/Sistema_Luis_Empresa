@@ -75,19 +75,19 @@ $(document).on("click", ".show-tasks-btn", function () {
   `;
           } else if (!data.plan_status) {
             options += `
-    <button class="btn btn-sm btn-primary btn-edit-task"
-      data-id="${task.id}"
-      data-task="${task.task}"
-      data-requirements="${task.requirements ? task.requirements.join('\n') : ''}"
-      data-start="${task.start_date}"
-      data-end="${task.end_date}"
-      data-plan-id="${planId}">
-      <i data-feather="edit"></i>
-    </button>
-    <button class="btn btn-sm btn-danger btn-delete-task" data-id="${task.id}">
-      <i data-feather="trash-2"></i>
-    </button>
-  `;
+  <button class="btn btn-sm btn-primary btn-edit-task"
+    data-id="${task.id}"
+    data-task="${task.task.replace(/"/g, '&quot;')}"
+    data-requirements="${task.requirements ? task.requirements.join('\n').replace(/"/g, '&quot;') : ''}"
+    data-start="${task.start_date}"
+    data-end="${task.end_date}"
+    data-plan-id="${planId}">
+    <i data-feather="edit"></i>
+  </button>
+  <button class="btn btn-sm btn-danger btn-delete-task" data-id="${task.id}">
+    <i data-feather="trash-2"></i>
+  </button>
+`;
           }
           html += `
   <tr${task.finished ? ' class="text-decoration-line-through text-muted"' : ''}>

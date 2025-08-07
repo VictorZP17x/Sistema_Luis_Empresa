@@ -7,10 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¡Esta acción no se puede deshacer!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Sí, borrar",
-        cancelButtonText: "Cancelar"
+        confirmButtonText: "Sí, Borrar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           const companyId = button.getAttribute("data-id");

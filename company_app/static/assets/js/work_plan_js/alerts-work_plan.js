@@ -3,11 +3,12 @@ $("#add-form").on("submit", function (e) {
   const form = this;
   Swal.fire({
     title: "¿Estás seguro?",
-    text: "¿Deseas añadir este plan de trabajo?",
+    text: "¿Deseas registrar este plan de trabajo?",
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Sí, añadir",
+    confirmButtonText: "Sí, Registrar",
     cancelButtonText: "Cancelar",
+    reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
       fetch("/work_plan/work_plan_create/", {
@@ -46,8 +47,9 @@ $(document).on("click", ".btn-delete-workplan", function () {
     text: "Esta acción no se puede deshacer.",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonText: "Sí, borrar",
+    confirmButtonText: "Sí, Borrar",
     cancelButtonText: "Cancelar",
+    reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
       fetch(`/work_plan/delete/${id}/`, {
@@ -81,13 +83,32 @@ $(document).on("click", ".btn-delete-workplan", function () {
 $("#edit-form").on("submit", function (e) {
   e.preventDefault();
   const id = $("#edit-id").val();
+
+  // --- DETECCIÓN DE CAMBIOS SOLO PARA CAMPOS EXISTENTES ---
+  const nameInput = document.getElementById("edit-name");
+  const worksToDoInput = document.getElementById("edit-works-to-do");
+
+  const nameChanged = nameInput.value !== nameInput.getAttribute("data-original");
+  const worksToDoChanged = worksToDoInput.value !== worksToDoInput.getAttribute("data-original");
+
+  if (!(nameChanged || worksToDoChanged)) {
+    Swal.fire({
+      icon: "info",
+      title: "Sin cambios",
+      text: "No se detectaron cambios para guardar.",
+      confirmButtonText: "Aceptar"
+    });
+    return false;
+  }
+
   Swal.fire({
     title: "¿Estás seguro?",
     text: "¿Deseas guardar los cambios de este plan de trabajo?",
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Sí, guardar",
+    confirmButtonText: "Sí, Guardar",
     cancelButtonText: "Cancelar",
+    reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
       fetch(`/work_plan/update/${id}/`, {

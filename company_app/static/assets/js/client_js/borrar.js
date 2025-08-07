@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "Esta acción eliminará el cliente permanentemente.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, eliminar",
+        confirmButtonText: "Sí, Eliminar",
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           fetch(`/client/delete_client/${clientId}/`, {

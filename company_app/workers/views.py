@@ -36,7 +36,7 @@ def workers(request):
 @login_required
 def workers_list_fragment(request):
     page_number = request.GET.get('page', 1)
-    workers_list = UserProfile.objects.filter(role=3).select_related('user', 'company').prefetch_related('work_types')
+    workers_list = UserProfile.objects.filter(role=3).select_related('user', 'company').prefetch_related('work_types').order_by('id')
     paginator = Paginator(workers_list, 4)
     page_obj = paginator.get_page(page_number)
     html = render_to_string('partials/workers_cards.html', {

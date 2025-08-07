@@ -21,8 +21,9 @@ $("#finish-task-form").on("submit", function (e) {
     text: "¿Deseas guardar la observación y terminar la tarea?",
     icon: "question",
     showCancelButton: true,
-    confirmButtonText: "Sí, guardar",
+    confirmButtonText: "Sí, Guardar y Terminar",
     cancelButtonText: "Cancelar",
+    reverseButtons: true,
   }).then((result) => {
     if (result.isConfirmed) {
       fetch(`/work_plan/task_finish/${taskId}/`, {

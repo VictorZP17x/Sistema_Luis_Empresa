@@ -6,8 +6,9 @@ $(document).ready(function () {
             text: "Esta acción eliminará el trabajo.",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonText: "Sí, borrar",
-            cancelButtonText: "Cancelar"
+            confirmButtonText: "Sí, Borrar",
+            cancelButtonText: "Cancelar",
+            reverseButtons: true,
         }).then((result) => {
             if (result.isConfirmed) {
                 $.post('/works_to_do/delete_works_to_do/', { id: id }, function (response) {

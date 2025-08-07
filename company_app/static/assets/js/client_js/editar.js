@@ -149,8 +149,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Deseas editar este cliente?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, editar",
+        confirmButtonText: "Sí, Editar",
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           // Enviar datos por AJAX

@@ -40,8 +40,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Deseas editar los datos de este servicio?",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, editar",
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Sí, Editar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           const form = e.target;

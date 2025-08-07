@@ -80,8 +80,9 @@ $(document).ready(function () {
       text: "¿Deseas registrar este trabajador con los datos ingresados?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Sí, registrar",
+      confirmButtonText: "Sí, Registrar",
       cancelButtonText: "Cancelar",
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         // Cambia a FormData para enviar archivos

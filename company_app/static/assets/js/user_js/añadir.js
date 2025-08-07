@@ -1,107 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("add-user-form");
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "¿Deseas registrar este usuario?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí, registrar",
-        cancelButtonText: "Cancelar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const formData = new FormData(form);
-          fetch("", {
-            method: "POST",
-            body: formData,
-            headers: {
-              "X-Requested-With": "XMLHttpRequest",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                Swal.fire({
-                  title: "¡Registrado!",
-                  text: "El usuario ha sido registrado correctamente.",
-                  icon: "success",
-                  confirmButtonText: "OK",
-                  showConfirmButton: true,
-                }).then(() => {
-                  window.location.reload();
-                });
-                const modal = bootstrap.Modal.getInstance(
-                  document.getElementById("register-user-modal")
-                );
-                modal.hide();
-              } else {
-                let errorMsg = "No se pudo registrar el usuario.";
-                if (data.errors && data.errors.email) {
-                  errorMsg = data.errors.email.join(" ");
-                }
-                Swal.fire({
-                  title: "Error",
-                  text: errorMsg,
-                  icon: "error",
-                  confirmButtonText: "OK",
-                  showConfirmButton: true,
-                });
-              }
-            });
-        }
-      });
-    });
-  }
-});
-
-// Mostrar/ocultar contraseña
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleBtn = document.getElementById("toggle-password");
-  const passwordInput = document.getElementById("id_password");
-  if (toggleBtn && passwordInput) {
-    toggleBtn.addEventListener("click", function () {
-      let iconEye = document.getElementById("icon-eye");
-      if (!iconEye) return;
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        iconEye.setAttribute("data-feather", "eye-off");
-      } else {
-        passwordInput.type = "password";
-        iconEye.setAttribute("data-feather", "eye");
-      }
-      if (window.feather) feather.replace();
-    });
-  }
-});
-
-// Formato y validación de teléfono
-document.addEventListener("DOMContentLoaded", function () {
   const phoneInput = document.getElementById("id_phone");
-  if (phoneInput) {
-    // Al cargar, si el campo está vacío, coloca el prefijo
-    if (phoneInput.value.trim() === "") {
-      phoneInput.value = "+58 ";
-    }
 
-    // Formato automático para teléfono al escribir
+  // Mostrar/ocultar contraseña
+  document.querySelectorAll(".toggle-password").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const input = document.getElementById(this.dataset.target);
+      if (input.type === "password") {
+        input.type = "text";
+        this.classList.add("showing");
+      } else {
+        input.type = "password";
+        this.classList.remove("showing");
+      }
+    });
+  });
+
+  // Formato automático para teléfono
+  if (phoneInput) {
     phoneInput.addEventListener("input", function (e) {
       let value = e.target.value.replace(/\D/g, "");
-
-      // Siempre inicia con 58
       if (!value.startsWith("58")) {
         value = "58" + value.replace(/^0+/, "");
       }
-
-      // Elimina el cero si lo ponen después del prefijo
-      if (value.length > 2 && value[2] === "0") {
-        value = value.slice(0, 2) + value.slice(3);
-      }
-
-      value = value.slice(0, 12); // +58 y 10 números
-
-      // Formatea como +58 412-123-4567
+      value = value.slice(0, 12);
       let formatted = "+58 ";
       if (value.length > 2) {
         formatted += value.slice(2, 5);
@@ -115,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
       e.target.value = formatted;
     });
 
-    // Evita borrar el prefijo +58
     phoneInput.addEventListener("keydown", function (e) {
       if (
         phoneInput.selectionStart <= 4 &&
@@ -126,51 +47,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Validación antes de enviar el formulario
-  const form = document.getElementById("add-user-form");
-  if (form && phoneInput) {
-    form.addEventListener("submit", function (e) {
-      // Elimina espacios y guiones para validar
-      const phoneValue = phoneInput.value.replace(/\s|-/g, "");
-
-      // Teléfono venezolano: +584121234567, +582121234567, etc.
-      const phoneRegex = /^\+58(412|414|416|424|426|212)\d{7}$/;
-
-      if (!phoneRegex.test(phoneValue)) {
-        e.preventDefault();
-        Swal.fire({
-          icon: "error",
-          title: "Teléfono inválido",
-          text: "El número debe ser venezolano y tener el formato correcto (ej: +58 412-123-4567).",
-        });
-        phoneInput.focus();
-        return false;
-      }
-    });
-  }
-});
-
-async function validarDatosUsuario(username, email, phone) {
-  const response = await fetch('/user/validar_datos_usuario/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-    },
-    body: JSON.stringify({ username, email, phone })
-  });
-  return await response.json();
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("add-user-form");
+  // Validación y envío del formulario
   if (form) {
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
+
+      // Validación de teléfono
+      if (phoneInput) {
+        const phoneValue = phoneInput.value.replace(/\s|-/g, "");
+        const phoneRegex = /^\+58(412|414|416|424|426|212)\d{7}$/;
+        if (!phoneRegex.test(phoneValue)) {
+          Swal.fire({
+            icon: "error",
+            title: "Teléfono inválido",
+            text: "El número debe ser venezolano y tener el formato correcto (ej: +58 412-123-4567).",
+          });
+          phoneInput.focus();
+          return false;
+        }
+      }
+
+      // Validación de datos únicos
       const username = form.querySelector('[name="username"]').value;
       const email = form.querySelector('[name="email"]').value;
       const phone = form.querySelector('[name="phone"]').value;
-
       const resultado = await validarDatosUsuario(username, email, phone);
       if (resultado.error) {
         Swal.fire({
@@ -182,13 +82,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
       }
 
+      // Confirmación final
       Swal.fire({
         title: "¿Estás seguro?",
         text: "¿Deseas registrar este usuario?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, registrar",
+        confirmButtonText: "Sí, Registrar",
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           const formData = new FormData(form);
@@ -214,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const modal = bootstrap.Modal.getInstance(
                   document.getElementById("register-user-modal")
                 );
-                modal.hide();
+                if (modal) modal.hide();
               } else {
                 let errorMsg = "No se pudo registrar el usuario.";
                 if (data.errors && data.errors.email) {
@@ -234,3 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// Función para validar datos únicos vía AJAX
+async function validarDatosUsuario(username, email, phone) {
+  const response = await fetch('/user/validar_datos_usuario/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+    },
+    body: JSON.stringify({ username, email, phone })
+  });
+  return await response.json();
+}

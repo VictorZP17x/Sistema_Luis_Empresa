@@ -26,8 +26,9 @@ $(document).ready(function () {
                 text: "¿Deseas registrar este trabajo?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: "Sí, registrar",
-                cancelButtonText: "Cancelar"
+                confirmButtonText: "Sí, Registrar",
+                cancelButtonText: "Cancelar",
+                reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.post('/works_to_do/add_works_to_do/', $('#add-works_to_do-form').serialize(), function (response) {

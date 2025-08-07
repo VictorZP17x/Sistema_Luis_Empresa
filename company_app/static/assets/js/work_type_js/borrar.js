@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "Esta acción eliminará el servicio.",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, borrar",
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Sí, Borrar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           fetch(`/work_type/delete/${serviceId}/`, {

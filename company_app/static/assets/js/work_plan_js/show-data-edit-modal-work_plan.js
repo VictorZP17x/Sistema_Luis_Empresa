@@ -8,7 +8,12 @@ $(document).ready(function () {
             document.getElementById("edit-id").value = this.dataset.id;
             document.getElementById("edit-name").value = this.dataset.name;
             document.getElementById("edit-works-to-do").value = this.dataset.worksToDo;
-            editModal.show(); // Reutiliza la instancia
+
+            // Guarda los valores originales SOLO de los campos que existen
+            document.getElementById("edit-name").setAttribute("data-original", this.dataset.name || "");
+            document.getElementById("edit-works-to-do").setAttribute("data-original", this.dataset.worksToDo || "");
+
+            editModal.show();
         });
     });
 });

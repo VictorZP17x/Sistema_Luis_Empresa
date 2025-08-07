@@ -104,8 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Deseas editar este usuario?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, editar",
+        confirmButtonText: "Sí, Editar",
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           const formData = new FormData(editForm);

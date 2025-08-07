@@ -114,13 +114,45 @@ $(document).ready(function () {
       }
     }
 
+    // --- DETECCIÓN DE CAMBIOS ---
+    const usernameInput = document.getElementById("edit-worker-username");
+    const firstNameInput = document.getElementById("edit-worker-first-name");
+    const lastNameInput = document.getElementById("edit-worker-last-name");
+    const emailInput = document.getElementById("edit-worker-email");
+    const phoneInput2 = document.getElementById("edit-worker-phone");
+    const companyInput = document.getElementById("edit-worker-company");
+    const servicesInput = document.getElementById("edit-worker-services");
+
+    const usernameChanged = usernameInput.value !== usernameInput.getAttribute("data-original");
+    const firstNameChanged = firstNameInput.value !== firstNameInput.getAttribute("data-original");
+    const lastNameChanged = lastNameInput.value !== lastNameInput.getAttribute("data-original");
+    const emailChanged = emailInput.value !== emailInput.getAttribute("data-original");
+    const phoneChanged = phoneInput2.value !== phoneInput2.getAttribute("data-original");
+    const companyChanged = companyInput.value !== companyInput.getAttribute("data-original");
+
+    // Para servicios (select múltiple)
+    const originalServices = (servicesInput.getAttribute("data-original") || "").split(",").map(String).sort();
+    const currentServices = ($("#edit-worker-services").val() || []).map(String).sort();
+    const servicesChanged = JSON.stringify(originalServices) !== JSON.stringify(currentServices);
+
+    if (!(usernameChanged || firstNameChanged || lastNameChanged || emailChanged || phoneChanged || companyChanged || servicesChanged)) {
+      Swal.fire({
+        icon: "info",
+        title: "Sin cambios",
+        text: "No se detectaron cambios para guardar.",
+        confirmButtonText: "Aceptar"
+      });
+      return false;
+    }
+
     Swal.fire({
       title: "¿Estás seguro?",
       text: "¿Deseas guardar los cambios de este trabajador?",
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Sí, guardar",
+      confirmButtonText: "Sí, Guardar",
       cancelButtonText: "Cancelar",
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
         var formData = new FormData(this);
@@ -233,6 +265,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const photoUrl =
         btn.dataset.photoUrl || "/static/assets/img/default-user.png";
       document.getElementById("edit-worker-photo-preview").src = photoUrl;
+
+      // Guardar valores originales en atributos data
+      document.getElementById("edit-worker-username").setAttribute("data-original", btn.dataset.username || "");
+      document.getElementById("edit-worker-first-name").setAttribute("data-original", btn.dataset.firstName || "");
+      document.getElementById("edit-worker-last-name").setAttribute("data-original", btn.dataset.lastName || "");
+      document.getElementById("edit-worker-email").setAttribute("data-original", btn.dataset.email || "");
+      document.getElementById("edit-worker-phone").setAttribute("data-original", phone);
+      document.getElementById("edit-worker-company").setAttribute("data-original", btn.dataset.company || "");
+      document.getElementById("edit-worker-services").setAttribute("data-original", btn.dataset.services || "");
 
       // Abre el modal
       new bootstrap.Modal(document.getElementById("edit-worker-modal")).show();

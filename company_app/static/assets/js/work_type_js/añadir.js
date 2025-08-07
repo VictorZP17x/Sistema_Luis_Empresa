@@ -8,8 +8,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Deseas registrar este servicio?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, registrar",
         cancelButtonText: "Cancelar",
+        confirmButtonText: "Sí, Registrar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           // AJAX para enviar el formulario

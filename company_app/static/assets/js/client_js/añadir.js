@@ -23,8 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Deseas registrar este cliente?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, registrar",
+        confirmButtonText: "Sí, Registrar",
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           const formData = new FormData(form);

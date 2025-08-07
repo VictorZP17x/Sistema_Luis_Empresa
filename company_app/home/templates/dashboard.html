@@ -261,35 +261,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
             <div class="modal-body">
-                <div class="card shadow rounded mb-4">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-hover table-sm mb-0" id="tabla-trabajadores-modal">
-                                <thead>
-                                    <tr>
-                                        <th>Foto</th>
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Teléfono</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Aquí se cargan los trabajadores dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm mb-0" id="tabla-trabajadores-modal">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Foto</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Aquí se cargan los trabajadores dinámicamente -->
+                        </tbody>
+                    </table>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" id="volver-ver-mas">
-                        <i data-feather="arrow-left"></i> Volver
-                    </button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="volver-ver-mas">Volver</button>
             </div>
         </div>
     </div>
 </div>
-
 
 {% endblock %}
 

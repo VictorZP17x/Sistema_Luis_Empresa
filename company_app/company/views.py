@@ -43,7 +43,7 @@ def delete_company(request, pk):
             if UserProfile.objects.filter(company=company).exists():
                 return JsonResponse({'success': False, 'error': 'No se puede eliminar: la empresa está asociada a un trabajador.'})
             # Verificar si está asociada a alguna solicitud de trabajo
-            if WorksToDo.objects.filter(company=company).exists():
+            if WorksToDo.objects.filter(fk_company=company).exists():
                 return JsonResponse({'success': False, 'error': 'No se puede eliminar: la empresa está asociada a una solicitud de trabajo.'})
             if company.photo and company.photo.name:
                 photo_path = company.photo.path

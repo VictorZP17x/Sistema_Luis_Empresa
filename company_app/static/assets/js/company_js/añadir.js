@@ -119,8 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
               text: "¿Deseas registrar esta empresa con los datos ingresados?",
               icon: 'question',
               showCancelButton: true,
-              confirmButtonText: 'Sí, registrar',
-              cancelButtonText: 'Cancelar'
+              cancelButtonText: 'Cancelar',
+              confirmButtonText: 'Sí, Registrar',
+              reverseButtons: true,
           }).then((result) => {
               if (result.isConfirmed) {
                   form.submit();

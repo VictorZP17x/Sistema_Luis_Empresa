@@ -168,9 +168,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Deseas guardar los cambios de la empresa?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, guardar",
+        confirmButtonText: "Sí, Guardar",
         cancelButtonText: "Cancelar",
-        reverseButtons: true
+        reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
           const formData = new FormData(this);

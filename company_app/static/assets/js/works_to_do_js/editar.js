@@ -84,8 +84,9 @@ $(document).ready(function () {
                 text: "¿Deseas editar este trabajo?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonText: "Sí, editar",
-                cancelButtonText: "Cancelar"
+                confirmButtonText: "Sí, Editar",
+                cancelButtonText: "Cancelar",
+                reverseButtons: true,
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.post('/works_to_do/edit_works_to_do/', $('#edit-works_to_do-form').serialize(), function (response) {
