@@ -15,11 +15,18 @@ from django.http import HttpResponse
 
 @login_required
 def work_plan(request):
-    work_plans = WorkPlan.objects.select_related('fk_works_to_do').all()
-    works_to_do = WorksToDo.objects.all()
-    form = WorkPlanForm()
     is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
     is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
+
+    if is_trabajador:
+        # Solo los planes y solicitudes del trabajador
+        works_to_do = WorksToDo.objects.filter(fk_worker=request.user)
+        work_plans = WorkPlan.objects.filter(fk_works_to_do__fk_worker=request.user).select_related('fk_works_to_do')
+    else:
+        works_to_do = WorksToDo.objects.all()
+        work_plans = WorkPlan.objects.select_related('fk_works_to_do').all()
+
+    form = WorkPlanForm()
     return render(request, 'work_plan.html', {
         'work_plans': work_plans,
         'works_to_do': works_to_do,
