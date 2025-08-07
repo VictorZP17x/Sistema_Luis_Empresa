@@ -53,7 +53,7 @@
                   <span class="position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);">
                     <i data-feather="user"></i>
                   </span>
-                  <input type="text" name="username" class="form-control ps-5" placeholder="Usuario" required
+                  <input type="text" name="username" class="form-control ps-5" placeholder="Usuario" required autocomplete="username"
                     value="{{ form.username.value|default_if_none:'' }}">
                 </div>
                 <div class="form-group mb-3 position-relative">
@@ -61,7 +61,7 @@
                     <i data-feather="lock"></i>
                   </span>
                   <input type="password" name="password" id="password-input" class="form-control ps-5 pe-5"
-                    placeholder="Contraseña" required>
+                    placeholder="Contraseña" required autocomplete="current-password">
                   <span class="position-absolute"
                     style="right: 15px; top: 50%; transform: translateY(-50%); cursor:pointer;"
                     onclick="togglePassword()">

@@ -163,8 +163,10 @@
                         </span> -->
                         <span>
                             <i data-feather="phone"></i>
-                            <a href="tel:+58412 349 14 27" class="text-white text-decoration-none ms-2">+58 412 349 14 27</a>
-                            <a href="tel:+580424 369 36 79" class="text-white text-decoration-none ms-2">+58 0424-3693679</a>
+                            <a href="tel:+58412 349 14 27" class="text-white text-decoration-none ms-2">+58 412 349 14
+                                27</a>
+                            <a href="tel:+580424 369 36 79" class="text-white text-decoration-none ms-2">+58
+                                0424-3693679</a>
                         </span>
                     </div>
                     <!-- Derechos -->
@@ -180,11 +182,15 @@
         <script src="{% static 'assets/datatables/js/jquery.dataTables.min.js' %}"></script>
         <!-- Feather Icons JS -->
         <script src="{% static 'assets/js/plugins/feather.min.js' %}"></script>
-        <script>
-            feather.replace();
-        </script>
-        {% block extra_js %}
+
         <script src="{% static 'assets/js/index_js/index.js' %}"></script>
+        <script src="{% static 'assets/js/index_js/feather-replace.js' %}"></script>
+        <script src="{% static 'assets/js/index_js/modal-accessibility.js' %}"></script>
+
+        <!-- Script para limpiar el foco de las modales, evitando problemas de accesibilidad -->
+        <script src="{% static 'assets/js/inert.min.js' %}"></script>
+        
+        {% block extra_js %}
         {% endblock %}
 
 </body>
