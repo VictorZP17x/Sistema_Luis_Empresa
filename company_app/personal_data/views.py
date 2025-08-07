@@ -17,6 +17,10 @@ def personal_data(request):
     except UserProfile.DoesNotExist:
         profile = None
 
+    is_trabajador = hasattr(user, 'userprofile') and user.userprofile.role == 3
+    is_cliente = hasattr(user, 'userprofile') and user.userprofile.role == 2
+    is_empleado = hasattr(user, 'userprofile') and user.userprofile.role == 1
+
     if request.method == "POST" and request.headers.get("x-requested-with") == "XMLHttpRequest":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -25,7 +29,7 @@ def personal_data(request):
         email = request.POST.get("email")
         phone = request.POST.get("phone")
         photo = request.FILES.get("photo")
-
+        pass
         # Validación de duplicados (excluyendo el propio usuario)
         errores = []
         if User.objects.filter(username=username).exclude(pk=user.id).exists():
@@ -58,7 +62,13 @@ def personal_data(request):
             return JsonResponse({"success": False, "error": str(e)})
     else:
         form = PersonalDataForm(instance=user)
-        return render(request, 'personal_data.html', {'form': form, 'profile': profile})
+        return render(request, 'personal_data.html', {
+            'form': form,
+            'profile': profile,
+            'is_trabajador': is_trabajador,
+            'is_cliente': is_cliente,
+            'is_empleado': is_empleado,
+        })
     
 @csrf_exempt
 @login_required

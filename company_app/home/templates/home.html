@@ -24,7 +24,74 @@
 </head>
 
 <body class="{% if show_header_search %}dashboard-page {% endif %}{% if is_cliente %}cliente{% endif %}">
-    <!-- Navegation-Bar -->
+    {% if is_trabajador %}
+    <!-- NAVBAR SUPERIOR SOLO PARA TRABAJADOR -->
+    <nav class="navbar navbar-expand-lg bg-primary shadow" style="position:sticky;top:0;z-index:1040;">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'works_to_do:works_to_do' %}">
+                <img src="{% static 'assets/images/logo.png' %}" alt="Logo"
+                    style="width: 60px; height: 60px; object-fit: contain; border-radius: 12px; box-shadow: 0 2px 8px #0002;">
+            </a>
+            <!-- Botón de menú para móvil -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTrabajador"
+                aria-controls="navbarTrabajador" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Opciones -->
+            <div class="collapse navbar-collapse" id="navbarTrabajador">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white d-flex align-items-center" href="{% url 'home:works_to_do' %}">
+                            <i data-feather="file-text" class="me-1"></i>
+                            Solicitudes de Trabajos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white d-flex align-items-center" href="{% url 'home:work_plan' %}">
+                            <i data-feather="layout" class="me-1"></i>
+                            Planes de Trabajo
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#"
+                            id="navbarProfile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{% if request.user.userprofile.photo %}{{ request.user.userprofile.photo.url }}{% else %}{% static 'assets/images/user/avatar-2.jpg' %}{% endif %}"
+                                alt="user-image" class="rounded-circle me-2" width="32" height="32">
+                            {{ request.user.first_name }} {{ request.user.last_name }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'personal_data:personal_data' %}">
+                                    <i data-feather="settings" class="me-2"></i> Editar Datos Personales
+                                </a>
+                            </li>
+                            <li>
+                                <form action="{% url 'home:logout' %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">
+                                        <i data-feather="log-out" class="me-2"></i> Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <style>
+        .bg-primary {
+            background: linear-gradient(135deg, #2e3c8c 0%, #1e2746 100%) !important;
+        }
+    </style>
+    <script>
+        if (window.feather) feather.replace();
+    </script>
+    {% else %}
+    <!-- Sidebar y header normales para otros roles -->
     <header class="pc-header">
         <div class="header-wrapper">
             <!-- Ocultar/Mostrar Menú y Buscador -->
@@ -99,22 +166,21 @@
     <nav class="pc-sidebar">
         <div class="navbar-wrapper">
             <div class="m-header d-flex align-items-center justify-content-center my-4">
-                <a href="{% url 'home:dashboard' %}" class="b-brand text-primary">
-                    <img src="{% static 'assets/images/logo.png' %}" class="img-fluid sidebar-logo-custom me-2"
-                        alt="logo">
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'works_to_do:works_to_do' %}">
+                    <img src="{% static 'assets/images/logo.png' %}" alt="Logo"
+                        style="width: 60px; height: 60px; object-fit: contain; border-radius: 12px; box-shadow: 0 2px 8px #0002;">
                 </a>
             </div>
             <div class="navbar-content">
-                <ul class="pc-navbar">
+                <ul class="pc-navbar" style="align-items: flex-start;">
                     {% if is_trabajador %}
-                    <!-- SOLO para trabajador: solo estos dos -->
                     <li class="pc-item">
                         <a href="{% url 'home:works_to_do' %}" class="pc-link">
                             <span class="pc-micon"><i data-feather="file-text"></i></span>
                             <span class="pc-mtext">Solicitudes de Trabajos</span>
                         </a>
                     </li>
-                    <li class="pc-item pc-hasmenu">
+                    <li class="pc-item">
                         <a href="{% url 'home:work_plan' %}" class="pc-link">
                             <span class="pc-micon"><i data-feather="layout"></i></span>
                             <span class="pc-mtext">Planes de Trabajo</span>
@@ -185,11 +251,13 @@
             </div>
         </div>
     </nav>
+    {% endif %}
     <main id="main-content">
         {% block content %}
 
         {% endblock %}
     </main>
+
     <!-- Footer -->
     <footer class="pc-footer">
         <div class="footer-wrapper container-fluid">
@@ -224,7 +292,36 @@
     <script src="{% static 'assets/js/home_js/description-char-counter.js' %}"></script>
 
     {% block extra_css %}
+    {% if is_trabajador %}
+    <style>
+        /* Ajusta el contenido para ocupar toda la pantalla cuando hay navbar */
+        .pc-container,
+        .pc-content,
+        .pc-content>.row,
+        .pc-content>.row>.col-md-12,
+        .pc-content>.row>.col {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
 
+        .card.custom-card-height,
+        .card {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .pc-container,
+        .pc-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+        }
+    </style>
+    {% endif %}
     {% endblock %}
 
     {% block extra_js %}
