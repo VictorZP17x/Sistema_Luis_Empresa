@@ -12,11 +12,13 @@
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
+                            {% if not is_cliente %}
                             <button class="btn btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                                 <span class="pc-micon">
                                     <i data-feather="plus-circle"></i>
                                 </span><strong>Añadir Plan de Trabajo</strong>
                             </button>
+                            {% endif %}
                         </div>
                         <div class="table-responsive">
                             <table id="datatable-workplan" class="table">
@@ -44,7 +46,17 @@
                                         </td>
                                         <td>
                                             <div class="btn-group-flex">
-                                            {% if not plan.status %}
+                                                {% if is_cliente %}
+                                                <button class="btn btn-sm btn-info show-tasks-btn" data-plan-id="{{ plan.id }}">
+                                                    <span class="pc-micon"><i data-feather="list"></i></span>
+                                                </button>
+                                                <button class="btn btn-sm btn-secondary btn-pdf-individual"
+                                                    data-href="{% url 'work_plan:generate_pdf_work_plan' plan.id %}"
+                                                    title="Descargar PDF">
+                                                    <span class="pc-micon"><i data-feather="file-text"></i></span>
+                                                </button>
+                                                {% else %}
+                                                {% if not plan.status %}
                                                 <button class="btn btn-sm btn-success add-task-btn"
                                                     data-plan-id="{{ plan.id }}">
                                                     <span class="pc-micon"><i data-feather="plus"></i></span>
@@ -68,6 +80,7 @@
                                                     title="Descargar PDF">
                                                     <span class="pc-micon"><i data-feather="file-text"></i></span>
                                                 </button>
+                                                {% endif %}
                                             </div>
                                         </td>
                                     </tr>

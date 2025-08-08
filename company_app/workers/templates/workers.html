@@ -11,12 +11,14 @@
                         placeholder="Buscar trabajador por nombre, empresa, servicio...">
                 </div>
             </div>
+            {% if not is_cliente %}
             <div class="col-12 col-md-3 mb-2 mb-md-0 d-flex justify-content-md-start justify-content-center">
                 <button class="btn btn-primary w-90 w-md-auto" data-bs-toggle="modal"
                     data-bs-target="#add-worker-modal">
                     <i data-feather="plus-circle"></i> Añadir Trabajador
                 </button>
             </div>
+            {% endif %}
         </div>
         <div class="row">
             <div class="col-12">
@@ -46,11 +48,13 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label" for="worker-username">Usuario</label>
-                        <input type="text" class="form-control" id="worker-username" name="username" required autocomplete="username">
+                        <input type="text" class="form-control" id="worker-username" name="username" required
+                            autocomplete="username">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-password">Contraseña</label>
-                        <input type="password" class="form-control" id="worker-password" name="password" required autocomplete="current-password">
+                        <input type="password" class="form-control" id="worker-password" name="password" required
+                            autocomplete="current-password">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-first-name">Nombre</label>
@@ -62,7 +66,8 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-email">Email</label>
-                        <input type="email" class="form-control" id="worker-email" name="email" required autocomplete="email">
+                        <input type="email" class="form-control" id="worker-email" name="email" required
+                            autocomplete="email">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-phone">Teléfono</label>

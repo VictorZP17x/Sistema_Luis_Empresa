@@ -31,6 +31,7 @@
                             data-bs-target="#workerModal{{ worker.user.id }}">
                             Ver más
                         </button>
+                        {% if not is_cliente %}
                         <button class="btn btn-warning btn-sm edit-worker-button" data-id="{{ worker.user.id }}"
                             data-username="{{ worker.user.username }}" data-first-name="{{ worker.user.first_name }}"
                             data-last-name="{{ worker.user.last_name }}" data-email="{{ worker.user.email }}"
@@ -42,6 +43,7 @@
                         <button class="btn btn-danger btn-sm delete-worker-button" data-id="{{ worker.user.id }}">
                             <i data-feather="trash-2"></i>
                         </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
