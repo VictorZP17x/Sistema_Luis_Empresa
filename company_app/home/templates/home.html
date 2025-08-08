@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" id="main-style-link">
 </head>
 
-<body class="{% if show_header_search %}dashboard-page {% endif %}{% if is_cliente %}cliente{% endif %}">
+<body class="{% if show_header_search %}dashboard-page {% endif %}{% if is_cliente %}cliente{% endif %}{% if is_trabajador %}trabajador{% endif %}">
     {% if is_trabajador %}
     <!-- NAVBAR SUPERIOR SOLO PARA TRABAJADOR -->
     <nav class="navbar navbar-expand-lg bg-primary shadow" style="position:sticky;top:0;z-index:1040;">
@@ -300,34 +300,7 @@
 
     {% block extra_css %}
     {% if is_trabajador %}
-    <style>
-        /* Ajusta el contenido para ocupar toda la pantalla cuando hay navbar */
-        .pc-container,
-        .pc-content,
-        .pc-content>.row,
-        .pc-content>.row>.col-md-12,
-        .pc-content>.row>.col {
-            max-width: 100% !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
 
-        .card.custom-card-height,
-        .card {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-
-        .pc-container,
-        .pc-content {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 80vh;
-        }
-    </style>
     {% endif %}
     {% endblock %}
 
