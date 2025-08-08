@@ -36,6 +36,8 @@ $(document).on("click", ".show-tasks-btn", function () {
       if (!data.tasks || data.tasks.length === 0) {
         html = `<div class="alert alert-info mb-0">Este plan de trabajo no tiene tareas registradas.</div>`;
       } else {
+        // Detecta si es cliente
+        const isCliente = window.isCliente === true;
         html = `
           <div class="mb-2">
             <input type="text" class="form-control form-control-sm task-search-input" placeholder="Buscar tarea...">
@@ -49,7 +51,7 @@ $(document).on("click", ".show-tasks-btn", function () {
                   <th>Inicio</th>
                   <th>Fin</th>
                   <th>Terminada</th>
-                  <th>Opciones</th>
+                  ${!isCliente ? '<th>Opciones</th>' : ''}
                 </tr>
               </thead>
               <tbody>
@@ -63,18 +65,28 @@ $(document).on("click", ".show-tasks-btn", function () {
             });
             reqList += "</ul>";
           }
-          let finishBtn = task.finished
-            ? `<span class="badge bg-success">Sí</span>`
-            : `<button class="btn btn-success btn-finish-task btn-sm" data-id="${task.id}">Terminar</button>`;
+          let terminadaCol = "";
+          if (isCliente) {
+            // Si hay al menos una tarea no terminada, mostrar "Tareas en Proceso"
+            // Si todas terminadas, mostrar "Tarea(s) Terminada(s)"
+            terminadaCol = task.finished
+              ? `<span class="badge bg-success">Tarea(s) Terminada(s)</span>`
+              : `<span class="badge bg-warning text-dark">Tareas en Proceso</span>`;
+          } else {
+            terminadaCol = task.finished
+              ? `<span class="badge bg-success">Sí</span>`
+              : `<button class="btn btn-success btn-finish-task btn-sm" data-id="${task.id}">Terminar</button>`;
+          }
           let options = "";
-          if (task.finished) {
-            options += `
+          if (!isCliente) {
+            if (task.finished) {
+              options += `
     <button class="btn btn-sm btn-info btn-view-observation" data-id="${task.id}">
       <i data-feather="eye"></i>
     </button>
-  `;
-          } else if (!data.plan_status) {
-            options += `
+`;
+            } else if (!data.plan_status) {
+              options += `
   <button class="btn btn-sm btn-primary btn-edit-task"
     data-id="${task.id}"
     data-task="${task.task.replace(/"/g, '&quot;')}"
@@ -88,6 +100,7 @@ $(document).on("click", ".show-tasks-btn", function () {
     <i data-feather="trash-2"></i>
   </button>
 `;
+            }
           }
           html += `
   <tr${task.finished ? ' class="text-decoration-line-through text-muted"' : ''}>
@@ -95,17 +108,17 @@ $(document).on("click", ".show-tasks-btn", function () {
     <td>${reqList}</td>
     <td>${task.start_date}</td>
     <td>${task.end_date}</td>
-    <td>${finishBtn}</td>
-    <td>${options}</td>
+    <td>${terminadaCol}</td>
+    ${!isCliente ? `<td>${options}</td>` : ""}
   </tr>
 `;
         });
         html += `
-        </tbody>
-      </table>
-      <div class="no-tasks-found alert alert-warning mt-2 mb-0" style="display:none;">No se encontraron tareas que coincidan.</div>
-    </div>
-  `;
+          </tbody>
+        </table>
+        <div class="no-tasks-found alert alert-warning mt-2 mb-0" style="display:none;">No se encontraron tareas que coincidan.</div>
+      </div>
+    `;
       }
       $tr.next().find("td").hide().html(html).slideDown(200);
       // Filtro de búsqueda para la tabla de tareas

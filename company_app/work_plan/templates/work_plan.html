@@ -288,4 +288,7 @@
 <script src="{% static 'assets/js/work_plan_js/end-task.js' %}"></script>
 <script src="{% static 'assets/js/work_plan_js/select2-work_plan.js' %}"></script>
 <script src="{% static 'assets/js/work_plan_js/backdrop-remove-work_plan.js' %}"></script>
+<script>
+  window.isCliente = {{ is_cliente|yesno:"true,false" }};
+</script>
 {% endblock %}
