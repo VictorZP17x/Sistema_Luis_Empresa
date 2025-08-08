@@ -8,12 +8,16 @@
     overflow: visible !important;
 }
 .btn-group-flex .btn {
-    flex: 1 1 auto !important;
+    flex: 0 0 auto !important;
     min-width: 30px !important;
     margin-bottom: 0.2rem !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
     z-index: 2 !important;
+}
+
+.btn-group-flex:has(.btn:nth-child(3)) .btn {
+    flex: 1 1 auto !important;
 }
 
 .btn-group-flex .btn {
