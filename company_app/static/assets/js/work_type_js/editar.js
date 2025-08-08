@@ -1,23 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".edit-service-button").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const id = btn.getAttribute("data-id");
-      const name = btn.getAttribute("data-name");
-      const description = btn.getAttribute("data-description");
-      document.getElementById("edit-service-id").value = id;
-      document.getElementById("edit-name").value = name;
-      document.getElementById("edit-description").value = description;
-      // Guarda valores originales
-      document.getElementById("edit-name").setAttribute("data-original", name);
-      document.getElementById("edit-description").setAttribute("data-original", description);
-      const modal = new bootstrap.Modal(document.getElementById("edit-modal"));
-      modal.show();
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".edit-service-button");
+    if (!btn) return;
+    const id = btn.getAttribute("data-id");
+    const name = btn.getAttribute("data-name");
+    const description = btn.getAttribute("data-description");
+    document.getElementById("edit-service-id").value = id;
+    document.getElementById("edit-name").value = name;
+    document.getElementById("edit-description").value = description;
+    // Guarda valores originales
+    document.getElementById("edit-name").setAttribute("data-original", name);
+    document.getElementById("edit-description").setAttribute("data-original", description);
+    const modal = new bootstrap.Modal(document.getElementById("edit-modal"));
+    modal.show();
   });
 
-  document
-    .getElementById("edit-service-form")
-    .addEventListener("submit", function (e) {
+  document.getElementById("edit-service-form").addEventListener("submit", function (e) {
       // Detección de cambios
       const nameInput = document.getElementById("edit-name");
       const descInput = document.getElementById("edit-description");

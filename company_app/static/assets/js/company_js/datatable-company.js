@@ -25,34 +25,34 @@ $(document).ready(function () {
   });
 });
 
-//Mostrar descripción de la empresa
+// Mostrar descripción de la empresa
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .querySelectorAll(".description-company-button")
-    .forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var description = btn.getAttribute("data-description") || "";
-        var services = btn.getAttribute("data-services") || "Sin servicios";
-        var modalContent = `
-          <strong>Servicios:</strong>
-          <div class="mb-2">
-            ${services.split(',').map(s => `<span class="badge bg-info me-1">${s.trim()}</span>`).join('')}
-          </div>
-          <strong>Descripción:</strong>
-          <div>${description}</div>
-        `;
-        document.getElementById("company-description-modal").innerHTML = modalContent;
-      });
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".description-company-button");
+    if (!btn) return;
+    var description = btn.getAttribute("data-description") || "";
+    var services = btn.getAttribute("data-services") || "Sin servicios";
+    var modalContent = `
+      <strong>Servicios:</strong>
+      <div class="mb-2">
+        ${services.split(',').map(s => `<span class="badge bg-info me-1">${s.trim()}</span>`).join('')}
+      </div>
+      <strong>Descripción:</strong>
+      <div>${description}</div>
+    `;
+    document.getElementById("company-description-modal").innerHTML = modalContent;
+    // Si necesitas abrir la modal, hazlo aquí:
+    // new bootstrap.Modal(document.getElementById("descriptionModal")).show();
+  });
 });
 
 // Mostrar la foto en la modal
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".show-photo-modal").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const photoUrl = btn.getAttribute("data-photo-url");
-      document.getElementById("company-photo-modal-img").src = photoUrl;
-      new bootstrap.Modal(document.getElementById("photoModal")).show();
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".show-photo-modal");
+    if (!btn) return;
+    const photoUrl = btn.getAttribute("data-photo-url");
+    document.getElementById("company-photo-modal-img").src = photoUrl;
+    new bootstrap.Modal(document.getElementById("photoModal")).show();
   });
 });

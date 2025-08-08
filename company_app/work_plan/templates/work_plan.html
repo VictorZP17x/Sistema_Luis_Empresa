@@ -18,59 +18,63 @@
                                 </span><strong>Añadir Plan de Trabajo</strong>
                             </button>
                         </div>
-                        <table id="datatable-workplan" class="table responsive">
-                            <thead>
-                                <tr>
-                                    <th class="centered">#</th>
-                                    <th class="centered">Nombre</th>
-                                    <th class="centered">Solicitud</th>
-                                    <th class="centered">Estado</th>
-                                    <th class="centered">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for plan in work_plans %}
-                                <tr>
-                                    <td>{{ forloop.counter }}</td>
-                                    <td>{{ plan.plan_name }}</td>
-                                    <td>{{ plan.fk_works_to_do }}</td>
-                                    <td>
-                                        {% if plan.status %}
+                        <div class="table-responsive">
+                            <table id="datatable-workplan" class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="centered">#</th>
+                                        <th class="centered">Nombre</th>
+                                        <th class="centered">Solicitud</th>
+                                        <th class="centered">Estado</th>
+                                        <th class="centered">Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for plan in work_plans %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ plan.plan_name }}</td>
+                                        <td>{{ plan.fk_works_to_do }}</td>
+                                        <td>
+                                            {% if plan.status %}
                                             <span class="badge bg-secondary ms-2">Terminado</span>
-                                        {% else %}
+                                            {% else %}
                                             <span class="badge bg-success ms-2">Abierto</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if not plan.status %}
-                                        <button class="btn btn-sm btn-success add-task-btn"
-                                            data-plan-id="{{ plan.id }}">
-                                            <span class="pc-micon"><i data-feather="plus"></i></span>
-                                        </button>
-                                        <button class="btn btn-sm btn-primary edit-btn" data-id="{{ plan.id }}"
-                                            data-name="{{ plan.plan_name }}"
-                                            data-works-to-do="{{ plan.fk_works_to_do_id }}" data-bs-toggle="modal"
-                                            data-bs-target="#editModal">
-                                            <span class="pc-micon"><i data-feather="edit"></i></span>
-                                        </button>
-                                        <button class="btn btn-danger btn-sm btn-delete-workplan"
-                                            data-id="{{ plan.id }}">
-                                            <span class="pc-micon"><i data-feather="trash-2"></i></span>
-                                        </button>
-                                        {% endif %}
-                                        <button class="btn btn-sm btn-info show-tasks-btn" data-plan-id="{{ plan.id }}">
-                                            <span class="pc-micon"><i data-feather="list"></i></span>
-                                        </button>
-                                        <button class="btn btn-sm btn-secondary"
-                                            onclick="window.open('{% url 'work_plan:generate_pdf_work_plan' plan.id %}', '_blank')"
-                                            title="Descargar PDF">
-                                            <span class="pc-micon"><i data-feather="file-text"></i></span>
-                                        </button>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group-flex">
+                                            {% if not plan.status %}
+                                                <button class="btn btn-sm btn-success add-task-btn"
+                                                    data-plan-id="{{ plan.id }}">
+                                                    <span class="pc-micon"><i data-feather="plus"></i></span>
+                                                </button>
+                                                <button class="btn btn-sm btn-primary edit-btn" data-id="{{ plan.id }}"
+                                                    data-name="{{ plan.plan_name }}"
+                                                    data-works-to-do="{{ plan.fk_works_to_do_id }}" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal">
+                                                    <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm btn-delete-workplan"
+                                                    data-id="{{ plan.id }}">
+                                                    <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                </button>
+                                                {% endif %}
+                                                <button class="btn btn-sm btn-info show-tasks-btn" data-plan-id="{{ plan.id }}">
+                                                    <span class="pc-micon"><i data-feather="list"></i></span>
+                                                </button>
+                                                <button class="btn btn-sm btn-secondary btn-pdf-individual"
+                                                    data-href="{% url 'work_plan:generate_pdf_work_plan' plan.id %}"
+                                                    title="Descargar PDF">
+                                                    <span class="pc-micon"><i data-feather="file-text"></i></span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

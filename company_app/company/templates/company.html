@@ -23,74 +23,87 @@
                                             </span><strong>Añadir Empresa</strong>
                                         </button>
                                         <div class="d-flex align-items-center">
-                                            <button id="open-generate-pdf-modal" class="btn btn-danger"
-                                                onclick="window.location.href='{% url 'company:generate_pdf' %}'">
+                                            <button class="btn btn-danger btn-pdf-general"
+                                                data-href="{% url 'company:generate_pdf' %}">
                                                 <span class="pc-micon">
                                                     <i data-feather="file"></i>
                                                 </span><strong>Generar Reporte PDF</strong>
                                             </button>
                                         </div>
                                     </div>
-                                    <table id="datatable-company" class="table responsive">
-                                        <thead>
-                                            <tr>
-                                                <th class="centered" scope="col">#</th>
-                                                <th class="centered" scope="col">Nombre</th>
-                                                <th class="centered" scope="col">Dirección</th>
-                                                <th class="centered" scope="col">Teléfono</th>
-                                                <th class="centered" scope="col">RIF</th>
-                                                <th class="centered" scope="col">Descripción</th>
-                                                <th class="centered" scope="col">Foto</th>
-                                                <th class="centered" scope="col">Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for company in company %}
-                                            <tr>
-                                                <td>{{ forloop.counter }}</td>
-                                                <td>{{ company.name }}</td>
-                                                <td>{{ company.address }}</td>
-                                                <td>{{ company.phone_number }}</td>
-                                                <td>{{ company.rif }}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-warning description-company-button"
-                                                        data-bs-toggle="modal" data-bs-target="#companyModal"
-                                                        data-description="{{ company.description|escapejs }}"
-                                                        data-services="{% for wt in company.work_types.all %}{{ wt.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
-                                                        <span class="pc-micon">
-                                                            <i data-feather="align-left"></i>
-                                                        </span>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    {% if company.photo %}
-                                                    <button type="button" class="btn btn-link p-0 show-photo-modal"
-                                                        data-photo-url="{{ company.photo.url }}">
-                                                        <i data-feather="image" style="font-size: 1.8rem;"></i>
-                                                    </button>
-                                                    {% else %}
-                                                    <span class="text-muted">Sin foto</span>
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary edit-company-button"
-                                                        data-id="{{ company.id }}"
-                                                        data-work-types="{% for wt in company.work_types.all %}{{ wt.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
-                                                        <span class="pc-micon">
-                                                            <i data-feather="edit"></i>
-                                                        </span>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm delete-company-button"
-                                                        data-id="{{ company.id }}">
-                                                        <span class="pc-micon">
-                                                            <i data-feather="trash-2"></i>
-                                                        </span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table id="datatable-company" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centered" scope="col">#</th>
+                                                    <th class="centered" scope="col">Nombre</th>
+                                                    <th class="centered" scope="col">Dirección</th>
+                                                    <th class="centered" scope="col">Teléfono</th>
+                                                    <th class="centered" scope="col">RIF</th>
+                                                    <th class="centered" scope="col">Descripción</th>
+                                                    <th class="centered" scope="col">Foto</th>
+                                                    <th class="centered" scope="col">Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for company in company %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ company.name }}</td>
+                                                    <td>{{ company.address }}</td>
+                                                    <td>{{ company.phone_number }}</td>
+                                                    <td>{{ company.rif }}</td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            <button class="btn btn-sm btn-warning description-company-button"
+                                                                data-bs-toggle="modal" data-bs-target="#companyModal"
+                                                                data-description="{{ company.description|escapejs }}"
+                                                                data-services="{% for wt in company.work_types.all %}{{ wt.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+                                                                <span class="pc-micon">
+                                                                    <i data-feather="align-left"></i>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            {% if company.photo %}
+                                                            <button type="button" class="btn btn-link p-0 show-photo-modal"
+                                                                data-photo-url="{{ company.photo.url }}">
+                                                                <i data-feather="image" style="font-size: 1.8rem;"></i>
+                                                            </button>
+                                                            {% else %}
+                                                            <span class="text-muted">Sin foto</span>
+                                                            {% endif %}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            <button class="btn btn-sm btn-primary edit-company-button"
+                                                                data-id="{{ company.id }}"
+                                                                data-name="{{ company.name }}"
+                                                                data-address="{{ company.address }}"
+                                                                data-phone="{{ company.phone }}"
+                                                                data-rif="{{ company.rif }}"
+                                                                data-description="{{ company.description }}"
+                                                                data-work-types="{% for wt in company.work_types.all %}{{ wt.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                                                                <span class="pc-micon">
+                                                                    <i data-feather="edit"></i>
+                                                                </span>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm delete-company-button"
+                                                                data-id="{{ company.id }}">
+                                                                <span class="pc-micon">
+                                                                    <i data-feather="trash-2"></i>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +173,6 @@
         </div>
     </div>
 </div>
-<!-- Fin modal registrar empresa -->
 
 <!-- Modal para editar empresa -->
 <div class="modal fade" id="edit-modal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -235,6 +247,9 @@
             <div class="modal-body d-flex justify-content-center align-items-center" style="min-height: 300px;">
                 <img id="company-photo-modal-img" src="" alt="Foto de la empresa" class="img-fluid rounded"
                     style="width: 100%; max-width: 400px; max-height: 400px; object-fit: cover;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>

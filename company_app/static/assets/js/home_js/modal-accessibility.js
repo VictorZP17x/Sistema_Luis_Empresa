@@ -11,6 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
         '#progressModal',
         '#empresaModal',
         '#trabajadoresModal',
+        // Planes de Trabajo
+        '#addModal',
+        '#editModal',
+        '#addTaskModal',
+        '#editTaskModal',
+        '#finishTaskModal',
+        '#viewObservationModal',
+        // Servicios
+        '#serviceModal',
+        '#register-modal',
+        '#edit-modal',
+        // Empresas
+        '#companyModal',
+        '#photoModal',
     ];
     const modals = document.querySelectorAll(modalSelectors.join(','));
 

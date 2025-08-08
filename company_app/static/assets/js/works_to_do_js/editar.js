@@ -15,7 +15,6 @@ $(document).ready(function () {
 
     // Al hacer click en el botón de editar
     $(document).on('click', '.edit-works_to_do-button', function () {
-        console.log('Delegado editar', this, window.innerWidth);
         $('#edit-id').val($(this).data('id'));
         $('#edit-name').val($(this).data('name'));
         $('#edit-description').val($(this).data('description'));

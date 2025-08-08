@@ -1,18 +1,24 @@
-/* Puedes poner esto en tu bloque extra_css o en tu archivo CSS global */
 .btn-group-flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    overflow: visible;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.3rem !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    overflow: visible !important;
 }
 .btn-group-flex .btn {
-    flex: 1 1 auto; /* Ocupa casi la mitad del ancho, ajusta según tu preferencia */
-    min-width: 30px;
-    margin-bottom: 0.2rem;
-    margin-left: 0;
-    margin-right: 0;
-    z-index: 2;
+    flex: 1 1 auto !important;
+    min-width: 30px !important;
+    margin-bottom: 0.2rem !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    z-index: 2 !important;
+}
+
+.btn-group-flex .btn {
+    cursor: pointer !important;
+}
+.btn-group-flex .btn svg {
+    pointer-events: none !important;
 }
