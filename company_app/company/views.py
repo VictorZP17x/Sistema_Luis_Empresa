@@ -19,6 +19,8 @@ from works_to_do.models import WorksToDo
 
 @login_required
 def company(request):
+    is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
+    is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES)
         if form.is_valid():
@@ -32,6 +34,8 @@ def company(request):
         'company': companies,
         'form': form,
         'work_types': work_types,
+        'is_cliente': is_cliente,
+        'is_trabajador': is_trabajador,
     })
     
 @login_required

@@ -19,9 +19,11 @@ def work_plan(request):
     is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
 
     if is_trabajador:
-        # Solo los planes y solicitudes del trabajador
         works_to_do = WorksToDo.objects.filter(fk_worker=request.user)
         work_plans = WorkPlan.objects.filter(fk_works_to_do__fk_worker=request.user).select_related('fk_works_to_do')
+    elif is_cliente:
+        works_to_do = WorksToDo.objects.filter(fk_user=request.user)
+        work_plans = WorkPlan.objects.filter(fk_works_to_do__fk_user=request.user).select_related('fk_works_to_do')
     else:
         works_to_do = WorksToDo.objects.all()
         work_plans = WorkPlan.objects.select_related('fk_works_to_do').all()

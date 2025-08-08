@@ -81,7 +81,7 @@ $(document).ready(function () {
         setTimeout(function () {
             Swal.fire({
                 title: "¿Estás seguro?",
-                text: "¿Deseas editar este trabajo?",
+                text: "¿Deseas editar esta solicitud de trabajo?",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Sí, Editar",
@@ -91,7 +91,7 @@ $(document).ready(function () {
                 if (result.isConfirmed) {
                     $.post('/works_to_do/edit_works_to_do/', $('#edit-works_to_do-form').serialize(), function (response) {
                         if (response.success) {
-                            Swal.fire('¡Editado!', 'El trabajo ha sido editado correctamente.', 'success')
+                            Swal.fire('¡Editado!', 'La solicitud de trabajo ha sido editado correctamente.', 'success')
                                 .then(() => location.reload());
                         } else {
                             Swal.fire('Error', 'No se pudo editar el trabajo.', 'error');

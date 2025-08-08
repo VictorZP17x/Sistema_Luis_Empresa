@@ -21,11 +21,13 @@
                                                 <i data-feather="plus-circle"></i>
                                             </span><strong>Añadir Solicitud de Trabajo</strong>
                                         </button>
+                                        {% if not is_cliente %}
                                         <button class="btn btn-danger btn-pdf-general"
                                             data-href="{% url 'works_to_do:generate_pdf_all' %}">
                                             <span class="pc-micon"><i data-feather="file"></i></span>
                                             <strong>Generar Reporte PDF</strong>
                                         </button>
+                                        {% endif %}
                                     </div>
                                     <div class="table-responsive">
                                         <table id="datatable-works_to_do" class="table">
@@ -88,37 +90,50 @@
                                                         <span class="badge bg-success">Terminado</span>
                                                         {% endif %}
                                                     </td>
-                                                    <td>
-                                                        <div class="btn-group-flex">
-                                                            {% if works_to_do.status != 3 %}
-                                                            <button class="btn btn-sm btn-primary edit-works_to_do-button" data-id="{{ works_to_do.id }}"
-                                                                data-name="{{ works_to_do.name|escapejs }}"
-                                                                data-description="{{ works_to_do.description|escapejs }}"
-                                                                data-fk_company_id="{{ works_to_do.fk_company_id|escapejs }}"
-                                                                data-fk_user_id="{{ works_to_do.fk_user_id|escapejs }}"
-                                                                data-fk_worker_id="{{ works_to_do.fk_worker_id|escapejs }}"
-                                                                data-fk_work_type_id='{{ works_to_do.fk_work_type_ids_json }}'>
-                                                                <span class="pc-micon"><i data-feather="edit"></i></span>
-                                                            </button>
-                                                            <button class="btn btn-danger btn-sm delete-works_to_do-button" data-id="{{ works_to_do.id }}">
-                                                                <span class="pc-micon"><i data-feather="trash-2"></i></span>
-                                                            </button>
-                                                            {% endif %}
-                                                            {% if works_to_do.status == 2 or works_to_do.status == 3 %}
-                                                            <button class="btn btn-sm btn-info show-progress-btn" data-id="{{ works_to_do.id }}">
-                                                                <i data-feather="bar-chart-2"></i>
-                                                            </button>
-                                                            {% endif %}
-                                                            <button class="btn btn-sm btn-secondary btn-pdf-individual"
-                                                                data-href="{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}"
-                                                                title="Descargar PDF individual">
-                                                                <i data-feather="file-text"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
+                                                        <td>
+                                                            <div class="btn-group-flex">
+                                                                {% if not is_cliente %}
+                                                                    {% if works_to_do.status != 3 %}
+                                                                    <button class="btn btn-sm btn-primary edit-works_to_do-button" data-id="{{ works_to_do.id }}"
+                                                                        data-name="{{ works_to_do.name|escapejs }}"
+                                                                        data-description="{{ works_to_do.description|escapejs }}"
+                                                                        data-fk_company_id="{{ works_to_do.fk_company_id|escapejs }}"
+                                                                        data-fk_user_id="{{ works_to_do.fk_user_id|escapejs }}"
+                                                                        data-fk_worker_id="{{ works_to_do.fk_worker_id|escapejs }}"
+                                                                        data-fk_work_type_id='{{ works_to_do.fk_work_type_ids_json }}'>
+                                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                                    </button>
+                                                                    <button class="btn btn-danger btn-sm delete-works_to_do-button" data-id="{{ works_to_do.id }}">
+                                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                                    </button>
+                                                                    {% endif %}
+                                                                    {% if works_to_do.status == 2 or works_to_do.status == 3 %}
+                                                                    <button class="btn btn-sm btn-info show-progress-btn" data-id="{{ works_to_do.id }}">
+                                                                        <i data-feather="bar-chart-2"></i>
+                                                                    </button>
+                                                                    {% endif %}
+                                                                    <button class="btn btn-sm btn-secondary btn-pdf-individual"
+                                                                        data-href="{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}"
+                                                                        title="Descargar PDF individual">
+                                                                        <i data-feather="file-text"></i>
+                                                                    </button>
+                                                                {% else %}
+                                                                    {% if works_to_do.status == 2 or works_to_do.status == 3 %}
+                                                                    <button class="btn btn-sm btn-info show-progress-btn" data-id="{{ works_to_do.id }}">
+                                                                        <i data-feather="bar-chart-2"></i>
+                                                                    </button>
+                                                                    {% endif %}
+                                                                    <button class="btn btn-sm btn-secondary btn-pdf-individual"
+                                                                        data-href="{% url 'works_to_do:generate_pdf_individual' works_to_do.id %}"
+                                                                        title="Descargar PDF individual">
+                                                                        <i data-feather="file-text"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -216,15 +231,22 @@
                     <input type="hidden" name="worker" value="{{ user.id }}">
                     {% endif %}
 
-                    <div class="mb-3">
+                    <div class="mb-3" {% if is_cliente %}style="display:none"{% endif %}>
                         <label for="add-fk_user" class="form-label">Cliente</label>
                         <select class="form-select select2" id="add-fk_user" name="fk_user" required>
-                            <option value="" selected>Seleccione el cliente</option>
+                            <option value="" {% if not is_cliente %}selected{% endif %}>Seleccione el cliente</option>
                             {% for user in users %}
-                            <option value="{{ user.id }}">{{ user.username }}</option>
+                            <option value="{{ user.id }}"
+                                {% if is_cliente and user.id == cliente_id %}selected{% endif %}>
+                                {{ user.username }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
+                    {% if is_cliente %}
+                        <input type="hidden" name="fk_user" value="{{ cliente_id }}">
+                    {% endif %}
+                    
                     <div class="mb-3">
                         <label for="add-description" class="form-label">Descripción</label>
                         <textarea class="form-control" id="add-description" name="description" rows="3"
@@ -357,6 +379,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script>
+    const IS_CLIENTE = {{ is_cliente|yesno:"true,false" }};
+</script>
 <!-- Datos de servicios de cada empresa -->
 {{ company_services|json_script:"company-services-data" }}
 <!-- Datos de trabajadores -->

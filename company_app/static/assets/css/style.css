@@ -19855,9 +19855,9 @@ pre[class*=language-]>code {
 }
 
 /* Quitar el margin-left cuando sea trabajador */
-body.trabajador .pc-footer,
-body.trabajador .pc-container {
-  margin-left: 0 !important;
+body.trabajador .pc-container,
+body.cliente .pc-container {
+    margin-left: 0 !important;
 }
 /* ...existing code... */
 
@@ -26075,3 +26075,4 @@ body.cliente .pc-navbar .pc-item:not(:nth-child(1)):not(:nth-child(2)) {
 .swal2-container {
   z-index: 20000 !important;
 }
+

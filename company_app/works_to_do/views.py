@@ -24,6 +24,8 @@ def works_to_do(request):
     # Filtrar trabajos: si es trabajador, solo los suyos
     if is_trabajador:
         works_to_do = WorksToDo.objects.filter(fk_worker=request.user)
+    elif is_cliente:
+        works_to_do = WorksToDo.objects.filter(fk_user=request.user)
     else:
         works_to_do = WorksToDo.objects.all()
 
@@ -57,6 +59,9 @@ def works_to_do(request):
         empresa_trabajador = perfil.company.id if perfil.company else None
         servicios_trabajador = list(perfil.work_types.values_list('id', flat=True))
 
+    # Definir cliente_id SIEMPRE
+    cliente_id = request.user.id if is_cliente else None
+
     return render(request, 'works_to_do.html', {
         'works_to_do': works_to_do,
         'companies': companies,
@@ -70,6 +75,9 @@ def works_to_do(request):
         'show_welcome': show_welcome,
         'empresa_trabajador': empresa_trabajador,
         'servicios_trabajador': servicios_trabajador,
+        'is_trabajador': is_trabajador,
+        'is_cliente': is_cliente,
+        'cliente_id': cliente_id,
     })
 
 @login_required

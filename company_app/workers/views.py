@@ -15,6 +15,8 @@ from works_to_do.models import WorksToDo
 
 @login_required
 def workers(request):
+    is_trabajador = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 3
+    is_cliente = hasattr(request.user, 'userprofile') and request.user.userprofile.role == 2
     companies = Company.objects.all()
     services = WorkType.objects.all()
     company_services = {
@@ -31,6 +33,8 @@ def workers(request):
         'company_services': company_services,
         'workers': page_obj.object_list,
         'page_obj': page_obj,
+        'is_trabajador': is_trabajador,
+        'is_cliente': is_cliente,
     })
 
 @login_required
