@@ -97,7 +97,6 @@ def delete_client(request, client_id):
             return JsonResponse({"success": False, "error": str(e)})
     return JsonResponse({"success": False, "error": "Petición inválida"})
 
-@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"

@@ -2,6 +2,9 @@ function filterWorkTypes(companyId, workTypesSelector) {
     var companyServices = JSON.parse(document.getElementById('company-services-data').textContent);
     var allowed = companyServices[companyId] || [];
 
+    var $select = $(workTypesSelector);
+    if ($select.length === 0) return; // Evita el error si no existe
+
     // Guarda todas las opciones originales en data para restaurarlas después
     if (!$(workTypesSelector).data('all-options')) {
         $(workTypesSelector).data('all-options', $(workTypesSelector).html());

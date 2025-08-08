@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (rowPhotoBtn && rowPhotoBtn.getAttribute("data-photo-url")) {
       photoPreview.src = rowPhotoBtn.getAttribute("data-photo-url");
     } else {
-      photoPreview.src = "https://via.placeholder.com/120?text=Sin+foto";
+      photoPreview.src = typeof defaultCompanyPhoto !== "undefined" ? defaultCompanyPhoto : "";
     }
 
     // Guarda los valores originales en atributos data-*

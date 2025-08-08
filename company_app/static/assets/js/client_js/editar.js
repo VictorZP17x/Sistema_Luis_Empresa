@@ -48,25 +48,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Abrir modal y rellenar datos
-  document.querySelectorAll(".edit-client-button").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      document.getElementById("edit-client-id").value = btn.dataset.id;
-      document.getElementById("edit-username").value = btn
-        .closest("tr")
-        .querySelector("td:nth-child(2)")
-        .textContent.trim();
-      document.getElementById("edit-password").value = ""; // Siempre vacío
-      document.getElementById("edit-first-name").value = btn.dataset.name;
-      document.getElementById("edit-last-name").value = btn.dataset.lastname;
-      document.getElementById("edit-email").value = btn.dataset.email;
-      // Formatea el teléfono antes de mostrarlo
-      document.getElementById("edit-phone").value = formatVenezuelanPhone(btn.dataset.phone || "");
-      // Mostrar modal
-      const modal = new bootstrap.Modal(
-        document.getElementById("edit-client-modal")
-      );
-      modal.show();
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".edit-client-button");
+    if (!btn) return;
+    document.getElementById("edit-client-id").value = btn.dataset.id;
+    document.getElementById("edit-username").value = btn.dataset.username || "";
+    document.getElementById("edit-password").value = "";
+    document.getElementById("edit-first-name").value = btn.dataset.name || "";
+    document.getElementById("edit-last-name").value = btn.dataset.lastname || "";
+    document.getElementById("edit-email").value = btn.dataset.email || "";
+    document.getElementById("edit-phone").value = formatVenezuelanPhone(btn.dataset.phone || "");
+    new bootstrap.Modal(document.getElementById("edit-client-modal")).show();
   });
 
   // Validación y envío del formulario de edición

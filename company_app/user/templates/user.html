@@ -21,61 +21,66 @@
                                                 <i data-feather="plus-circle"></i>
                                             </span><strong>Añadir Usuario</strong>
                                         </button>
-                                        <button class="btn btn-danger"
-                                            onclick="window.location.href='{% url 'user:generate_pdf_users' %}'">
+                                        <button class="btn btn-danger btn-pdf-general"
+                                            data-href="{% url 'user:generate_pdf_users' %}">
                                             <i data-feather="file"></i> Generar Reporte PDF
                                         </button>
                                     </div>
-                                    <table id="datatable-user" class="table responsive">
-                                        <thead>
-                                            <tr>
-                                                <th class="centered" scope="col">#</th>
-                                                <th class="centered" scope="col">Usuario</th>
-                                                <th class="centered" scope="col">Nombre</th>
-                                                <th class="centered" scope="col">Apellido</th>
-                                                <th class="centered" scope="col">Email</th>
-                                                <th class="centered" scope="col">Teléfono</th>
-                                                <th class="centered" scope="col">Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for user in users %}
-                                            <tr>
-                                                <td>{{ forloop.counter }}</td>
-                                                <td>{{ user.username }}</td>
-                                                <td>{{ user.first_name }}</td>
-                                                <td>{{ user.last_name }}</td>
-                                                <td>{{ user.email }}</td>
-                                                <td>{{ user.userprofile.phone }}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary edit-user-button"
-                                                        data-id="{{ user.id }}"
-                                                        data-name="{{ user.first_name|escapejs }}"
-                                                        data-lastname="{{ user.last_name|escapejs }}"
-                                                        data-email="{{ user.email|escapejs }}"
-                                                        data-phone="{{ user.userprofile.phone }}">
-                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm delete-user-button"
-                                                        data-id="{{ user.id }}">
-                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
-                                                    </button>
-                                                    {% if user.userprofile.role == 1 %}
-                                                    <button class="btn btn-success btn-sm profile-user-button"
-                                                        data-id="{{ user.id }}" data-role="1">
-                                                        <span class="pc-micon"><i data-feather="user"></i></span>
-                                                    </button>
-                                                    {% else %}
-                                                    <button class="btn btn-secondary btn-sm profile-user-button"
-                                                        data-id="{{ user.id }}" data-role="0">
-                                                        <span class="pc-micon"><i data-feather="user-x"></i></span>
-                                                    </button>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table id="datatable-user" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centered" scope="col">#</th>
+                                                    <th class="centered" scope="col">Usuario</th>
+                                                    <th class="centered" scope="col">Nombre</th>
+                                                    <th class="centered" scope="col">Apellido</th>
+                                                    <th class="centered" scope="col">Email</th>
+                                                    <th class="centered" scope="col">Teléfono</th>
+                                                    <th class="centered" scope="col">Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for user in users %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ user.username }}</td>
+                                                    <td>{{ user.first_name }}</td>
+                                                    <td>{{ user.last_name }}</td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td>{{ user.userprofile.phone }}</td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            <button class="btn btn-sm btn-primary edit-user-button"
+                                                                data-id="{{ user.id }}"
+                                                                data-username="{{ user.username }}"
+                                                                data-name="{{ user.first_name }}"
+                                                                data-lastname="{{ user.last_name }}"
+                                                                data-email="{{ user.email }}"
+                                                                data-phone="{{ user.userprofile.phone }}">
+                                                                <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm delete-user-button"
+                                                                data-id="{{ user.id }}">
+                                                                <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                            </button>
+                                                            {% if user.userprofile.role == 1 %}
+                                                            <button class="btn btn-success btn-sm profile-user-button"
+                                                                data-id="{{ user.id }}" data-role="1">
+                                                                <span class="pc-micon"><i data-feather="user"></i></span>
+                                                            </button>
+                                                            {% else %}
+                                                            <button class="btn btn-secondary btn-sm profile-user-button"
+                                                                data-id="{{ user.id }}" data-role="0">
+                                                                <span class="pc-micon"><i data-feather="user-x"></i></span>
+                                                            </button>
+                                                        </div>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

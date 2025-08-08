@@ -261,6 +261,10 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Foto genérica en caso de, al editar, la empresa no tenga foto -->
+<script>
+  var defaultCompanyPhoto = "{% static 'assets/img/default-company.png' %}";
+</script>
 <script src="{% static 'assets/js/company_js/borrar.js' %}"></script>
 <script src="{% static 'assets/js/company_js/añadir.js' %}"></script>
 <script src="{% static 'assets/js/company_js/editar.js' %}"></script>

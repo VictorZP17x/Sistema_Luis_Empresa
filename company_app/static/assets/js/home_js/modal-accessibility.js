@@ -25,6 +25,16 @@ document.addEventListener('DOMContentLoaded', function () {
         // Empresas
         '#companyModal',
         '#photoModal',
+        // Cliente
+        '#register-client-modal',
+        '#edit-client-modal',
+        // Trabajadores
+        '.modal[id^="workerModal"]',
+        '#add-worker-modal',
+        '#edit-worker-modal',
+        // Usuarios
+        '#register-user-modal',
+        '#edit-user-modal',
     ];
     const modals = document.querySelectorAll(modalSelectors.join(','));
 
