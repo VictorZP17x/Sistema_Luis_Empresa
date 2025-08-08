@@ -112,8 +112,9 @@ document.addEventListener("DOMContentLoaded", function () {
         text: "¿Estás seguro de que los datos ingresados son correctos?",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, registrar",
+        confirmButtonText: "Sí, Registrar",
         cancelButtonText: "Cancelar",
+        reverseButtons: true,
       }).then(async (result) => {
         if (result.isConfirmed) {
           // Enviar datos por AJAX

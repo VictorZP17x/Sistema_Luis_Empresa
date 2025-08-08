@@ -46,11 +46,11 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label" for="worker-username">Usuario</label>
-                        <input type="text" class="form-control" id="worker-username" name="username" required>
+                        <input type="text" class="form-control" id="worker-username" name="username" required autocomplete="username">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-password">Contraseña</label>
-                        <input type="password" class="form-control" id="worker-password" name="password" required>
+                        <input type="password" class="form-control" id="worker-password" name="password" required autocomplete="current-password">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-first-name">Nombre</label>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-email">Email</label>
-                        <input type="email" class="form-control" id="worker-email" name="email" required>
+                        <input type="email" class="form-control" id="worker-email" name="email" required autocomplete="email">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="worker-phone">Teléfono</label>
@@ -180,8 +180,8 @@
 
 
 {% block extra_js %}
+{{ company_services|json_script:"company-services-data" }}
 <script>
-    var companyServices = {{ company_services| safe }};
     const addWorkerUrl = "{% url 'workers:add_worker' %}";
 </script>
 <script src="{% static 'assets/js/workers_js/add-workers.js' %}"></script>

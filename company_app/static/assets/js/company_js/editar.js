@@ -1,59 +1,48 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Abrir modal y cargar datos
-  document.querySelectorAll(".edit-company-button").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const row = btn.closest("tr");
-      document.getElementById("edit-company-id").value =
-        btn.getAttribute("data-id");
-      document.getElementById("edit-name").value =
-        row.children[1].textContent.trim();
-      document.getElementById("edit-address").value =
-        row.children[2].textContent.trim();
-      document.getElementById("edit-phone").value =
-        row.children[3].textContent.trim();
-      document.getElementById("edit-rif").value =
-        row.children[4].textContent.trim();
-      document.getElementById("edit-description").value =
-        row
-          .querySelector(".description-company-button")
-          ?.getAttribute("data-description") || "";
-      // Forzar el formato del teléfono
-      const phoneInput = document.getElementById("edit-phone");
-      if (
-        phoneInput.value.trim() === "" ||
-        !phoneInput.value.startsWith("+58")
-      ) {
-        phoneInput.value = "+58 ";
-      }
-      // Abre la modal
-      new bootstrap.Modal(document.getElementById("edit-modal")).show();
+  // Delegación para abrir modal y cargar datos
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".edit-company-button");
+    if (!btn) return;
+    const row = btn.closest("tr");
+    document.getElementById("edit-company-id").value = btn.getAttribute("data-id") || "";
+    document.getElementById("edit-name").value = btn.getAttribute("data-name") || "";
+    document.getElementById("edit-address").value = btn.getAttribute("data-address") || "";
+    document.getElementById("edit-phone").value = btn.getAttribute("data-phone") || "";
+    document.getElementById("edit-rif").value = btn.getAttribute("data-rif") || "";
+    document.getElementById("edit-description").value = btn.getAttribute("data-description") || "";
+    // Forzar el formato del teléfono
+    const phoneInput = document.getElementById("edit-phone");
+    if (phoneInput.value.trim() === "" || !phoneInput.value.startsWith("+58")) {
+      phoneInput.value = "+58 ";
+    }
+    // Abre la modal
+    new bootstrap.Modal(document.getElementById("edit-modal")).show();
 
-      const photoPreview = document.getElementById("edit-photo-preview");
-      const rowPhotoBtn = row.querySelector(".show-photo-modal");
-      if (rowPhotoBtn && rowPhotoBtn.getAttribute("data-photo-url")) {
-        photoPreview.src = rowPhotoBtn.getAttribute("data-photo-url");
-      } else {
-        photoPreview.src = "https://via.placeholder.com/120?text=Sin+foto";
-      }
+    const photoPreview = document.getElementById("edit-photo-preview");
+    const rowPhotoBtn = row.querySelector(".show-photo-modal");
+    if (rowPhotoBtn && rowPhotoBtn.getAttribute("data-photo-url")) {
+      photoPreview.src = rowPhotoBtn.getAttribute("data-photo-url");
+    } else {
+      photoPreview.src = typeof defaultCompanyPhoto !== "undefined" ? defaultCompanyPhoto : "";
+    }
 
-      // Guarda los valores originales en atributos data-*
-      document.getElementById("edit-name").setAttribute("data-original", document.getElementById("edit-name").value);
-      document.getElementById("edit-address").setAttribute("data-original", document.getElementById("edit-address").value);
-      document.getElementById("edit-phone").setAttribute("data-original", document.getElementById("edit-phone").value);
-      document.getElementById("edit-rif").setAttribute("data-original", document.getElementById("edit-rif").value);
-      document.getElementById("edit-description").setAttribute("data-original", document.getElementById("edit-description").value);
-      document.getElementById("edit-photo-preview").setAttribute("data-original", document.getElementById("edit-photo-preview").src);
+    // Guarda los valores originales en atributos data-*
+    document.getElementById("edit-name").setAttribute("data-original", document.getElementById("edit-name").value);
+    document.getElementById("edit-address").setAttribute("data-original", document.getElementById("edit-address").value);
+    document.getElementById("edit-phone").setAttribute("data-original", document.getElementById("edit-phone").value);
+    document.getElementById("edit-rif").setAttribute("data-original", document.getElementById("edit-rif").value);
+    document.getElementById("edit-description").setAttribute("data-original", document.getElementById("edit-description").value);
+    document.getElementById("edit-photo-preview").setAttribute("data-original", document.getElementById("edit-photo-preview").src);
 
-      const workTypesSelect = document.getElementById("edit-work-types");
-      const selectedWorkTypes = btn.getAttribute("data-work-types")?.split(",") || [];
-      if (workTypesSelect) {
-        Array.from(workTypesSelect.options).forEach(opt => {
-          opt.selected = selectedWorkTypes.includes(opt.value);
-        });
-        // Guardar los servicios originales en data-original
-        workTypesSelect.setAttribute("data-original", selectedWorkTypes.join(","));
-      }
-    });
+    const workTypesSelect = document.getElementById("edit-work-types");
+    const selectedWorkTypes = btn.getAttribute("data-work-types")?.split(",") || [];
+    if (workTypesSelect) {
+      Array.from(workTypesSelect.options).forEach(opt => {
+        opt.selected = selectedWorkTypes.includes(opt.value);
+      });
+      // Guardar los servicios originales en data-original
+      workTypesSelect.setAttribute("data-original", selectedWorkTypes.join(","));
+    }
   });
 
   // Validación y formato igual que añadir

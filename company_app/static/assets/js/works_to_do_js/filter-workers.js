@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     function filterWorkers(companyId, serviceIds, selectId) {
+        var workersData = JSON.parse(document.getElementById('workers-data').textContent);
         var $select = $(selectId);
         $select.empty();
         $select.append('<option value="">Seleccione el trabajador</option>');

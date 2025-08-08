@@ -29,11 +29,10 @@ $(document).ready(function () {
   });
 
   //Mostrar descripción del trabajo
-  document.querySelectorAll(".description-works_to_do-button").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var description = btn.getAttribute("data-description") || "";
-      document.getElementById("works_to_do-description-modal").textContent =
-        description;
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".description-works_to_do-button");
+    if (!btn) return;
+    var description = btn.getAttribute("data-description") || "";
+    document.getElementById("works_to_do-description-modal").textContent = description;
   });
 });

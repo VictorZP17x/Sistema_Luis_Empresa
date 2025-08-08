@@ -7,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // remove pre-loader start
   setTimeout(function () {
-    document.querySelector(".loader-bg").remove();
+    var loader = document.querySelector(".loader-bg");
+    if (loader) loader.remove();
   }, 400);
 
   // remove pre-loader end
@@ -1004,51 +1005,50 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
     `;
 
-  buscador.addEventListener("input", function () {
-    const filtro = buscador.value.trim().toLowerCase();
-    let hayCoincidencias = false;
+  if (buscador && cardsEmpresas) {
+    buscador.addEventListener("input", function () {
+      const filtro = buscador.value.trim().toLowerCase();
+      let hayCoincidencias = false;
 
-    document
-      .querySelectorAll("#cards-empresas .company-card")
-      .forEach(function (card) {
-        const textos = [
-          card.querySelector("h6")?.textContent || "", // Nombre
-          card.querySelector(".empresa-direccion")?.textContent || "", // Dirección
-          card.querySelector(".empresa-telefono")?.textContent || "", // Teléfono
-          card.querySelector(".empresa-rif")?.textContent || "", // RIF
-          card.querySelector(".company-description")?.textContent || "", // Descripción
-        ]
-          .join(" ")
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
+      document
+        .querySelectorAll("#cards-empresas .company-card")
+        .forEach(function (card) {
+          const textos = [
+            card.querySelector("h6")?.textContent || "", // Nombre
+            card.querySelector(".empresa-direccion")?.textContent || "", // Dirección
+            card.querySelector(".empresa-telefono")?.textContent || "", // Teléfono
+            card.querySelector(".empresa-rif")?.textContent || "", // RIF
+            card.querySelector(".company-description")?.textContent || "", // Descripción
+          ]
+            .join(" ")
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
 
-        const filtroNormalizado = filtro
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
+          const filtroNormalizado = filtro
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
 
-        // OCULTA EL DIV DE COLUMNA DE LA CARD
-        const colDiv = card.closest('[class*="col-"]');
-        if (textos.includes(filtroNormalizado)) {
-          colDiv.style.display = "";
-          hayCoincidencias = true;
-        } else {
-          colDiv.style.display = "none";
+          // OCULTA EL DIV DE COLUMNA DE LA CARD
+          const colDiv = card.closest('[class*="col-"]');
+          if (textos.includes(filtroNormalizado)) {
+            colDiv.style.display = "";
+            hayCoincidencias = true;
+          } else {
+            colDiv.style.display = "none";
+          }
+        });
+
+      // Mostrar mensaje si no hay coincidencias
+      if (!hayCoincidencias) {
+        if (!cardsEmpresas.contains(alertaNoResultados)) {
+          cardsEmpresas.appendChild(alertaNoResultados);
         }
-      });
-
-    // Mostrar mensaje si no hay coincidencias
-    if (!hayCoincidencias) {
-      if (!cardsEmpresas.contains(alertaNoResultados)) {
-        cardsEmpresas.appendChild(alertaNoResultados);
+      } else {
+        if (cardsEmpresas.contains(alertaNoResultados)) {
+          cardsEmpresas.removeChild(alertaNoResultados);
+        }
       }
-    } else {
-      if (cardsEmpresas.contains(alertaNoResultados)) {
-        cardsEmpresas.removeChild(alertaNoResultados);
-      }
-    }
-  });
+    });
+  }
 });
-// ...existing code...
-// =======================================================
-// =======================================================

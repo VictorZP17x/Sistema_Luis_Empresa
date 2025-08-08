@@ -1,9 +1,11 @@
-document.querySelectorAll(".add-task-btn").forEach((btn) => {
-  btn.addEventListener("click", function () {
-    const planId = this.dataset.planId;
-    document.getElementById("task-plan-id").value = planId;
-    document.getElementById("add-task-form").reset();
-    // No hay select dinámico, solo textarea para requerimientos
-    new bootstrap.Modal(document.getElementById("addTaskModal")).show();
-  });
+document.addEventListener("DOMContentLoaded", function () {
+    document.body.addEventListener("click", function (e) {
+        const btn = e.target.closest(".add-task-btn");
+        if (!btn) return;
+
+        const planId = btn.dataset.planId;
+        document.getElementById("task-plan-id").value = planId;
+        document.getElementById("add-task-form").reset();
+        new bootstrap.Modal(document.getElementById("addTaskModal")).show();
+    });
 });

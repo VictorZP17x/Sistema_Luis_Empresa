@@ -14,7 +14,7 @@ $(document).ready(function () {
     });
 
     // Al hacer click en el botón de editar
-    $('.edit-works_to_do-button').click(function () {
+    $(document).on('click', '.edit-works_to_do-button', function () {
         $('#edit-id').val($(this).data('id'));
         $('#edit-name').val($(this).data('name'));
         $('#edit-description').val($(this).data('description'));

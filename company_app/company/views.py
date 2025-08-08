@@ -77,7 +77,6 @@ def edit_company(request, pk):
             return JsonResponse({'success': False, 'error': 'Empresa no encontrada'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
-@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"

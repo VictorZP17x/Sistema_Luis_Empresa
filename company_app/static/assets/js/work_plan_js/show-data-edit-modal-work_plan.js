@@ -1,19 +1,18 @@
-$(document).ready(function () {
-    // Obtén la instancia de la modal solo una vez
+document.addEventListener("DOMContentLoaded", function () {
     var editModalEl = document.getElementById("editModal");
     var editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
 
-    document.querySelectorAll(".edit-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-            document.getElementById("edit-id").value = this.dataset.id;
-            document.getElementById("edit-name").value = this.dataset.name;
-            document.getElementById("edit-works-to-do").value = this.dataset.worksToDo;
+    document.body.addEventListener("click", function (e) {
+        const btn = e.target.closest(".edit-btn");
+        if (!btn) return;
 
-            // Guarda los valores originales SOLO de los campos que existen
-            document.getElementById("edit-name").setAttribute("data-original", this.dataset.name || "");
-            document.getElementById("edit-works-to-do").setAttribute("data-original", this.dataset.worksToDo || "");
+        document.getElementById("edit-id").value = btn.dataset.id || "";
+        document.getElementById("edit-name").value = btn.dataset.name || "";
+        document.getElementById("edit-works-to-do").value = btn.dataset.worksToDo || "";
 
-            editModal.show();
-        });
+        document.getElementById("edit-name").setAttribute("data-original", btn.dataset.name || "");
+        document.getElementById("edit-works-to-do").setAttribute("data-original", btn.dataset.worksToDo || "");
+
+        editModal.show();
     });
 });

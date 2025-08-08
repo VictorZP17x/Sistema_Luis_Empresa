@@ -29,13 +29,10 @@ $(document).ready(function () {
   });
 
   // Modal descripción
-  document
-    .querySelectorAll(".description-service-button")
-    .forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var description = btn.getAttribute("data-description") || "";
-        document.getElementById("service-description-modal").textContent =
-          description;
-      });
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".description-service-button");
+    if (!btn) return;
+    var description = btn.getAttribute("data-description") || "";
+    document.getElementById("service-description-modal").textContent = description;
+  });
 });

@@ -73,7 +73,6 @@ def edit_service(request):
             return JsonResponse({'success': False, 'error': 'Servicio no encontrado'})
     return JsonResponse({'success': False, 'error': 'Método no permitido'})
 
-@login_required
 def footer(canvas, doc):
     fecha = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     footer_text = f"Emitido: {fecha}    Página {canvas.getPageNumber()}"

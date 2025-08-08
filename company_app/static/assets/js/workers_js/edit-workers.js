@@ -201,82 +201,35 @@ $(document).ready(function () {
 
 // Llenar los campos al hacer click en editar
 document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".edit-worker-button").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      // Llenar campos básicos
-      document.getElementById("edit-worker-id").value = btn.dataset.id;
-      document.getElementById("edit-worker-username").value =
-        btn.dataset.username || "";
-      document.getElementById("edit-worker-first-name").value =
-        btn.dataset.firstName || "";
-      document.getElementById("edit-worker-last-name").value =
-        btn.dataset.lastName || "";
-      document.getElementById("edit-worker-email").value =
-        btn.dataset.email || "";
-
-      // Formatear teléfono si es necesario
-      let phone = btn.dataset.phone || "";
-      // Elimina todo lo que no sea dígito
-      phone = phone.replace(/\D/g, "");
-      // Si el número tiene 10 dígitos (sin el 58), lo formatea
-      if (phone.length === 12 && phone.startsWith("58")) {
-        phone =
-          "+58 " +
-          phone.slice(2, 5) +
-          "-" +
-          phone.slice(5, 8) +
-          "-" +
-          phone.slice(8, 12);
-      } else if (phone.length === 11 && phone.startsWith("58")) {
-        phone =
-          "+58 " +
-          phone.slice(2, 5) +
-          "-" +
-          phone.slice(5, 8) +
-          "-" +
-          phone.slice(8, 11);
-      } else if (phone.length === 10) {
-        phone =
-          "+58 " +
-          phone.slice(0, 3) +
-          "-" +
-          phone.slice(3, 6) +
-          "-" +
-          phone.slice(6, 10);
-      } else {
-        phone = "+58 ";
-      }
-      document.getElementById("edit-worker-phone").value = phone;
-
-      // Empresa
-      $("#edit-worker-company")
-        .val(btn.dataset.company || "")
-        .trigger("change");
-
-      // Servicios: espera a que el select2 se actualice tras filtrar
-      let services = btn.dataset.services
-        ? btn.dataset.services.split(",")
-        : [];
-      setTimeout(function () {
-        $("#edit-worker-services").val(services.map(String)).trigger("change");
-      }, 200);
-
-      // Foto
-      const photoUrl =
-        btn.dataset.photoUrl || "/static/assets/img/default-user.png";
-      document.getElementById("edit-worker-photo-preview").src = photoUrl;
-
-      // Guardar valores originales en atributos data
-      document.getElementById("edit-worker-username").setAttribute("data-original", btn.dataset.username || "");
-      document.getElementById("edit-worker-first-name").setAttribute("data-original", btn.dataset.firstName || "");
-      document.getElementById("edit-worker-last-name").setAttribute("data-original", btn.dataset.lastName || "");
-      document.getElementById("edit-worker-email").setAttribute("data-original", btn.dataset.email || "");
-      document.getElementById("edit-worker-phone").setAttribute("data-original", phone);
-      document.getElementById("edit-worker-company").setAttribute("data-original", btn.dataset.company || "");
-      document.getElementById("edit-worker-services").setAttribute("data-original", btn.dataset.services || "");
-
-      // Abre el modal
-      new bootstrap.Modal(document.getElementById("edit-worker-modal")).show();
-    });
+  document.body.addEventListener("click", function (e) {
+    const btn = e.target.closest(".edit-worker-button");
+    if (!btn) return;
+    // Llenar campos básicos
+    document.getElementById("edit-worker-id").value = btn.dataset.id;
+    document.getElementById("edit-worker-username").value = btn.dataset.username || "";
+    document.getElementById("edit-worker-first-name").value = btn.dataset.firstName || "";
+    document.getElementById("edit-worker-last-name").value = btn.dataset.lastName || "";
+    document.getElementById("edit-worker-email").value = btn.dataset.email || "";
+    // Formatear teléfono si es necesario
+    let phone = btn.dataset.phone || "";
+    phone = phone.replace(/\D/g, "");
+    if (phone.length === 12 && phone.startsWith("58")) {
+      phone = "+58 " + phone.slice(2, 5) + "-" + phone.slice(5, 8) + "-" + phone.slice(8, 12);
+    } else {
+      phone = "+58 ";
+    }
+    document.getElementById("edit-worker-phone").value = phone;
+    // Empresa
+    $("#edit-worker-company").val(btn.dataset.company || "").trigger("change");
+    // Servicios
+    let services = btn.dataset.services ? btn.dataset.services.split(",") : [];
+    setTimeout(function () {
+      $("#edit-worker-services").val(services.map(String)).trigger("change");
+    }, 200);
+    // Foto
+    const photoUrl = btn.dataset.photoUrl || "/static/assets/img/default-user.png";
+    document.getElementById("edit-worker-photo-preview").src = photoUrl;
+    // Abre el modal
+    new bootstrap.Modal(document.getElementById("edit-worker-modal")).show();
   });
 });

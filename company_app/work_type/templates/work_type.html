@@ -22,56 +22,60 @@
                                             </span><strong>Añadir Servicio</strong>
                                         </button>
                                         <div class="d-flex align-items-center">
-                                            <button id="open-generate-pdf-modal" class="btn btn-danger"
-                                                onclick="window.location.href='{% url 'work_type:generate_pdf' %}'">
+                                            <button class="btn btn-danger btn-pdf-general"
+                                                data-href="{% url 'work_type:generate_pdf' %}">
                                                 <span class="pc-micon">
                                                     <i data-feather="file"></i>
                                                 </span><strong>Generar Reporte PDF</strong>
                                             </button>
                                         </div>
                                     </div>
-                                    <!-- Buscador DataTable -->
-                                    <table id="datatable-work-type" class="table responsive">
-                                        <thead>
-                                            <tr>
-                                                <th class="centered" scope="col">#</th>
-                                                <th class="centered" scope="col">Nombre</th>
-                                                <th class="centered" scope="col">Descripción</th>
-                                                <th class="centered" scope="col">Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for service in services %}
-                                            <tr>
-                                                <td>{{ forloop.counter }}</td>
-                                                <td>{{ service.name }}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-warning description-service-button"
-                                                        data-bs-toggle="modal" data-bs-target="#serviceModal"
-                                                        data-description="{{ service.description|escapejs }}">
-                                                        <span class="pc-micon">
-                                                            <i data-feather="align-left"></i>
-                                                        </span>
-                                                    </button>
-                                                    <span class="d-none datatable-description">{{ service.description
-                                                        }}</span>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary edit-service-button"
-                                                        data-id="{{ service.id }}"
-                                                        data-name="{{ service.name|escapejs }}"
-                                                        data-description="{{ service.description|escapejs }}">
-                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm delete-service-button"
-                                                        data-id="{{ service.id }}">
-                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table id="datatable-work-type" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centered" scope="col">#</th>
+                                                    <th class="centered" scope="col">Nombre</th>
+                                                    <th class="centered" scope="col">Descripción</th>
+                                                    <th class="centered" scope="col">Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for service in services %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ service.name }}</td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            <button class="btn btn-sm btn-warning description-service-button"
+                                                                data-bs-toggle="modal" data-bs-target="#serviceModal"
+                                                                data-description="{{ service.description|escapejs }}">
+                                                                <span class="pc-micon">
+                                                                    <i data-feather="align-left"></i>
+                                                                </span>
+                                                            </button>
+                                                            <span class="d-none datatable-description">{{ service.description }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            <button class="btn btn-sm btn-primary edit-service-button"
+                                                                data-id="{{ service.id }}"
+                                                                data-name="{{ service.name|escapejs }}"
+                                                                data-description="{{ service.description|escapejs }}">
+                                                                <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm delete-service-button"
+                                                                data-id="{{ service.id }}">
+                                                                <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

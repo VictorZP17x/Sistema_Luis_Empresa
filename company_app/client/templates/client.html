@@ -21,51 +21,55 @@
                                                 <i data-feather="plus-circle"></i>
                                             </span><strong>Añadir Cliente</strong>
                                         </button>
-                                        <button class="btn btn-danger"
-                                            onclick="window.location.href='{% url 'client:generate_pdf_clients' %}'">
+                                        <button class="btn btn-danger btn-pdf-general"
+                                            data-href="{% url 'client:generate_pdf_clients' %}">
                                             <i data-feather="file"></i> Generar Reporte PDF
                                         </button>
                                     </div>
-                                    <!-- Buscador DataTable -->
-                                    <table id="datatable-client" class="table responsive">
-                                        <thead>
-                                            <tr>
-                                                <th class="centered" scope="col">#</th>
-                                                <th class="centered" scope="col">Usuario</th>
-                                                <th class="centered" scope="col">Nombre</th>
-                                                <th class="centered" scope="col">Apellido</th>
-                                                <th class="centered" scope="col">Email</th>
-                                                <th class="centered" scope="col">Teléfono</th>
-                                                <th class="centered" scope="col">Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for client in clients %}
-                                            <tr>
-                                                <td>{{ forloop.counter }}</td>
-                                                <td>{{ client.username }}</td>
-                                                <td>{{ client.first_name }}</td>
-                                                <td>{{ client.last_name }}</td>
-                                                <td>{{ client.email }}</td>
-                                                <td>{{ client.userprofile.phone }}</td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary edit-client-button"
-                                                        data-id="{{ client.id }}"
-                                                        data-name="{{ client.first_name|escapejs }}"
-                                                        data-lastname="{{ client.last_name|escapejs }}"
-                                                        data-email="{{ client.email|escapejs }}"
-                                                        data-phone="{{ client.userprofile.phone }}">
-                                                        <span class="pc-micon"><i data-feather="edit"></i></span>
-                                                    </button>
-                                                    <button class="btn btn-danger btn-sm delete-client-button"
-                                                        data-id="{{ client.id }}">
-                                                        <span class="pc-micon"><i data-feather="trash-2"></i></span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table id="datatable-client" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="centered" scope="col">#</th>
+                                                    <th class="centered" scope="col">Usuario</th>
+                                                    <th class="centered" scope="col">Nombre</th>
+                                                    <th class="centered" scope="col">Apellido</th>
+                                                    <th class="centered" scope="col">Email</th>
+                                                    <th class="centered" scope="col">Teléfono</th>
+                                                    <th class="centered" scope="col">Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for client in clients %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ client.username }}</td>
+                                                    <td>{{ client.first_name }}</td>
+                                                    <td>{{ client.last_name }}</td>
+                                                    <td>{{ client.email }}</td>
+                                                    <td>{{ client.userprofile.phone }}</td>
+                                                    <td>
+                                                        <div class="btn-group-flex">
+                                                            <button class="btn btn-sm btn-primary edit-client-button"
+                                                                data-id="{{ client.id }}"
+                                                                data-username="{{ client.username|escapejs }}"
+                                                                data-name="{{ client.first_name|escapejs }}"
+                                                                data-lastname="{{ client.last_name|escapejs }}"
+                                                                data-email="{{ client.email|escapejs }}"
+                                                                data-phone="{{ client.userprofile.phone }}">
+                                                                <span class="pc-micon"><i data-feather="edit"></i></span>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm delete-client-button"
+                                                                data-id="{{ client.id }}">
+                                                                <span class="pc-micon"><i data-feather="trash-2"></i></span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

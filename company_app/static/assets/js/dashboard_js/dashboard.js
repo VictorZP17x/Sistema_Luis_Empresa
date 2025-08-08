@@ -52,7 +52,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  var workersDetail = window.workersDetail;
+  var workersDetail = JSON.parse(document.getElementById('workers-detail-data').textContent);
   var empresaModalId = null;
 
   $('.btn-ver-trabajadores').on('click', function () {
