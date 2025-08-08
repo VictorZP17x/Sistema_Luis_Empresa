@@ -291,8 +291,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  window.workersDetail = {{ workers_detail|safe }};
-</script>
+<!-- Datos de trabajadores para el modal -->
+{{ workers_detail|json_script:"workers-detail-data" }}
 <script src="{% static 'assets/js/dashboard_js/dashboard.js' %}"></script>
 {% endblock %}

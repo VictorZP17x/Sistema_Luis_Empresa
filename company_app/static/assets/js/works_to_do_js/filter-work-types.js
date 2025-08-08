@@ -1,4 +1,5 @@
 function filterWorkTypes(companyId, workTypesSelector) {
+    var companyServices = JSON.parse(document.getElementById('company-services-data').textContent);
     var allowed = companyServices[companyId] || [];
 
     // Guarda todas las opciones originales en data para restaurarlas después

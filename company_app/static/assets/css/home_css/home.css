@@ -1,0 +1,9 @@
+/* Aumentar el área de click en los dispositivos móviles */
+@media (max-width: 576px) {
+    .btn-group-flex .btn {
+        min-width: 40px;
+        min-height: 40px;
+        font-size: 1.1rem;
+        padding: 0.5rem;
+    }
+}

@@ -5,9 +5,14 @@
     gap: 0.3rem;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    overflow: visible;
 }
 .btn-group-flex .btn {
-    flex: 1 1 30%; /* Ocupa casi la mitad del ancho, ajusta según tu preferencia */
-    min-width: 20px;
+    flex: 1 1 auto; /* Ocupa casi la mitad del ancho, ajusta según tu preferencia */
+    min-width: 30px;
     margin-bottom: 0.2rem;
+    margin-left: 0;
+    margin-right: 0;
+    z-index: 2;
 }

@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    $('.delete-works_to_do-button').click(function () {
+    $(document).on('click', '.delete-works_to_do-button', function () {
+        console.log('Delegado borrar', this, window.innerWidth);
         const id = $(this).data('id');
         Swal.fire({
             title: "¿Estás seguro?",
