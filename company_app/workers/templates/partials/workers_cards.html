@@ -25,10 +25,12 @@
                     <small class="text-muted">Empresa</small><br>
                     <span>{{ worker.company.name }}</span>
                 </div>
+                {% if not is_cliente %}
                 <div class="mb-2">
                     <small class="text-muted">Teléfono</small><br>
                     <span>{{ worker.phone }}</span>
                 </div>
+                {% endif %}
                 <div class="d-flex justify-content-center gap-2 mt-2">
                     <div class="btn-group-flex">
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
@@ -77,8 +79,10 @@
                         <span class="text-muted">Sin servicios</span>
                         {% endfor %}
                     </div>
+                    {% if not is_cliente %}
                     <div><strong>Teléfono:</strong> {{ worker.phone }}</div>
                     <div><strong>Email:</strong> {{ worker.user.email }}</div>
+                    {% endif %}
                     <!-- Puedes agregar más datos aquí -->
                 </div>
                 <div class="modal-footer">
@@ -107,8 +111,10 @@
                         <span class="text-muted">Sin servicios</span>
                         {% endfor %}
                     </div>
+                    {% if not is_cliente %}
                     <div><strong>Teléfono:</strong> {{ worker.phone }}</div>
                     <div><strong>Email:</strong> {{ worker.user.email }}</div>
+                    {% endif %}
                     <!-- Puedes agregar más datos aquí -->
                 </div>
                 <div class="modal-footer">
