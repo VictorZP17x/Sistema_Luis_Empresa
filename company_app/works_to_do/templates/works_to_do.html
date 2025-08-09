@@ -382,6 +382,7 @@
 <script>
     const IS_CLIENTE = {{ is_cliente|yesno:"true,false" }};
 </script>
+<script src="{% static 'assets/js/works_to_do_js/autofill-from-worker.js' %}"></script>
 <!-- Datos de servicios de cada empresa -->
 {{ company_services|json_script:"company-services-data" }}
 <!-- Datos de trabajadores -->

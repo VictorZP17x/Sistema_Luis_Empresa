@@ -18,6 +18,10 @@
             </div>
             <div class="card-body text-center">
                 <div class="mb-2">
+                    <small class="text-muted">Usuario</small><br>
+                    <span>{{ worker.user.username }}</span>
+                </div>
+                <div class="mb-2">
                     <small class="text-muted">Empresa</small><br>
                     <span>{{ worker.company.name }}</span>
                 </div>
@@ -30,6 +34,10 @@
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                             data-bs-target="#workerModal{{ worker.user.id }}">
                             Ver más
+                        </button>
+                        <button class="btn btn-success btn-sm solicitar-servicio-btn"
+                            data-company-id="{{ worker.company.id }}" data-worker-id="{{ worker.user.id }}">
+                            Solicitar servicio(s)
                         </button>
                         {% if not is_cliente %}
                         <button class="btn btn-warning btn-sm edit-worker-button" data-id="{{ worker.user.id }}"
