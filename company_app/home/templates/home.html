@@ -440,6 +440,9 @@
     {% if is_cliente %}
     <script src="{% static 'assets/js/alert-for-bell.js' %}"></script>
     {% endif %}
+    <script>
+      window.CSRF_TOKEN = '{{ csrf_token }}';
+    </script>
 
     {% block extra_css %}
     {% if is_trabajador %}

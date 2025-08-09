@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'work_plan',
     'index',
     'personal_data',
+    'notifications',
 ]
 
 MIDDLEWARE = [

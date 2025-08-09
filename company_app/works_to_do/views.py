@@ -80,6 +80,8 @@ def works_to_do(request):
         'cliente_id': cliente_id,
     })
 
+from notifications.models import Notification  # Importa el modelo
+
 @login_required
 @csrf_exempt
 def add_works_to_do(request):
@@ -93,6 +95,17 @@ def add_works_to_do(request):
             description=data['description'],
         )
         work.fk_work_type.set(request.POST.getlist('fk_work_type'))
+
+        # Notificación para el cliente
+        worker = work.fk_worker
+        cliente = work.fk_user
+        if worker and cliente:
+            mensaje = f'Se ha realizado la solicitud al trabajador "{worker.get_full_name() or worker.username}", estas a la espera de que acepte tu peticion.'
+            Notification.objects.create(
+                user=cliente,
+                message=mensaje
+            )
+
         return JsonResponse({'success': True, 'id': work.id})
 
 @login_required

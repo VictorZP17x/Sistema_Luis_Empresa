@@ -1,6 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .forms import PersonalDataForm
-from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from user.models import UserProfile
